@@ -1,23 +1,28 @@
 #include <stdlib.h>
-#include "cbmp.h"
+#include "lib/bmplib/cbmp.h"
 #include <stdio.h>
 
 int main()
 {
-    char file_path[] = "Maxcamnico.bmp";
-    BMP* image = bopen("max.bmp");
+    char file_path[] = "lib/testbmp/Maxcamnico.bmp";
+    BMP* image = bopen(file_path);
 
-    // Gets image width in pixels
+    // Gets image width & height in pixels
     int width = get_width(image);
-
-    // Gets image height in pixels
     int height = get_height(image);
-    printf("width: %d, height: %d", width, height);
-    bclose(image);
-    for (;;)
-    {
-        int c = 0;
-    }
-    
-}
 
+    unsigned char matrix[width][height];
+
+    for (int i = 0; i < width; i++) {
+    
+      for (int j = 0; j < height; j++) {
+        unsigned char r, g, b;
+        
+        get_pixel_rgb(image,i,j, &r, &g, &b);
+        matrix[i][j] = ((r + g + b) / 3) < 128 ? 0 : 255;
+      }
+    }
+
+    bclose(image);
+
+}
