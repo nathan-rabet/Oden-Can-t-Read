@@ -2,35 +2,38 @@
 #include "lib/bmplib/cbmp.h"
 #include <stdio.h>
 
-int main()
+int main(int argc, char *argv[])
 {
     
-  unsigned char *binarization(char img_path[]) {
-  
-    BMP* image = bopen(img_path);
-    
-    // Gets image width & height in pixels
-    int width = get_width(image);
-    int height = get_height(image);
-
-    unsigned char matrix[width][height];
-
+  void binarization(BMP image,unsigned char *imgMatrix,int width,int height) {
     for (int i = 0; i < width; i++) {
       
       for (int j = 0; j < height; j++) {
-        unsigned char r, g, b;
+        unsigned char *r, *g, *b;
         
-        get_pixel_rgb(image,i,j, &r, &g, &b);
-        matrix[i][j] = ((r + g + b) / 3) < 128 ? 0 : 255;
-        printf("%d",matrix[i][j]); 
+        get_pixel_rgb(image,i,j, r, g, b);
+        imgMatrix[i][j] = ((r + g + b) / 3) < 128 ? 0 : 255;
+        printf("%d",imgMatrix[i][j]); 
       }
      
     }
- 
-    bclose(image);
-    return &matrix;
   }
 
-binarization("lib/testbmp/max.bmp");
 
+
+if (argc < 2) {
+  printf("You must provide an image path as an argument!\n");
+  return 1;
+}
+
+// Image initialization
+BMP *image = bopen(argv[1]);
+int width = get_width(image);
+int height = get_height(image);
+
+// Initializing binarized matrix
+unsigned char *imgMatrix[width][height];
+
+binarization(&image,imgMatrix,width,height);
+bclose(image);
 }
