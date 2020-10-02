@@ -1,3 +1,6 @@
+#vscode directory
+.vscode/
+
 # Local Editor files
 .idea
 

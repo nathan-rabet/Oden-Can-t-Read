@@ -10,7 +10,7 @@ struct Matrix CreateMatrix(int x, int y,int sizeof_type)
   matrix.rows = x;
   matrix.columns = y;
 
-  matrix.pointer = malloc(sizeof_type*x*y);
+  matrix.pointer = calloc(x*y,sizeof_type*x*y);
 
   return matrix;
 }
