@@ -6,11 +6,12 @@ struct MatrixINT {
   // The pointer of the matrix
   // The data structure is like so :
   //  E.g :
-  //        a aa 
-  //        b bb -> IN MEMORY : | |a|aa|b|bb|c|cc|...  
-  //        c cc                   ^
-  //                            Pointer
-  // And the allocated size in the memory must be "sizeof(TYPE) × x × y"
+  //        
+  //   rows=3       a aa                   0 1  2 3  4 5
+  //   columns=2    b bb -> IN MEMORY : | |a|aa|b|bb|c|cc|...  
+  //                c cc                   ^
+  //                                    Pointer
+  // And the allocated size in the memory must be "sizeof(TYPE) × rows × columns"
   int* pointer;
 };
 

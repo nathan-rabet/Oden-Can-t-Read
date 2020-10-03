@@ -91,7 +91,7 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * matrix.rows + y) = value;
+    *(matrix.pointer + x * matrix.columns + y) = value;
   }
 }
 
@@ -101,7 +101,7 @@ void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value)
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * matrix.rows + y) = value;
+    *(matrix.pointer + x * matrix.columns + y) = value;
   }
 }
 
@@ -111,7 +111,7 @@ unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * matrix.rows + y);
+    return *(matrix.pointer + x * matrix.columns + y);
   }
 }
 
@@ -121,7 +121,7 @@ float matrixGetFLOAT(struct MatrixFLOAT matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * matrix.rows + y);
+    return *(matrix.pointer + x * matrix.columns + y);
   }
 }
 
