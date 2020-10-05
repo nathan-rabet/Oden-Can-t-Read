@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
 #include "src/matrix/matrix.h"
 #include "src/image/image.h"
 
