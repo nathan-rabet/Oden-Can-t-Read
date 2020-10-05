@@ -32,5 +32,5 @@ Uint32 getPixel(SDL_Surface *image, int x, int y)
         case 4:
             return *(Uint32 *)p;
     }
-    return 0;
+    return *p/24;
 }

@@ -1,6 +1,6 @@
 CC = gcc
 
-FLAGS = -Wall -Wextra -std=c99 -O2
+FLAGS = -Wall -Wextra -std=c99 -O0
 LIBS = `sdl2-config --cflags --libs` -lSDL2_image
 SRC = main.c
 SRC2 = src/matrix/matrix.c src/image/image.c

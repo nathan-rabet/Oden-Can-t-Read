@@ -6,13 +6,14 @@
 #include "src/image/image.h"
 
 void binarization(SDL_Surface image, struct MatrixUCHAR matrix) {
+    Uint32 pixel;
+    SDL_Color color;
     for(int i = 0; i < matrix.rows;i++) {
         for(int j = 0; j < matrix.columns;j++) {
-          Uint32 pixel = getPixel(&image,i,j);
-          Uint8 r, g, b;
+          pixel = getPixel(&image, i, j);
 
-          SDL_GetRGB(pixel,(&image)->format,&r,&g,&b);
-          Uint8 bin = (Uint8)(((uintptr_t)r + (uintptr_t)g + (uintptr_t)b) / 3 < 128 ? 0 : 255);
+          SDL_GetRGB(pixel,(&image)->format,&color.r, &color.g, &color.b);
+          Uint8 bin = (Uint8)((color.r + color.g + color.b) / 3 < 128 ? 0 : 255);
           matrixSetUCHAR(matrix,i,j,bin);
         }
     }
@@ -20,8 +21,13 @@ void binarization(SDL_Surface image, struct MatrixUCHAR matrix) {
 
 int main()
 {
-  SDL_Surface *image = loadImage("/home/nathan/Documents/EPITA/OCR/lib/testbmp/max.bmp");
-  struct MatrixUCHAR imgMatrix = createMatrixUCHAR(image->w,image->h);
+  SDL_Surface *image;
+  char* file_name = "lib/testbmp/10x10.bmp";
 
-binarization(*image,imgMatrix);
+  image = loadImage(file_name);
+
+  /* Create image pixel Matrix */
+  struct MatrixUCHAR imgMatrix = createMatrixUCHAR(image->w,image->h);
+  binarization(*image,imgMatrix);
+  printMatrixUCHAR(imgMatrix);
 }
