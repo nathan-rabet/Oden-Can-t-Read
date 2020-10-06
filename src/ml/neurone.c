@@ -1,7 +1,8 @@
 #include "neurone.h"
 #include <math.h>
 
-struct Neurone CreatePerceptron(float weights[],float bias, unsigned char activationFunction) {
+// If no activation function, set activationFunction to 0
+struct Neurone CreateNeurone(float weights[],float bias, unsigned char activationFunction) {
     struct Neurone neurone;
     neurone.weights = weights;
     neurone.nb_weights = sizeof(weights) / sizeof(float);
@@ -10,8 +11,8 @@ struct Neurone CreatePerceptron(float weights[],float bias, unsigned char activa
     return neurone;
 }
 
-float threshold(float x, float threshold) {
-    if (x < threshold) {
+float threshold(float x) {
+    if (x < 1) {
         return 0;
     }
     return 1;
@@ -29,7 +30,7 @@ float smooth_relu(float x) {
     return log(1 + exp(x));
 }
 
-int CalculateNeuroneOutput(struct Neurone *neurone,float input[],float threashold) {
+int CalculateNeuroneOutput(struct Neurone *neurone,float input[]) {
     if (sizeof(input) / sizeof(float) == neurone->nb_weights) { 
         neurone->output = 0;
         for (int i = 0; i < neurone->nb_weights; i++)
@@ -49,7 +50,7 @@ int CalculateNeuroneOutput(struct Neurone *neurone,float input[],float threashol
         
         // Threshold
         case 1:
-            neurone->output = threshold(neurone->output, threashold);
+            neurone->output = threshold(neurone->output);
             break;
         
         // Sigmoïd
@@ -77,4 +78,8 @@ int CalculateNeuroneOutput(struct Neurone *neurone,float input[],float threashol
     else {
         return 1;
     }
+}
+
+void NeuroneLinker(struct Neurone *curentNeurone,struct Neurone *nextNeurone) {
+    curentNeurone->nextNeuroneSameLayer = nextNeurone;
 }

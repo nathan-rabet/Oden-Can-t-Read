@@ -1,14 +1,13 @@
 #include "layer.h"
 
-struct Layer CreateLayer(int nb_neurones) {
+struct Layer CreateLayer(struct Neurone neurones[]) {
     struct Layer layer;
 
-    layer.neurones = malloc()
+    int n = sizeof(neurones) / sizeof(struct Neurone);
+    layer.neurones = neurones;
+    return layer;
 }
 
-// ! DEBUG
-struct Neurone *n1;
-struct Neurone *n2;
-
-struct Neurone **p1 = *n1;
-
+void LayerLinker(struct Layer *currentLayer, struct Layer *nextLayer) {
+    currentLayer->nextLayer = nextLayer;
+}
