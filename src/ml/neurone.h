@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-struct Neurone {
+typedef struct Neurone {
     // The bias of the neurone
     float bias;
 
@@ -17,7 +16,7 @@ struct Neurone {
 
     unsigned char activationFunction;
     
-    // activationFunction(Σxi×wi + bias = output
+    // activationFunction(Σxi×wi + bias) = output
     float output;
 };
 
