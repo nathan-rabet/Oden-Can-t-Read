@@ -6,8 +6,8 @@
 struct MatrixINT createMatrixINT(int x, int y)
 {
   struct MatrixINT matrix;
-  matrix.rows = x;
-  matrix.columns = y;
+  matrix.columns = x;
+  matrix.rows = y;
 
   matrix.pointer = malloc(sizeof(int)*x*y);
 
@@ -17,8 +17,8 @@ struct MatrixINT createMatrixINT(int x, int y)
 struct MatrixFLOAT createMatrixFLOAT(int x, int y)
 {
   struct MatrixFLOAT matrix;
-  matrix.rows = x;
-  matrix.columns = y;
+  matrix.columns = x;
+  matrix.rows = y;
 
   matrix.pointer = malloc(sizeof(float)*x*y);
 
@@ -28,8 +28,8 @@ struct MatrixFLOAT createMatrixFLOAT(int x, int y)
 struct MatrixUCHAR createMatrixUCHAR(int x, int y)
 {
   struct MatrixUCHAR matrix;
-  matrix.rows = x;
-  matrix.columns = y;
+  matrix.columns = x;
+  matrix.rows = y;
 
   matrix.pointer = malloc(sizeof(unsigned char)*x*y);
 
@@ -56,17 +56,17 @@ int checkMatrixUCHARValidity(struct MatrixUCHAR matrix) {
 
 int checkMatrixINTCoord(struct MatrixINT matrix, int x, int y)
 {
-  return (x < matrix.rows &&  y < matrix.columns); 
+  return (x < matrix.columns &&  y < matrix.rows);
 }
 
 int checkMatrixFLOATCoord(struct MatrixFLOAT matrix, int x, int y)
 {
-  return (x < matrix.rows &&  y < matrix.columns); 
+  return (x < matrix.columns &&  y < matrix.rows); 
 }
 
 int checkMatrixUCHARCoord(struct MatrixUCHAR matrix, int x, int y)
 {
-  return (x < matrix.rows &&  y < matrix.columns); 
+  return (x < matrix.columns &&  y < matrix.rows);
 }
 
 void printMatrixERROR(int error) {
@@ -91,7 +91,7 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * (matrix.columns - 1) + y) = value;
+    *(matrix.pointer + x * (matrix.rows - 1) + y) = value;
   }
 }
 
@@ -101,7 +101,7 @@ void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value)
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * (matrix.columns - 1) + y) = value;
+    *(matrix.pointer + x * (matrix.rows - 1) + y) = value;
   }
 }
 
@@ -111,7 +111,7 @@ unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * (matrix.columns - 1) + y);
+    return *(matrix.pointer + x * (matrix.rows - 1) + y);
   }
 }
 
@@ -121,14 +121,14 @@ float matrixGetFLOAT(struct MatrixFLOAT matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * (matrix.columns - 1) + y);
+    return *(matrix.pointer + x * (matrix.rows - 1) + y);
   }
 }
 
 void printMatrixUCHAR(struct MatrixUCHAR matrix) {
-  for (int i = 0; i < matrix.rows; i++)
+  for (int i = 0; i < matrix.columns; i++)
   {
-    for (int j = 0; j < matrix.columns; j++)
+    for (int j = 0; j < matrix.rows; j++)
     {
       printf("%d\t", matrixGetUCHAR(matrix,i,j));
     }
@@ -137,9 +137,9 @@ void printMatrixUCHAR(struct MatrixUCHAR matrix) {
 }
 
 void printMatrixFLOAT(struct MatrixFLOAT matrix) {
-  for (int i = 0; i < matrix.rows; i++)
+  for (int i = 0; i < matrix.columns; i++)
   {
-    for (int j = 0; j < matrix.columns; j++)
+    for (int j = 0; j < matrix.rows; j++)
     {
       printf("%f\t", matrixGetFLOAT(matrix,i,j));
     }

@@ -9,8 +9,8 @@ struct MatrixUCHAR binarization(char path[]) {
     
     Uint32 pixel;
     SDL_Color color;
-    for(int i = 0; i < matrix.rows;i++) {
-        for(int j = 0; j < matrix.columns;j++) {
+    for(int i = 0; i < matrix.columns;i++) {
+        for(int j = 0; j < matrix.rows;j++) {
           pixel = getPixel(image, i, j);
 
           SDL_GetRGB(pixel,(image)->format,&color.r, &color.g, &color.b);

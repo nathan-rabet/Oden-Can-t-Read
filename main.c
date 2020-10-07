@@ -7,9 +7,8 @@
 
 int main()
 {
-  char* file_name = "lib/testbmp/10x10.bmp";
+  char* file_name = "lib/testbmp/tigre.bmp";
 
   struct MatrixUCHAR mat = binarization(file_name);
-  printMatrixUCHAR(mat);
   show_matrix_to_img(mat);
 }
