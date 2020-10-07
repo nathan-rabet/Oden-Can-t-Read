@@ -3,7 +3,7 @@ CC = gcc
 FLAGS = -Wall -Wextra -std=c99 -O0
 LIBS = `sdl2-config --cflags --libs` -lSDL2_image
 SRC = main.c
-SRC2 = src/matrix/matrix.c src/image/image.c
+SRC2 = src/matrix/matrix.c src/image/image.c src/image/binarization.c
 
 OBJ = ${SRC:.c=.o}
 DEP = ${SRC:.c=.d}
