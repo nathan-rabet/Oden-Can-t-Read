@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "src/matrix/matrix.h"
-#define MATRIX
 
 #include "src/image/binarization.h"
 

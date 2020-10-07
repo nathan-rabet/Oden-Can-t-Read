@@ -57,9 +57,9 @@ int show_matrix_to_img(struct MatrixUCHAR matrix)
     
     for(int i = 0; i < matrix.columns;i++) {
         for(int j = 0; j < matrix.rows;j++) {
-            Uint32 grey;
+            Uint32 grey = 0;
             SDL_Rect pixel = {i, j, i, j};
-            matrixSetUCHAR(matrix, i, j, grey);
+            grey = matrixGetUCHAR(matrix, i, j);
             printf("%d : ", grey);
             SDL_FillRect(image, &pixel, SDL_MapRGB(image->format, grey, grey, grey));
         }

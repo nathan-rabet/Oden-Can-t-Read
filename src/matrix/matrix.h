@@ -1,3 +1,5 @@
+#ifndef MATRIX
+#define MATRIX
 struct MatrixINT {
   // These corresponds to the height & width of the matrix
   int rows;
@@ -74,3 +76,4 @@ void printMatrixUCHAR(struct MatrixUCHAR matrix);
 
 // Print a float composed matrix
 void printMatrixFLOAT(struct MatrixFLOAT matrix);
+#endif
