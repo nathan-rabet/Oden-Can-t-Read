@@ -5,6 +5,11 @@
 struct MatrixUCHAR binarization(char path[]) {
     
     SDL_Surface *image = loadImage(path);
+
+    MedianFilter(image,1);
+
+    ShowImg(image);
+
     struct MatrixUCHAR matrix = createMatrixUCHAR(image->w,image->h);
     
     Uint32 pixel;

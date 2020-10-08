@@ -45,15 +45,11 @@ int show_matrix_to_img(struct MatrixUCHAR matrix)
     {
         coef = floor(780/matrix.rows);
     }
-    
-
-
-    
 
     SDL_Window* window = NULL;
     window = SDL_CreateWindow
     (
-        "OUI", SDL_WINDOWPOS_UNDEFINED,
+        "Binarized Image", SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         matrix.columns * coef,
         matrix.rows * coef,
@@ -100,9 +96,101 @@ int show_matrix_to_img(struct MatrixUCHAR matrix)
             break;
         }
     }
-
     SDL_DestroyWindow(window);
-    SDL_Quit();
 
     return EXIT_SUCCESS;
+}
+
+int ShowImg(SDL_Surface *image)
+{
+    
+    /* Find window size*/
+    int coef = 1;
+    if (image->h < 780)
+    {
+        coef = floor(780/image->h);
+    }
+
+    SDL_Window* window = NULL;
+    window = SDL_CreateWindow
+    (
+        "Image", SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        image->w * coef,
+        image->h * coef,
+        SDL_WINDOW_SHOWN
+    );
+
+    SDL_BlitSurface( image, NULL, SDL_GetWindowSurface( window ), NULL );
+
+    // Render the rect to the screen
+    SDL_UpdateWindowSurface( window );
+
+
+    SDL_Event event;
+    int quit = 0;
+    while (quit == 0)
+    {
+        SDL_WaitEvent(&event);
+ 
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            quit = 1;
+            break;
+        }
+    }
+
+    SDL_DestroyWindow(window);
+
+    return EXIT_SUCCESS;
+}
+
+SDL_Surface* MedianFilter(SDL_Surface *image, int px)
+{
+    for (int i = 1; i < image->w - 1; i++)
+    {
+        for (int j = 1; j < image->h - 1; j++)
+        {
+            //Create neighbours pixels matrix
+            struct MatrixINT neighboursR = createMatrixINT(8,1);
+            struct MatrixINT neighboursG = createMatrixINT(8,1);
+            struct MatrixINT neighboursB = createMatrixINT(8,1);
+
+            //Set neighbours pixels
+            for (int x = 0; x < 3; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    if (x!=1 && y!=1)
+                    {
+                        Uint32 pixel = getPixel(image, i - 1 + x, j - 1 + y);
+                        SDL_Color color;
+                        SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
+                        matrixSetINT(neighboursR, x*2 + y, 1, color.r);
+                        matrixSetINT(neighboursG, x*2 + y, 1, color.g);
+                        matrixSetINT(neighboursB, x*2 + y, 1, color.b);
+                    }
+                }
+                
+            }
+
+            printf("|");
+            printMatrixINT(neighboursR);
+            printf("|");
+            
+
+            // Search Median value
+
+            // Set pixel value
+        }
+        
+    }
+    
+
+
+    SDL_Rect surface_rect = {0, 0, 100, 100};
+    SDL_FillRect(image, &surface_rect, SDL_MapRGB(image->format, 255, 0, 0));
+
+    return image;
 }

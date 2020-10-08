@@ -13,3 +13,7 @@ SDL_Surface* loadImage(char* path);
 Uint32 getPixel(SDL_Surface *image, int x, int y);
 
 int show_matrix_to_img(struct MatrixUCHAR matrix);
+
+int ShowImg(SDL_Surface *image);
+
+SDL_Surface* MedianFilter(SDL_Surface *image, int px);

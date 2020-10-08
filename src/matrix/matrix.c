@@ -105,6 +105,16 @@ void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value)
   }
 }
 
+void matrixSetINT(struct MatrixINT matrix, int x, int y, float value)
+{
+  if (!(checkMatrixINTValidity(matrix) && checkMatrixINTCoord(matrix, x, y)))
+  {
+    printMatrixERROR(400);
+  } else {
+    *(matrix.pointer + x * (matrix.rows - 1) + y) = value;
+  }
+}
+
 unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
   if (!(checkMatrixUCHARValidity(matrix) && checkMatrixUCHARCoord(matrix, x, y)))
   {
@@ -125,23 +135,44 @@ float matrixGetFLOAT(struct MatrixFLOAT matrix, int x, int y) {
   }
 }
 
-void printMatrixUCHAR(struct MatrixUCHAR matrix) {
-  for (int i = 0; i < matrix.columns; i++)
+int matrixGetINT(struct MatrixINT matrix, int x, int y) {
+  if (!(checkMatrixINTValidity(matrix) && checkMatrixINTCoord(matrix, x, y)))
   {
-    for (int j = 0; j < matrix.rows; j++)
+    printMatrixERROR(400);
+    return '\0';
+  } else {
+    return *(matrix.pointer + x * (matrix.rows - 1) + y);
+  }
+}
+
+void printMatrixUCHAR(struct MatrixUCHAR matrix) {
+  for (int i = 0; i < matrix.rows; i++)
+  {
+    for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%d\t", matrixGetUCHAR(matrix,i,j));
+      printf("%d\t", matrixGetUCHAR(matrix,j,i));
     }
     printf("\n");
   }
 }
 
 void printMatrixFLOAT(struct MatrixFLOAT matrix) {
-  for (int i = 0; i < matrix.columns; i++)
+  for (int i = 0; i < matrix.rows; i++)
   {
-    for (int j = 0; j < matrix.rows; j++)
+    for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%f\t", matrixGetFLOAT(matrix,i,j));
+      printf("%f\t", matrixGetFLOAT(matrix,j,i));
+    }
+    printf("\n");
+  }
+}
+
+void printMatrixINT(struct MatrixINT matrix) {
+  for (int i = 0; i < matrix.rows; i++)
+  {
+    for (int j = 0; j < matrix.columns; j++)
+    {
+      printf("%d\t", matrixGetINT(matrix,j,i));
     }
     printf("\n");
   }

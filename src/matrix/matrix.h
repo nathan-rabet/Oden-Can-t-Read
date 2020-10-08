@@ -65,15 +65,24 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
 // Put a float into a matrix at the (x,y) coordonates
 void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value);
 
+// Put a float into a matrix at the (x,y) coordonates
+void matrixSetINT(struct MatrixINT matrix, int x, int y, float value);
+
 // Return the (x,y) charater in a matrix
 unsigned char matrixGetUCHAR(struct MatrixUCHAR matrix, int x, int y);
 
 // Return the (x,y) float in a matrix
 float matrixGetFLOAT(struct MatrixFLOAT matrix, int x, int y);
 
+// Return the (x,y) int in a matrix
+int matrixGetINT(struct MatrixINT matrix, int x, int y);
+
 // Print a unsigned characters composed matrix
 void printMatrixUCHAR(struct MatrixUCHAR matrix);
 
 // Print a float composed matrix
 void printMatrixFLOAT(struct MatrixFLOAT matrix);
+
+// Print a int composed matrix
+void printMatrixINT(struct MatrixINT matrix);
 #endif
