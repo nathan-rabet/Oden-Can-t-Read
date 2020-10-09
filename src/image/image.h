@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "../matrix/matrix.h"
+#include "../math/sortalgo.h"
 
 // Load an image in the memory using the SDL library
 SDL_Surface* loadImage(char* path);

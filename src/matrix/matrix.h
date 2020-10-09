@@ -66,7 +66,7 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
 void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value);
 
 // Put a float into a matrix at the (x,y) coordonates
-void matrixSetINT(struct MatrixINT matrix, int x, int y, float value);
+void matrixSetINT(struct MatrixINT matrix, int x, int y, int value);
 
 // Return the (x,y) charater in a matrix
 unsigned char matrixGetUCHAR(struct MatrixUCHAR matrix, int x, int y);

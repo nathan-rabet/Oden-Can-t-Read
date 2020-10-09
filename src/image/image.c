@@ -67,10 +67,10 @@ int show_matrix_to_img(struct MatrixUCHAR matrix)
     SDL_RenderClear( renderer );
 
 
-    for(int i = 0; i < matrix.columns;i++) {
-        for(int j = 0; j < matrix.rows;j++) {
+    for(int i = 0; i < matrix.rows;i++) {
+        for(int j = 0; j < matrix.columns;j++) {
             Uint32 grey = 0;
-            SDL_Rect r = {i * coef, j * coef, coef, coef};
+            SDL_Rect r = {j * coef, i * coef, coef, coef};
 
             grey = matrixGetUCHAR(matrix, i, j);
             SDL_SetRenderDrawColor( renderer, grey, grey, grey, 0 );
@@ -148,49 +148,65 @@ int ShowImg(SDL_Surface *image)
 
 SDL_Surface* MedianFilter(SDL_Surface *image, int px)
 {
+    //Verify px parameter
+    int border = 0;
+    switch (px)
+    {
+    case 3:
+        border = 1;
+        break;
+    case 5:
+        border = 2;
+        break;
+    case 7:
+        border = 3;
+        break;
+    
+    default:
+        return image;
+    }
+
+
+    SDL_Surface *outImage = SDL_CreateRGBSurface(image->flags,image->w,image->h,image->format->BitsPerPixel,image->format->Rmask,image->format->Gmask,image->format->Bmask,image->format->Amask);
     for (int i = 1; i < image->w - 1; i++)
     {
         for (int j = 1; j < image->h - 1; j++)
         {
             //Create neighbours pixels matrix
-            struct MatrixINT neighboursR = createMatrixINT(8,1);
-            struct MatrixINT neighboursG = createMatrixINT(8,1);
-            struct MatrixINT neighboursB = createMatrixINT(8,1);
+            int neighboursR[px*px];
+            int neighboursG[px*px];
+            int neighboursB[px*px];
 
             //Set neighbours pixels
-            for (int x = 0; x < 3; x++)
+            int index = 0;
+            for (int x = 0; x < px; x++)
             {
-                for (int y = 0; y < 3; y++)
-                {
-                    if (x!=1 && y!=1)
-                    {
-                        Uint32 pixel = getPixel(image, i - 1 + x, j - 1 + y);
-                        SDL_Color color;
-                        SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
-                        matrixSetINT(neighboursR, x*2 + y, 1, color.r);
-                        matrixSetINT(neighboursG, x*2 + y, 1, color.g);
-                        matrixSetINT(neighboursB, x*2 + y, 1, color.b);
-                    }
+                for (int y = 0; y < px; y++)
+                {                                     
+                    Uint32 pixel = getPixel(image, i - 1 + x, j - 1 + y);
+                    SDL_Color color;
+                    SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
+                    neighboursR[index] = color.r;
+                    neighboursG[index] = color.g;
+                    neighboursB[index] = color.b;
+                    index += 1;
                 }
                 
             }
 
-            printf("|");
-            printMatrixINT(neighboursR);
-            printf("|");
             
 
             // Search Median value
+            int medianValueR = MedianValueINT(neighboursR, sizeof(neighboursR) / sizeof(neighboursR[0]));
+            int medianValueG = MedianValueINT(neighboursG, sizeof(neighboursG) / sizeof(neighboursG[0]));
+            int medianValueB = MedianValueINT(neighboursB, sizeof(neighboursB) / sizeof(neighboursB[0]));
 
             // Set pixel value
+            SDL_Rect surface_rect = {i, j, 6, 1};
+            SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, medianValueR, medianValueG, medianValueB));
         }
         
     }
     
-
-
-    SDL_Rect surface_rect = {0, 0, 100, 100};
-    SDL_FillRect(image, &surface_rect, SDL_MapRGB(image->format, 255, 0, 0));
-
-    return image;
+    return outImage;
 }
