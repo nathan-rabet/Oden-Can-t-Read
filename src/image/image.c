@@ -103,7 +103,7 @@ int show_matrix_to_img(struct MatrixUCHAR matrix)
 
 int ShowImg(SDL_Surface *image)
 {
-    
+     
     /* Find window size*/
     int coef = 1;
     if (image->h < 780)
@@ -114,17 +114,40 @@ int ShowImg(SDL_Surface *image)
     SDL_Window* window = NULL;
     window = SDL_CreateWindow
     (
-        "Image", SDL_WINDOWPOS_UNDEFINED,
+        "Binarized Image", SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         image->w * coef,
         image->h * coef,
         SDL_WINDOW_SHOWN
     );
 
-    SDL_BlitSurface( image, NULL, SDL_GetWindowSurface( window ), NULL );
+    // Setup renderer
+    SDL_Renderer* renderer = NULL;
+    renderer =  SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED);
+
+    // Set render color to red ( background will be rendered in this color )
+    SDL_SetRenderDrawColor( renderer, 255, 255, 255, 0 );
+
+    // Clear winow
+    SDL_RenderClear( renderer );
+
+
+    for(int i = 0; i < image->h;i++) {
+        for(int j = 0; j < image->w;j++) {
+            Uint32 pixel = 0;
+            SDL_Rect r = {j * coef, i * coef, coef, coef};
+            SDL_Color color;
+
+            pixel = getPixel(image, j, i);
+            SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
+            SDL_SetRenderDrawColor( renderer, color.r, color.g, color.b, 0 );
+
+            SDL_RenderFillRect( renderer, &r );
+        }
+    }
 
     // Render the rect to the screen
-    SDL_UpdateWindowSurface( window );
+    SDL_RenderPresent(renderer);
 
 
     SDL_Event event;
@@ -140,7 +163,6 @@ int ShowImg(SDL_Surface *image)
             break;
         }
     }
-
     SDL_DestroyWindow(window);
 
     return EXIT_SUCCESS;
@@ -168,9 +190,9 @@ SDL_Surface* MedianFilter(SDL_Surface *image, int px)
 
 
     SDL_Surface *outImage = SDL_CreateRGBSurface(image->flags,image->w,image->h,image->format->BitsPerPixel,image->format->Rmask,image->format->Gmask,image->format->Bmask,image->format->Amask);
-    for (int i = 1; i < image->w - 1; i++)
+    for (int i = 1; i < image->w - border; i++)
     {
-        for (int j = 1; j < image->h - 1; j++)
+        for (int j = 1; j < image->h - border; j++)
         {
             //Create neighbours pixels matrix
             int neighboursR[px*px];
@@ -202,7 +224,7 @@ SDL_Surface* MedianFilter(SDL_Surface *image, int px)
             int medianValueB = MedianValueINT(neighboursB, sizeof(neighboursB) / sizeof(neighboursB[0]));
 
             // Set pixel value
-            SDL_Rect surface_rect = {i, j, 6, 1};
+            SDL_Rect surface_rect = {i, j, 1, 1};
             SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, medianValueR, medianValueG, medianValueB));
         }
         

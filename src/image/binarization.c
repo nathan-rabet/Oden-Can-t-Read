@@ -3,15 +3,17 @@
 #include "../matrix/matrix.h"
 
 struct MatrixUCHAR binarization(char path[]) {
-    
+    //Load image
     SDL_Surface *image = loadImage(path);
 
     ShowImg(image);
 
+    //Apply median filter
     image = MedianFilter(image,3);
 
     ShowImg(image);
 
+    //Create binary matrix
     struct MatrixUCHAR matrix = createMatrixUCHAR(image->h,image->w);
     
     Uint32 pixel;
