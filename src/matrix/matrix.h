@@ -1,3 +1,6 @@
+#ifndef MATRIX
+#define MATRIX
+
 struct MatrixINT {
   // These corresponds to the height & width of the matrix
   int rows;
@@ -15,10 +18,10 @@ struct MatrixINT {
   int* pointer;
 };
 
-struct MatrixFLOAT {
+struct MatrixDOUBLE {
   int rows;
   int columns;
-  float* pointer;
+  double* pointer;
 };
 
 struct MatrixUCHAR {
@@ -31,7 +34,7 @@ struct MatrixUCHAR {
 struct MatrixINT createMatrixINT(int x, int y);
 
 // Floating numbers composed matrix creation
-struct MatrixFLOAT createMatrixFLOAT(int x, int y);
+struct MatrixDOUBLE createMatrixDOUBLE(int x, int y);
 
 // Unsigned characters composed matrix creation
 struct MatrixUCHAR createMatrixUCHAR(int x, int y);
@@ -39,8 +42,8 @@ struct MatrixUCHAR createMatrixUCHAR(int x, int y);
 // Check if integers composed matrix pointer is not NULL
 int checkMatrixINTValidity(struct MatrixINT matrix);
 
-// Check if floating numbers composed matrix pointer is not NULL
-int checkMatrixFLOATValidity(struct MatrixFLOAT matrix);
+// Check if doubleing numbers composed matrix pointer is not NULL
+int checkMatrixDOUBLEValidity(struct MatrixDOUBLE matrix);
 
 // Check if integers composed matrix pointer is not NULL
 int checkMatrixUCHARValidity(struct MatrixUCHAR matrix);
@@ -48,8 +51,8 @@ int checkMatrixUCHARValidity(struct MatrixUCHAR matrix);
 // Check if the coordinates x & y are in a integers composed matrix
 int checkMatrixINTCoord(struct MatrixINT matrix, int x, int y);
 
-// Check if the coordinates x & y are in a floating numbers composed matrix
-int checkMatrixFLOATCoord(struct MatrixFLOAT matrix, int x, int y);
+// Check if the coordinates x & y are in a doubleing numbers composed matrix
+int checkMatrixDOUBLECoord(struct MatrixDOUBLE matrix, int x, int y);
 
 // Check if the coordinates x & y are in a unisgned characters composed matrix
 int checkMatrixUCHARCoord(struct MatrixUCHAR matrix, int x, int y);
@@ -60,17 +63,18 @@ void printMatrixERROR(int error);
 // Put a unsigned character into a matrix at the (x,y) coordonates
 void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value);
 
-// Put a float into a matrix at the (x,y) coordonates
-void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value);
+// Put a double into a matrix at the (x,y) coordonates
+void matrixSetDOUBLE(struct MatrixDOUBLE matrix, int x, int y, double value);
 
 // Return the (x,y) charater in a matrix
 unsigned char matrixGetUCHAR(struct MatrixUCHAR matrix, int x, int y);
 
-// Return the (x,y) float in a matrix
-float matrixGetFLOAT(struct MatrixFLOAT matrix, int x, int y);
+// Return the (x,y) double in a matrix
+double matrixGetDOUBLE(struct MatrixDOUBLE matrix, int x, int y);
 
 // Print a unsigned characters composed matrix
 void printMatrixUCHAR(struct MatrixUCHAR matrix);
 
-// Print a float composed matrix
-void printMatrixFLOAT(struct MatrixFLOAT matrix);
+// Print a double composed matrix
+void printMatrixDOUBLE(struct MatrixDOUBLE matrix);
+#endif

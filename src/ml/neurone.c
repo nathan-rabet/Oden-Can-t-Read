@@ -2,38 +2,37 @@
 #include <math.h>
 
 // If no activation function, set activationFunction to 0
-struct Neurone CreateNeurone(float weights[],float bias, unsigned char activationFunction) {
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input) {
     struct Neurone neurone;
     neurone.weights = weights;
-    neurone.nb_weights = sizeof(weights) / sizeof(float);
+    neurone.nb_inputs = nb_input;
     neurone.bias = bias;
     neurone.activationFunction = activationFunction;
     return neurone;
 }
 
-float threshold(float x) {
+double threshold(double x) {
     if (x < 1) {
         return 0;
     }
     return 1;
 }
 
-float sigmoid(float x) {
+double sigmoid(double x) {
     return 1 / (1 + exp(-x));
 }
 
-float relu(float x) {
-    return max(0,x);
+double relu(double x) {
+    return fmax(0,x);
 }
 
-float smooth_relu(float x) {
+double smooth_relu(double x) {
     return log(1 + exp(x));
 }
 
-int CalculateNeuroneOutput(struct Neurone *neurone,float input[]) {
-    if (sizeof(input) / sizeof(float) == neurone->nb_weights) { 
-        neurone->output = 0;
-        for (int i = 0; i < neurone->nb_weights; i++)
+double CalculateNeuroneOutput(struct Neurone *neurone,double input[]) {
+    neurone->output = 0;
+        for (int i = 0; i < neurone->nb_inputs; i++)
         {
             neurone->output += neurone->weights[i] * input[i];
         }
@@ -67,19 +66,7 @@ int CalculateNeuroneOutput(struct Neurone *neurone,float input[]) {
         case 4:
             neurone->output = smooth_relu(neurone->output);
             break;
-        
-        // If nothing match
-        default:
-            return 1;
         }
 
-        return 0;
-    }
-    else {
-        return 1;
-    }
-}
-
-void NeuroneLinker(struct Neurone *curentNeurone,struct Neurone *nextNeurone) {
-    curentNeurone->nextNeuroneSameLayer = nextNeurone;
+        return neurone->output;
 }

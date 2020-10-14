@@ -1,15 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "src/matrix/matrix.h"
-#define MATRIX
-
-#include "src/image/binarization.h"
+#include "src/ml/network.h"
 
 int main()
 {
-  char* file_name = "lib/testbmp/10x10.bmp";
+	char* file_name = "data/networks/test.json";
 
-  struct MatrixUCHAR mat = binarization(file_name);
-  printMatrixUCHAR(mat);
+	struct Network *network = LoadNetworkFromJSON(file_name);
+	printf("Done!");
 }

@@ -1,13 +1,9 @@
 #include "layer.h"
 
-struct Layer CreateLayer(struct Neurone neurones[]) {
+struct Layer CreateLayer(struct Neurone neurones[], int nb_neurones) {
     struct Layer layer;
 
-    int n = sizeof(neurones) / sizeof(struct Neurone);
+    layer.nb_neurones = nb_neurones;
     layer.neurones = neurones;
     return layer;
-}
-
-void LayerLinker(struct Layer *currentLayer, struct Layer *nextLayer) {
-    currentLayer->nextLayer = nextLayer;
 }

@@ -14,13 +14,13 @@ struct MatrixINT createMatrixINT(int x, int y)
   return matrix;
 }
 
-struct MatrixFLOAT createMatrixFLOAT(int x, int y)
+struct MatrixDOUBLE createMatrixDOUBLE(int x, int y)
 {
-  struct MatrixFLOAT matrix;
+  struct MatrixDOUBLE matrix;
   matrix.rows = x;
   matrix.columns = y;
 
-  matrix.pointer = malloc(sizeof(float)*x*y);
+  matrix.pointer = malloc(sizeof(double)*x*y);
 
   return matrix;
 }
@@ -42,7 +42,7 @@ int checkMatrixINTValidity(struct MatrixINT matrix) {
 
 }
 
-int checkMatrixFLOATValidity(struct MatrixFLOAT matrix) {
+int checkMatrixDOUBLEValidity(struct MatrixDOUBLE matrix) {
 
   return (matrix.pointer != NULL);
 
@@ -59,7 +59,7 @@ int checkMatrixINTCoord(struct MatrixINT matrix, int x, int y)
   return (x < matrix.rows &&  y < matrix.columns); 
 }
 
-int checkMatrixFLOATCoord(struct MatrixFLOAT matrix, int x, int y)
+int checkMatrixDOUBLECoord(struct MatrixDOUBLE matrix, int x, int y)
 {
   return (x < matrix.rows &&  y < matrix.columns); 
 }
@@ -95,9 +95,9 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
   }
 }
 
-void matrixSetFLOAT(struct MatrixFLOAT matrix, int x, int y, float value)
+void matrixSetDOUBLE(struct MatrixDOUBLE matrix, int x, int y, double value)
 {
-  if (!(checkMatrixFLOATValidity(matrix) && checkMatrixFLOATCoord(matrix, x, y)))
+  if (!(checkMatrixDOUBLEValidity(matrix) && checkMatrixDOUBLECoord(matrix, x, y)))
   {
     printMatrixERROR(400);
   } else {
@@ -115,8 +115,8 @@ unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
   }
 }
 
-float matrixGetFLOAT(struct MatrixFLOAT matrix, int x, int y) {
-  if (!(checkMatrixFLOATValidity(matrix) && checkMatrixFLOATCoord(matrix, x, y)))
+double matrixGetDOUBLE(struct MatrixDOUBLE matrix, int x, int y) {
+  if (!(checkMatrixDOUBLEValidity(matrix) && checkMatrixDOUBLECoord(matrix, x, y)))
   {
     printMatrixERROR(400);
     return '\0';
@@ -136,12 +136,12 @@ void printMatrixUCHAR(struct MatrixUCHAR matrix) {
   }
 }
 
-void printMatrixFLOAT(struct MatrixFLOAT matrix) {
+void printMatrixDOUBLE(struct MatrixDOUBLE matrix) {
   for (int i = 0; i < matrix.rows; i++)
   {
     for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%f\t", matrixGetFLOAT(matrix,i,j));
+      printf("%f\t", matrixGetDOUBLE(matrix,i,j));
     }
     printf("\n");
   }
