@@ -1,9 +1,11 @@
 #include "neurone.h"
 #include <math.h>
+#include <stdlib.h>
 
 // If no activation function, set activationFunction to 0
 struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input) {
     struct Neurone neurone;
+    neurone.weights = malloc(sizeof(double) * nb_input);
     neurone.weights = weights;
     neurone.nb_inputs = nb_input;
     neurone.bias = bias;
@@ -30,17 +32,18 @@ double smooth_relu(double x) {
     return log(1 + exp(x));
 }
 
-double CalculateNeuroneOutput(struct Neurone *neurone,double input[]) {
-    neurone->output = 0;
-        for (int i = 0; i < neurone->nb_inputs; i++)
+double CalculateNeuroneOutput(struct Neurone neurone,double input[]) {
+        double output;
+        
+        for (int i = 0; i < neurone.nb_inputs; i++)
         {
-            neurone->output += neurone->weights[i] * input[i];
+            output += neurone.weights[i] * input[i];
         }
 
-        neurone->output += neurone->bias;
+        output += neurone.bias;
 
         // Activation functions
-        switch (neurone->activationFunction)
+        switch (neurone.activationFunction)
         {
         // Identity
         case 0:
@@ -49,24 +52,24 @@ double CalculateNeuroneOutput(struct Neurone *neurone,double input[]) {
         
         // Threshold
         case 1:
-            neurone->output = threshold(neurone->output);
+            output = threshold(output);
             break;
         
         // Sigmoïd
         case 2:
-            neurone->output = sigmoid(neurone->output);
+            output = sigmoid(output);
             break;
 
         // ReLU
         case 3:
-            neurone->output = relu(neurone->output);
+            output = relu(output);
             break;
 
         // Smooth ReLU
         case 4:
-            neurone->output = smooth_relu(neurone->output);
+            output = smooth_relu(output);
             break;
         }
 
-        return neurone->output;
+        return output;
 }

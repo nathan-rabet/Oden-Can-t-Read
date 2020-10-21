@@ -27,23 +27,15 @@
             ]
         },
         {
-            "nb_neurones": 2,
+            "nb_neurones": 1,
             "neurones": [
                 {
                     "bias": 42,
                     "activationFunction": 4,
-                    "nb_weights": 1,
-                    "weights": [
-                        3.14
-                    ]
-                },
-                {
-                    "bias": 1000,
-                    "activationFunction": 0,
                     "nb_weights": 2,
                     "weights": [
-                        0.0001,
-                        9.9999
+                        3.14,
+                        7.2
                     ]
                 }
             ]

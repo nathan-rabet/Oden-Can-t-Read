@@ -13,6 +13,11 @@ struct Network {
     struct Network *otherNetwork;
 };
 
-struct Network * LoadNetworkFromJSON(char jsonFilePath[]);
+struct Network LoadNetworkFromJSON(char jsonFilePath[]);
+
+int networkNbInput(struct Network network);
+int networkNbOutput(struct Network network);
+
+double * CalculateNetworkOutput(struct Network network, double intput[]);
 
 #endif

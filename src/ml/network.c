@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct Network * LoadNetworkFromJSON(char jsonFilePath[]) {    
-    struct Network *network = malloc(sizeof(struct Network));
+struct Network LoadNetworkFromJSON(char jsonFilePath[]) {    
+    struct Network network;
 
     char *fileData;
     FILE *f = fopen (jsonFilePath, "rb");
@@ -39,10 +39,10 @@ struct Network * LoadNetworkFromJSON(char jsonFilePath[]) {
         json_object_object_get_ex(parsed_json,"layers",&JSONlayers);
 
         int nb_layers = json_object_get_int(JSONnb_layers);
-        network->nb_layers = nb_layers;
+        network.nb_layers = nb_layers;
         // ? Layers
-		struct Layer layers[network->nb_layers];
-        for (int l = 0; l < network->nb_layers; l++)
+		struct Layer layers[network.nb_layers];
+        for (int l = 0; l < network.nb_layers; l++)
         {
             // Point to a layer l of the network
             struct json_object *JSONlayer = json_object_array_get_idx(JSONlayers,l);
@@ -85,17 +85,55 @@ struct Network * LoadNetworkFromJSON(char jsonFilePath[]) {
                 }
 
                 neurones[n] = CreateNeurone(weights,bias,activationFunction,nb_weights);
+                
+                // Neurones linking
+                if (n >= 1) {
+                    neurones[n-1].nextNeuroneSameLayer = &neurones[n];
+                }
+
+                neurones[nb_neurones - 1].nextNeuroneSameLayer = NULL;
             }
 
             layers[l] = CreateLayer(neurones,nb_neurones);
+            
+            // Layers linking
+            if (l >= 1) {
+                layers[l-1].nextLayer = &layers[l];
+            }
         }
+        layers[nb_layers - 1].nextLayer = NULL;
 
-        network->layers = layers;
-        return network;
+        network.layers = layers;
     }
 
     else {
         fprintf(stderr, "The file '%s' doesn't exist.", jsonFilePath);
-        return network;
     }
+    
+    return network;
+}
+
+int networkNbInput(struct Network network) {
+    return network.layers[0].nb_neurones;
+}
+
+int networkNbOutput(struct Network network) {
+    return network.layers[network.nb_layers - 1].nb_neurones;
+}
+
+double * CalculateNetworkOutput(struct Network network, double input[]) {
+    double *nextInput = input;
+    double *output;
+
+    struct Layer *workingLayer = network.layers;
+
+    while(workingLayer != NULL) {
+        free(output);
+        output = malloc(sizeof(double) * (workingLayer->nb_neurones));
+        output = CalculateLayerOutput(*workingLayer, nextInput);
+        nextInput = output;
+
+        workingLayer = workingLayer->nextLayer; 
+    }
+    return output;
 }

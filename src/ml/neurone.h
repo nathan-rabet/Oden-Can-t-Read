@@ -32,14 +32,11 @@ struct Neurone {
     // 3 -> ReLU
     // 4 -> Smooth ReLU
     unsigned char activationFunction;
-    
-    // activationFunction(Σxi×wi + bias) = output
-    double output;
 };
 
 struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input);
 
-double CalculateNeuroneOutput(struct Neurone *neurone,double input[]);
+double CalculateNeuroneOutput(struct Neurone neurone,double input[]);
 
 double threshold(double x);
 
