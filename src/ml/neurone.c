@@ -33,14 +33,14 @@ double smooth_relu(double x) {
 }
 
 double CalculateNeuroneOutput(struct Neurone neurone,double input[]) {
-        double output;
+        double outputNeurone = 0;
         
         for (int i = 0; i < neurone.nb_inputs; i++)
         {
-            output += neurone.weights[i] * input[i];
+            outputNeurone += neurone.weights[i] * input[i];
         }
 
-        output += neurone.bias;
+        outputNeurone += neurone.bias;
 
         // Activation functions
         switch (neurone.activationFunction)
@@ -52,24 +52,24 @@ double CalculateNeuroneOutput(struct Neurone neurone,double input[]) {
         
         // Threshold
         case 1:
-            output = threshold(output);
+            outputNeurone = threshold(outputNeurone);
             break;
         
         // Sigmoïd
         case 2:
-            output = sigmoid(output);
+            outputNeurone = sigmoid(outputNeurone);
             break;
 
         // ReLU
         case 3:
-            output = relu(output);
+            outputNeurone = relu(outputNeurone);
             break;
 
         // Smooth ReLU
         case 4:
-            output = smooth_relu(output);
+            outputNeurone = smooth_relu(outputNeurone);
             break;
         }
 
-        return output;
+        return outputNeurone;
 }

@@ -5,11 +5,11 @@
 
 int main()
 {
-	char* file_name = "data/networks/test.json";
+	char* file_name = "data/networks/test-xor.json";
 
 	struct Network net = LoadNetworkFromJSON(file_name);
 
-	double dataInput[2] = {1,2};
+	double dataInput[2] = {1,1};
 
 	double *output = CalculateNetworkOutput(net, dataInput);
 

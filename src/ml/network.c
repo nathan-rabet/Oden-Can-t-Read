@@ -30,18 +30,19 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
     if (fileData)
     {
         struct json_object *parsed_json = json_tokener_parse(fileData);
+        free(fileData);
 
         // Point the layers
-        struct json_object *JSONnb_layers;
-        struct json_object *JSONlayers;
+        struct json_object *JSONnb_layers = NULL;
+        struct json_object *JSONlayers = NULL;
 
         json_object_object_get_ex(parsed_json,"nb_layers",&JSONnb_layers);
         json_object_object_get_ex(parsed_json,"layers",&JSONlayers);
 
-        int nb_layers = json_object_get_int(JSONnb_layers);
-        network.nb_layers = nb_layers;
+        network.nb_layers = json_object_get_int(JSONnb_layers);
         // ? Layers
-		struct Layer layers[network.nb_layers];
+		struct Layer *layers = NULL;
+        layers = malloc(sizeof(struct Layer) * network.nb_layers);
         for (int l = 0; l < network.nb_layers; l++)
         {
             // Point to a layer l of the network
@@ -57,16 +58,18 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
             json_object_object_get_ex(JSONlayer,"neurones",&JSONneurones);
 
             // ? Neurones
-            struct Neurone neurones[nb_neurones];
+            struct Neurone *neurones = NULL;
+            neurones = malloc(sizeof(struct Neurone) * nb_neurones);
             for (int n = 0; n < nb_neurones; n++)
             {
+                struct json_object *JSONbias = NULL;
+                struct json_object *JSONactivationFunction = NULL;
+                struct json_object *JSONnb_weights = NULL;
+                struct json_object *JSONweights = NULL;
+                struct json_object *JSONneurone = NULL;
+
                 // Point to the neurone n of the layer l
-                struct json_object *JSONneurone = json_object_array_get_idx(JSONneurones,n);
-                
-                struct json_object *JSONbias;
-                struct json_object *JSONactivationFunction;
-                struct json_object *JSONnb_weights;
-                struct json_object *JSONweights;
+                JSONneurone = json_object_array_get_idx(JSONneurones,n);
 
                 json_object_object_get_ex(JSONneurone,"bias",&JSONbias);
                 json_object_object_get_ex(JSONneurone,"activationFunction",&JSONactivationFunction);
@@ -77,7 +80,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
                 unsigned char activationFunction = (unsigned char) json_object_get_int(JSONactivationFunction);
                 int nb_weights = json_object_get_int(JSONnb_weights);
 
-                double weights[nb_weights];
+                double *weights = malloc(sizeof(double) * nb_weights);
                 for (int w = 0; w < nb_weights; w++)
                 {
                     struct json_object *JSONweight = json_object_array_get_idx(JSONweights,w);
@@ -90,9 +93,9 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
                 if (n >= 1) {
                     neurones[n-1].nextNeuroneSameLayer = &neurones[n];
                 }
-
-                neurones[nb_neurones - 1].nextNeuroneSameLayer = NULL;
             }
+
+            neurones[nb_neurones - 1].nextNeuroneSameLayer = NULL;
 
             layers[l] = CreateLayer(neurones,nb_neurones);
             
@@ -101,7 +104,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
                 layers[l-1].nextLayer = &layers[l];
             }
         }
-        layers[nb_layers - 1].nextLayer = NULL;
+        layers[network.nb_layers - 1].nextLayer = NULL;
 
         network.layers = layers;
     }
@@ -118,22 +121,42 @@ int networkNbInput(struct Network network) {
 }
 
 int networkNbOutput(struct Network network) {
-    return network.layers[network.nb_layers - 1].nb_neurones;
+    
+    int nb_output = 0;
+
+    struct Layer *workingLayer = network.layers;
+
+    while (workingLayer != NULL) {
+        nb_output = workingLayer->nb_neurones;
+        workingLayer = workingLayer->nextLayer;
+    }
+    
+    return nb_output;
 }
 
 double * CalculateNetworkOutput(struct Network network, double input[]) {
     double *nextInput = input;
-    double *output;
+    double *outputNetwork;
 
     struct Layer *workingLayer = network.layers;
 
-    while(workingLayer != NULL) {
-        free(output);
-        output = malloc(sizeof(double) * (workingLayer->nb_neurones));
-        output = CalculateLayerOutput(*workingLayer, nextInput);
-        nextInput = output;
-
-        workingLayer = workingLayer->nextLayer; 
+    // Entry
+    outputNetwork = malloc(sizeof(double) * (workingLayer->nb_neurones));
+    for (int i = 0; i < workingLayer->nb_neurones; i++)
+    {
+        outputNetwork[i] = CalculateNeuroneOutput(workingLayer->neurones[i],&input[i]);
     }
-    return output;
-}
+    workingLayer = workingLayer->nextLayer;
+    nextInput = outputNetwork;
+    free(outputNetwork);
+
+    // General case
+    while(workingLayer != NULL) {
+        outputNetwork = malloc(sizeof(double) * (workingLayer->nb_neurones));
+        outputNetwork = CalculateLayerOutput(*workingLayer, nextInput);
+
+        nextInput = outputNetwork;
+        workingLayer = workingLayer->nextLayer;
+    }
+    return outputNetwork;
+} 

@@ -11,13 +11,15 @@ struct Layer CreateLayer(struct Neurone neurones[], int nb_neurones) {
 }
 
 double * CalculateLayerOutput(struct Layer layer, double input[]) {
-    layer.output = malloc(sizeof(double) * layer.nb_neurones);
-    struct Neurone workingNeurone = *layer.neurones;
+    double *outputLayer = NULL;
+    outputLayer = malloc(sizeof(double) * layer.nb_neurones);
+    struct Neurone *workingNeurone = layer.neurones;
 
-    for (int n = 0; n < layer.nb_neurones; n++) {
-        layer.output[n] = CalculateNeuroneOutput(layer.neurones[n],input);
-        workingNeurone = *workingNeurone.nextNeuroneSameLayer;
+    int n = 0;
+    while (n < layer.nb_neurones) {
+        outputLayer[n] = CalculateNeuroneOutput(layer.neurones[n],input);
+        workingNeurone = workingNeurone->nextNeuroneSameLayer;
+        n++;
     }
-
-    return layer.output;
+    return outputLayer;
 }
