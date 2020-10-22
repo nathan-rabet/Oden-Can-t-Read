@@ -1,7 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef NEURONE
+#define NEURONE
 
-typedef struct Neurone {
+struct Neurone {
     //  ◯
     //  ↓ nextLayer
     //  ◯
@@ -13,42 +13,36 @@ typedef struct Neurone {
     //  ∅
     struct Neurone *nextNeuroneSameLayer;
     
-    // The bias of the neurone
-    float bias;
+    int nb_inputs;
 
-    int nb_weights;
+    // The bias of the neurone
+    double bias;
 
     // List of weights of the neurone (=nb of entries)    
     // 
     // Pointer
     //     v
     //  | |w0|w1|w2|w3|...|wn| | 
-    float *weights;
+    double *weights;
 
     // List of implemented functions :
-    // 0 -> No function
+    // 0 -> No activation function
     // 1 -> Threashold
     // 2 -> Sigmoïd
     // 3 -> ReLU
     // 4 -> Smooth ReLU
     unsigned char activationFunction;
-    
-    // activationFunction(Σxi×wi + bias) = output
-    float output;
 };
 
-struct Neurone CreateNeurone(float weights[],float bias, unsigned char activationFunction);
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input);
 
-// if return int = 1 => ERROR !
-int CalculateNeuroneOutput(struct Neurone *neurone,float input[]);
+double CalculateNeuroneOutput(struct Neurone neurone,double input[]);
 
-float threshold(float x);
+double threshold(double x);
 
-float sigmoid(float x);
+double sigmoid(double x);
 
-float relu(float x);
+double relu(double x);
 
-float smooth_relu(float x);
-
-// nextNeurone <=> next layer into the current layer
-void NeuroneLinker(struct Neurone *curentNeurone,struct Neurone *nextNeurone);
+double smooth_relu(double x);
+#endif

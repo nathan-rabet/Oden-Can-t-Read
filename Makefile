@@ -1,27 +1,20 @@
 CC = gcc
 
-FLAGS = -Wall -Wextra -std=c99 -O0
-LIBS = `sdl2-config --cflags --libs` -lSDL2_image
-SRC = main.c
-SRC2 = src/matrix/matrix.c src/image/image.c src/image/binarization.c
+CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -ldl
+CFLAGS += $(shell pkg-config --cflags json-c) # json-c flags
 
-OBJ = ${SRC:.c=.o}
-DEP = ${SRC:.c=.d}
-RM = rm
+
+CLIBS = `sdl2-config --cflags --libs` -lSDL2_image
+CLIBS += $(shell pkg-config --libs json-c) #json-c libs
+
+SRC = main.c
+SRC2 = src/matrix/matrix.c src/image/image.c src/image/binarization.c src/ml/network.c src/ml/layer.c src/ml/neurone.c
 
 OUT = ocr
 DEBUG_OUT = a.out
 
-debug: ${SRC} ${SRC2}
-	${CC} ${SRC} ${SRC2} ${LIBS} ${FLAGS} -g -o a.out
+all: ${SRC} ${SRC2}
+	${CC} ${SRC} ${SRC2} ${CLIBS} ${CFLAGS} -g -o a.out
 
 release: ${SRC} ${SRC2}
-	${CC} ${SRC} ${SRC2} ${LIBS} ${FLAGS} -o ocr
-
-.PHONY: clean
-clean:
-	rm ${OBJ}   # remove object files
-	rm ${DEP}   # remove dependency files
-	rm OUT DEBUG_OUT     # remove main program
-
--include ${DEP}
+	${CC} ${SRC} ${SRC2} ${CLIBS} ${CFLAGS} -o ocr

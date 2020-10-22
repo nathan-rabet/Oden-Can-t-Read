@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "src/matrix/matrix.h"
-#include "src/math/sortalgo.h"
-#include "src/math/sortalgo.c"
-#include "src/image/binarization.h"
+#include "src/ml/network.h"
 
 int main()
 {
-  char* file_name = "lib/testbmp/tigre.bmp";
+	char* file_name = "data/networks/test-xor.json";
 
-  struct MatrixUCHAR mat = binarization(file_name);
-  show_matrix_to_img(mat);
+	struct Network net = LoadNetworkFromJSON(file_name);
 
-  SDL_Quit();
+	double dataInput[2] = {1,1};
+
+	double *output = CalculateNetworkOutput(net, dataInput);
+
+	for (int i = 0; i < networkNbOutput(net); i++)
+	{
+		printf("%lf\n",output[i]);
+	}
+	
 }
