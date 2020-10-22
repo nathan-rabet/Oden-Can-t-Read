@@ -23,7 +23,7 @@ struct MatrixUCHAR binarization(char path[]) {
           pixel = getPixel(image, j, i);
 
           SDL_GetRGB(pixel,(image)->format,&color.r, &color.g, &color.b);
-          Uint8 bin = (Uint8)((color.r + color.g + color.b) / 3 < 128 ? 0 : 255);
+          Uint8 bin = (Uint8)((color.r + color.g + color.b) / 3 < 128 ? 0 : 1);
           matrixSetUCHAR(matrix, i, j,bin);
         }
     }

@@ -1,0 +1,109 @@
+{
+    "nb_layers": 4,
+    "layers": [
+        {
+            "nb_neurones": 2,
+            "neurones": [
+                {
+                    "bias": 0,
+                    "activationFunction": 1,
+                    "nb_weights": 1,
+                    "weights": [
+                        1
+                    ]
+                },
+                {
+                    "bias": 0,
+                    "activationFunction": 1,
+                    "nb_weights": 1,
+                    "weights": [
+                        1
+                    ]
+                }
+            ]
+		},
+		{
+			"nb_neurones": 4,
+			"neurones": [
+				{
+					"bias": 1,
+					"activationFunction":1,
+					"nb_weights":2,
+					"weights": [
+                        -1,
+                        0
+					]
+                },
+                {
+					"bias": 0,
+					"activationFunction":1,
+					"nb_weights":2,
+					"weights": [
+                        1,
+                        0
+					]
+                },
+                {
+					"bias": 1,
+					"activationFunction":1,
+					"nb_weights":2,
+					"weights": [
+                        0,
+                        -1
+					]
+                },
+                {
+					"bias": 0,
+					"activationFunction":1,
+					"nb_weights":2,
+					"weights": [
+                        0,
+                        1
+					]
+				}
+            ]
+            
+        },
+		{
+			"nb_neurones": 2,
+			"neurones": [
+				{
+					"bias": -3,
+					"activationFunction":1,
+					"nb_weights":4,
+					"weights": [
+                        2,
+                        0,
+                        2,
+                        0
+					]
+                },
+                {
+					"bias": -3,
+					"activationFunction":1,
+					"nb_weights":2,
+					"weights": [
+                        0,
+                        2,
+                        0,
+                        2
+					]
+                }
+            ]            
+		},
+		{
+			"nb_neurones": 1,
+			"neurones": [
+				{
+					"bias": 0,
+					"activationFunction":1,
+					"nb_weights":2,
+					"weights": [
+                        1,
+                        1
+					]
+                }
+            ]            
+		}
+    ]
+}

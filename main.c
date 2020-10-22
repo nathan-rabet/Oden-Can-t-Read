@@ -5,17 +5,17 @@
 
 int main()
 {
-	char* file_name = "data/networks/test-xor.json";
+	char* file_name = "data/networks/xor.json";
 
 	struct Network net = LoadNetworkFromJSON(file_name);
 
-	double dataInput[2] = {1,1};
-
-	double *output = CalculateNetworkOutput(net, dataInput);
-
-	for (int i = 0; i < networkNbOutput(net); i++)
+	for (double i = 0; i <= 1; i++)
 	{
-		printf("%lf\n",output[i]);
+		for (double j = 0; j <= 1; j++)
+		{
+			double dataInput[2] = {i,j};
+			printf("XOR(%lf,%lf) => %lf\n",i,j,*CalculateNetworkOutput(net, dataInput));
+		}		
 	}
 	
 }
