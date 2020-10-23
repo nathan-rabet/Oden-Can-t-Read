@@ -17,7 +17,7 @@ double * CalculateLayerOutput(struct Layer layer, double input[]) {
 
     int n = 0;
     while (n < layer.nb_neurones) {
-        outputLayer[n] = CalculateNeuroneOutput(layer.neurones[n],input);
+        outputLayer[n] = CalculateNeuroneOutput(*workingNeurone,input);
         workingNeurone = workingNeurone->nextNeuroneSameLayer;
         n++;
     }

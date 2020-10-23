@@ -144,11 +144,11 @@ double * CalculateNetworkOutput(struct Network network, double input[]) {
     outputNetwork = malloc(sizeof(double) * (workingLayer->nb_neurones));
     for (int i = 0; i < workingLayer->nb_neurones; i++)
     {
-        outputNetwork[i] = CalculateNeuroneOutput(workingLayer->neurones[i],&input[i]);
+        double *entry = &input[i];
+        outputNetwork[i] = CalculateNeuroneOutput(workingLayer->neurones[i],entry);
     }
     workingLayer = workingLayer->nextLayer;
     nextInput = outputNetwork;
-    free(outputNetwork);
 
     // General case
     while(workingLayer != NULL) {

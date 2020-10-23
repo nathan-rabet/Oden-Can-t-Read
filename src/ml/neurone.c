@@ -14,7 +14,7 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
 }
 
 double threshold(double x) {
-    if (x < 1) {
+    if (x <= 0) {
         return 0;
     }
     return 1;
@@ -37,7 +37,9 @@ double CalculateNeuroneOutput(struct Neurone neurone,double input[]) {
         
         for (int i = 0; i < neurone.nb_inputs; i++)
         {
-            outputNeurone += neurone.weights[i] * input[i];
+            double w = neurone.weights[i];
+            double in = input[i];
+            outputNeurone += w * in;
         }
 
         outputNeurone += neurone.bias;

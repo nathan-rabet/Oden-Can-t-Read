@@ -15,19 +15,19 @@ struct MatrixINT {
   //                c cc                   ^
   //                                    Pointer
   // And the allocated size in the memory must be "sizeof(TYPE) × rows × columns"
-  int* pointer;
+  int* cells;
 };
 
 struct MatrixDOUBLE {
   int rows;
   int columns;
-  double* pointer;
+  double* cells;
 };
 
 struct MatrixUCHAR {
   int rows;
   int columns;
-  unsigned char* pointer;
+  unsigned char* cells;
 };
 
 // Integers composed matrix creation

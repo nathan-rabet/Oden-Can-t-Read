@@ -9,7 +9,7 @@ struct MatrixINT createMatrixINT(int x, int y)
   matrix.rows = x;
   matrix.columns = y;
 
-  matrix.pointer = malloc(sizeof(int)*x*y);
+  matrix.cells = malloc(sizeof(int)*x*y);
 
   return matrix;
 }
@@ -20,7 +20,7 @@ struct MatrixDOUBLE createMatrixDOUBLE(int x, int y)
   matrix.rows = x;
   matrix.columns = y;
 
-  matrix.pointer = malloc(sizeof(double)*x*y);
+  matrix.cells = malloc(sizeof(double)*x*y);
 
   return matrix;
 }
@@ -31,26 +31,26 @@ struct MatrixUCHAR createMatrixUCHAR(int x, int y)
   matrix.rows = x;
   matrix.columns = y;
 
-  matrix.pointer = malloc(sizeof(unsigned char)*x*y);
+  matrix.cells = malloc(sizeof(unsigned char)*x*y);
 
   return matrix;
 }
 
 int checkMatrixINTValidity(struct MatrixINT matrix) {
 
-  return (matrix.pointer != NULL);
+  return (matrix.cells != NULL);
 
 }
 
 int checkMatrixDOUBLEValidity(struct MatrixDOUBLE matrix) {
 
-  return (matrix.pointer != NULL);
+  return (matrix.cells != NULL);
 
 }
 
 int checkMatrixUCHARValidity(struct MatrixUCHAR matrix) {
 
-  return (matrix.pointer != NULL);
+  return (matrix.cells != NULL);
 
 }
 
@@ -91,7 +91,7 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * matrix.columns + y) = value;
+    *(matrix.cells + x * matrix.columns + y) = value;
   }
 }
 
@@ -101,7 +101,7 @@ void matrixSetDOUBLE(struct MatrixDOUBLE matrix, int x, int y, double value)
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * matrix.columns + y) = value;
+    *(matrix.cells + x * matrix.columns + y) = value;
   }
 }
 
@@ -111,7 +111,7 @@ void matrixSetINT(struct MatrixINT matrix, int x, int y, int value)
   {
     printMatrixERROR(400);
   } else {
-    *(matrix.pointer + x * matrix.columns + y) = value;
+    *(matrix.cells + x * matrix.columns + y) = value;
   }
 }
 
@@ -121,7 +121,7 @@ unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * matrix.columns + y);
+    return *(matrix.cells + x * matrix.columns + y);
   }
 }
 
@@ -131,7 +131,7 @@ double matrixGetDOUBLE(struct MatrixDOUBLE matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * matrix.columns + y);
+    return *(matrix.cells + x * matrix.columns + y);
   }
 }
 
@@ -141,7 +141,7 @@ int matrixGetINT(struct MatrixINT matrix, int x, int y) {
     printMatrixERROR(400);
     return '\0';
   } else {
-    return *(matrix.pointer + x * matrix.columns + y);
+    return *(matrix.cells + x * matrix.columns + y);
   }
 }
 
