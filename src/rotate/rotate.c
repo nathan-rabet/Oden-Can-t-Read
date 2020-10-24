@@ -5,15 +5,15 @@
 
 int diagMatrixSizeINT(struct MatrixINT matrix) 
 {
-  return (int) sqrt(matrix.columns*matrix.rows);
+  return (int) sqrt(pow(matrix.columns,2)+pow(matrix.rows,2));
 }
 
 int diagMatrixSizeUCHAR(struct MatrixUCHAR matrix) 
 {
-  return (int) sqrt(matrix.columns*matrix.rows);
+  return (int) sqrt(pow(matrix.columns,2)+pow(matrix.rows,2));
 }
 
-MatrixINT rotateINT(struct MatrixINT m, int angle) 
+struct MatrixINT rotateINT(struct MatrixINT m, int angle) 
 {
   //Conversion of the angle to radians
   angle=angle%360;
@@ -35,20 +35,25 @@ MatrixINT rotateINT(struct MatrixINT m, int angle)
     }
   }
 
-  for (int x=0; x<width; x++)
+  for (int x=0; x<height; x++)
   {
-    for (int y=0; y<height;y++)
+    for (int y=0; y<width;y++)
     {
       int newX = (x-diag_O)*cos(angle_c) - (y-diag_O)*sin(angle_c)+diag_O;
       int newY = (y-diag_O)*cos(angle_c) + (x-diag_O)*sin(angle_c)+diag_O;
-      int Value= *(m.pointer + x * m.columns + y);
-      matrixSetINT(newMatrix,newX,newY,Value);
+      if (newX >= 0 && newY >= 0 && newX < diag && newY < diag)
+      {
+        int Value= matrixGetINT(m,x,y);
+        matrixSetINT(newMatrix,newX,newY,Value);
+      }
+      
     }
   }
-  free(m);
+  free(m.cells);
   return newMatrix;
 }
-MatrixUCHAR rotateU(struct MatrixUCHAR m, int angle) 
+
+struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle) 
 {
   //Conversion of the angle to radians
   angle=angle%360;
@@ -61,7 +66,7 @@ MatrixUCHAR rotateU(struct MatrixUCHAR m, int angle)
   //Height and Width of the center of the new matrix
   int diag_O=diag/2;
 
-  struct MatrixINT newMatrix = createMatrixUCHAR(diag, diag);
+  struct MatrixUCHAR newMatrix = createMatrixUCHAR(diag, diag);
   for (int i=0; i<diag; i++)
   {
     for (int j=0; j<diag;j++)
@@ -70,16 +75,19 @@ MatrixUCHAR rotateU(struct MatrixUCHAR m, int angle)
     }
   }
 
-  for (int x=0; x<width; x++)
+  for (int x=0; x<height; x++)
   {
-    for (int y=0; y<height;y++)
+    for (int y=0; y<width;y++)
     {
       int newX = (x-diag_O)*cos(angle_c) - (y-diag_O)*sin(angle_c)+diag_O;
       int newY = (y-diag_O)*cos(angle_c) + (x-diag_O)*sin(angle_c)+diag_O;
-      int Value= *(m.pointer + x * m.columns + y);
-      matrixSetUCHAR(newMatrix,newX,newY,Value);
+      if (newX >= 0 && newY >= 0 && newX < diag && newY < diag)
+      {
+        int Value= matrixGetUCHAR(m,x,y);
+        matrixSetUCHAR(newMatrix,newX,newY,Value);
+      }
     }
   }
-  free(m);
+  free(m.cells);
   return newMatrix;
 }

@@ -10,9 +10,9 @@ int diagMatrixSizeUCHAR(struct MatrixUCHAR matrix);
 
 
 //Rotate the matrix with a given angle in degrees
-MatrixINT rotateINT(struct MatrixINT m, int angle);
+struct MatrixINT rotateINT(struct MatrixINT m, int angle);
 
-MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
+struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
 
 #endif
 

@@ -150,7 +150,7 @@ void printMatrixUCHAR(struct MatrixUCHAR matrix) {
   {
     for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%d\t", matrixGetUCHAR(matrix,j,i));
+      printf("%d\t", matrixGetUCHAR(matrix,i,j));
     }
     printf("\n");
   }

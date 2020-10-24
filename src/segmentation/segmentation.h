@@ -2,6 +2,10 @@
 #define SEGMENTATION_H
 #include "../matrix/matrix.h"
 
+#define MAX_TBLOCK_NUMBER 15 //for the calloc call
+#define MAX_LINE_NUMBER 70 //for the calloc call
+#define MAX_CHARACTER_NUMBER 100 //for the calloc call
+
 
 typedef struct Character
 {
@@ -27,18 +31,12 @@ typedef struct TextBlock
 } TextBlock;
 
 
+TextBlock GetTextBlock(struct MatrixUCHAR m);
 
+int GetLines(TextBlock *tblock, struct MatrixUCHAR m);
 
+int GetCharacters(Line *line,struct MatrixUCHAR m);
 
-void GetTextBlock(struct MatrixUCHAR m);
-
-void GetLines(TextBlock *tblock, struct MatrixUCHAR m);
-
-void GetCharacters(Line *line,struct MatrixUCHAR m);
-
-
-
-
-
+int *MatrixOfChar(struct MatrixUCHAR m, Line l, Character c);
 
 #endif

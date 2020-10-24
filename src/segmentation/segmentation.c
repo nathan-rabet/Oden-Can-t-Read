@@ -3,8 +3,8 @@
 #include "segmentation.h"
 #include "../matrix/matrix.h"
 
-
-void GetTextBlock(struct MatrixUCHAR m)
+//To be remplaced/improved with RLSA once ready
+TextBlock GetTextBlock(struct MatrixUCHAR m)
 {
     int FirstValue=0; // 0 if NoneFound 1 otherwise
     int FirstValueX=0;
@@ -47,10 +47,9 @@ void GetTextBlock(struct MatrixUCHAR m)
   }
     TextBlock newTextBlock;
     newTextBlock.matrix=&newMatrix;
-    //Éventuelle Sauvergarde
 }
 
-void GetLines(TextBlock *tblock, struct MatrixUCHAR m)
+int GetLines(TextBlock *tblock, struct MatrixUCHAR m)
 {
     int nbLines=0;
     int height=m.rows;
@@ -103,9 +102,10 @@ void GetLines(TextBlock *tblock, struct MatrixUCHAR m)
         tblock->lines[nbLines] = newLine;
         nbLines++;
     }
+    return nbLines;
 }
 
-void Find_Characters(Line *line, struct MatrixUCHAR m)
+int Find_Characters(Line *line, struct MatrixUCHAR m)
 {
     int upperBound = line->FirstPoint;
     int lowerBound = line->LastPoint;
@@ -176,7 +176,24 @@ void Find_Characters(Line *line, struct MatrixUCHAR m)
     {
         line->average_space = totalSpace / (nbCharacters - 1);
     }
+    return nbCharacters;
 }
 
 
-    
+double &MatrixOfChar(struct MatrixUCHAR m, Line l, Character c)
+{
+    int CHeight=l.LastPoint-l.FirstPoint;//Character Height
+    int CWidth=c.LastPoint-c.FirstPoint;//Character Width
+    struct MatrixUCHAR newMatrix = createMatrixUCHAR(CHeight, CWidth);
+    for (int i=0; i<CHeight;i++)
+    {
+        for (int j=0;i<CWidth;j++)
+        {
+            unsigned char Value=matrixGetUCHAR(m,l.FirstPoint+x,c.FirstPoint+y);
+            matrixSetUCHAR(newMatrix,x,y,Value);
+        }
+    }
+    return &newMatrix;
+}
+
+
