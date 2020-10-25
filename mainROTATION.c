@@ -18,6 +18,7 @@ int main(int argc,char *argv[])
          angle=(-1)*angle;
       }
       mat=rotateUCHAR(mat,angle);
+      mat=TrimUCHAR(mat);
    }
    show_matrix_to_img(mat);
    SDL_Quit();

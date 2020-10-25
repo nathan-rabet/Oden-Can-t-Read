@@ -93,3 +93,47 @@ struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle)
   free(m.cells);
   return newMatrix;
 }
+
+struct MatrixUCHAR TrimUCHAR(struct MatrixUCHAR m)
+{
+  int FirstValue=0; // 0 if NoneFound 1 otherwise
+  int FirstValueX=0;
+  int FirstValueY=0;
+  int LastValueX=0;
+  int LastValueY=0;
+  for (int i=0; i<m.rows;i++)
+  {
+    for (int j=0; j<m.columns;j++)
+    {
+      if (matrixGetUCHAR(m,i,j)==0)
+      {
+        LastValueX=i;
+        if (FirstValue==0)
+        {
+          FirstValueX=i;
+          FirstValueY=j;
+          FirstValue=1;
+        }
+        if(j<FirstValueY)
+        {
+          FirstValueY=j;
+        }
+        if(j>LastValueY)
+        {
+          LastValueY=j;
+        }
+      }
+    }
+  }
+  struct MatrixUCHAR newMatrix=createMatrixUCHAR(LastValueX-FirstValueX+1,LastValueY-FirstValueY+1);
+  for (int i=0; i<LastValueX-FirstValueX+1; i++)
+  {
+    for (int j=0; j<LastValueY-FirstValueY+1;j++)
+    {
+      unsigned char K=matrixGetUCHAR(m,i+FirstValueX,j+FirstValueY);
+      matrixSetUCHAR(newMatrix,i,j,K);
+    }
+  }
+  free(m.cells);
+  return newMatrix;
+}

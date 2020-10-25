@@ -14,5 +14,7 @@ struct MatrixINT rotateINT(struct MatrixINT m, int angle);
 
 struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
 
+struct MatrixUCHAR TrimUCHAR(struct MatrixUCHAR m);
+
 #endif
 
