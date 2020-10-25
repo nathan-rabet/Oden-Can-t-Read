@@ -3,6 +3,8 @@
 #include "rotate.h"
 #include <math.h>
 
+#define M_PI 3.14159265359
+
 int diagMatrixSizeINT(struct MatrixINT matrix) 
 {
   return (int) sqrt(pow(matrix.columns,2)+pow(matrix.rows,2));
