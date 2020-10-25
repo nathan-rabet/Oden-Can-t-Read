@@ -37,6 +37,6 @@ int GetLines(TextBlock *tblock, struct MatrixUCHAR m);
 
 int GetCharacters(Line *line,struct MatrixUCHAR m);
 
-int *MatrixOfChar(struct MatrixUCHAR m, Line l, Character c);
+struct MatrixUCHAR *MatrixOfChar(struct MatrixUCHAR m, Line *l, Character *c);
 
 #endif

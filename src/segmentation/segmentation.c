@@ -180,16 +180,16 @@ int Find_Characters(Line *line, struct MatrixUCHAR m)
 }
 
 
-double &MatrixOfChar(struct MatrixUCHAR m, Line l, Character c)
+struct MatrixUCHAR *MatrixOfChar(struct MatrixUCHAR m, Line *l, Character *c)
 {
-    int CHeight=l.LastPoint-l.FirstPoint;//Character Height
-    int CWidth=c.LastPoint-c.FirstPoint;//Character Width
+    int CHeight=l->LastPoint-l->FirstPoint;//Character Height
+    int CWidth=c->LastPoint-c->FirstPoint;//Character Width
     struct MatrixUCHAR newMatrix = createMatrixUCHAR(CHeight, CWidth);
     for (int i=0; i<CHeight;i++)
     {
         for (int j=0;i<CWidth;j++)
         {
-            unsigned char Value=matrixGetUCHAR(m,l.FirstPoint+x,c.FirstPoint+y);
+            unsigned char Value=matrixGetUCHAR(m,l->FirstPoint+x,c->FirstPoint+y);
             matrixSetUCHAR(newMatrix,x,y,Value);
         }
     }
