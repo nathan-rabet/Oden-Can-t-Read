@@ -19,7 +19,7 @@ struct MatrixINT rotateINT(struct MatrixINT m, int angle)
 {
   //Conversion of the angle to radians
   angle=angle%360;
-  int angle_c=angle*M_PI/180;
+  double angle_c=angle*M_PI/180;
 
   int width = m.columns;
   int height = m.rows;
@@ -59,7 +59,7 @@ struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle)
 {
   //Conversion of the angle to radians
   angle=angle%360;
-  int angle_c=angle*M_PI/180;
+  double angle_c=angle*M_PI/180;
 
   int width = m.columns;
   int height = m.rows;
