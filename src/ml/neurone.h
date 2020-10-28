@@ -3,11 +3,11 @@
 
 struct Neurone {
     //  ◯
-    //  ↓ nextLayer
+    //  ↓ nextNeuroneSameLayer
     //  ◯
-    //  ↓ nextLayer
+    //  ↓ nextNeuroneSameLayer
     //  ◯
-    //  ↓ nextLayer
+    //  ↓ nextNeuroneSameLayer
     //  ◯ 
     //  ↓ NULL
     //  ∅
