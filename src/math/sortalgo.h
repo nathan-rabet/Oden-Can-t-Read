@@ -3,7 +3,9 @@
 #include <stdint.h>
 
 /**
- * @brief Luca also do the doc plz
+ * @brief Return the median value of a list
+ * 
+ *  ex: [11, 56, 23, 169, 63] -> 56
  * 
  * @param mat 
  * @param matLenght 
