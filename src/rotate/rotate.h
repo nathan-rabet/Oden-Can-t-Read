@@ -3,17 +3,49 @@
 #include "../matrix/matrix.h"
 
 
-//Calculates the diagonal of the matrix
+/**
+ * @brief Estimates the length of the diagonal
+ * of the matrix via Pythagore Theorem and returns it.
+ * 
+ * @param matrix The matrix of the image we want to rotate.
+ * @return int The length of the diagonal of the Matrix.
+ */
 int diagMatrixSizeINT(struct MatrixINT matrix);
 
+/**
+ * @brief Estimates the length of the diagonal 
+ * of the matrix via Pythagore Theorem and returns it.
+ * 
+ * @param matrix The matrix of the image we want to rotate.
+ * @return int The length of the diagonal of the Matrix.
+ */
 int diagMatrixSizeUCHAR(struct MatrixUCHAR matrix);
 
 
-//Rotate the matrix with a given angle in degrees
+/**
+ * @brief Rotates the Matrix by the given angle and returns a new Matrix of size diagMatrix(m).
+ * 
+ * @param m The Matrix we want to rotate.
+ * @param angle The angle of rotation in degrees (positive).
+ * @return struct MatrixINT.
+ */
 struct MatrixINT rotateINT(struct MatrixINT m, int angle);
 
+/**
+ * @brief Rotates the Matrix by the given angle and returns a new Matrix of size diagMatrix(m).
+ * 
+ * @param m The Matrix we want to rotate.
+ * @param angle The angle of rotation in degrees (positive).
+ * @return struct MatrixUCHAR. 
+ */
 struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
 
+/**
+ * @brief Trims the Matric of its unuseful values.
+ * 
+ * @param m The Matrix needed to be trimmed.
+ * @return struct MatrixUCHAR.
+ */
 struct MatrixUCHAR TrimUCHAR(struct MatrixUCHAR m);
 
 #endif

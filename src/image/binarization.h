@@ -10,7 +10,7 @@
  * M(width,height) with only 1 and 0.
  * 
  * @see 1 correspond to a white pixel
- * and 0 to a black pixel
+ * and 0 to a black pixel.
  * 
  * @param path The path of the image file.
  * @return The binarized image as a unsigned char matrix.
