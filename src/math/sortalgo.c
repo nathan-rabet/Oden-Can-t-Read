@@ -1,8 +1,8 @@
 #include "sortalgo.h"
 
-int MedianValueINT(int mat[], int matLenght) //Buble sort
+int MedianValueINT(int mat[], int matLength) //Buble sort
 {
-    for (int i = 0; i < matLenght; i++)
+    for (int i = 0; i < matLength; i++)
     {
         for (int j = 0; j < i; j++)
         {
@@ -14,5 +14,5 @@ int MedianValueINT(int mat[], int matLenght) //Buble sort
             }
         }
     }
-    return mat[matLenght/2];
+    return mat[matLength/2];
 }

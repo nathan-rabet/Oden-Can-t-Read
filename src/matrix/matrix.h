@@ -2,44 +2,105 @@
 #define MATRIX
 
 /**
- * @struct Define a matrix composed by integers.
+ * @brief Matrix of int
+ * 
  */
 struct MatrixINT {
-  int rows; /* the height coordinate */
-  int columns; /* the width coordinate */
+
+/**
+ * @struct MatrixINT 
+ * matrix composed by integers.
+ */
+
+  /**
+   * @brief The height coordinate.
+   * 
+   */
+  int rows;
+
+  /**
+   * @brief The width coordinate.
+   * 
+   */
+  int columns;
 
   /* The pointer of the matrix
-  The data structure is like so :
-  E.g :
-       
-     rows=3       a aa                   0 1  2 3  4 5
-     columns=2    b bb -> IN MEMORY : | |a|aa|b|bb|c|cc|...  
-                  c cc                   ^
-                                      Pointer
-  And the allocated size in the memory must be "sizeof(TYPE) × rows × columns" */
+   */
 
-  // Cells of the matrix
+  /**
+   * @brief Cells of the matrix.
+   * 
+   * @see The data structure is like so :\n
+   * E.g :\n
+   | a | aa |\n
+   | b | bb |\n
+   | c | cc |
+   * 
+   * Is stored in the memory like :\n
+   * 
+   | a* | aa | b | bb | c | cc |\n
+   * 
+   * with * correspond to the pointer\n
+   * And the allocated size in the memory must be "sizeof(TYPE) × rows × columns".
+   * 
+   */
   int* cells;
 };
 
 /**
- * @struct Define a matrix 
- * composed by doubles.
+ * @brief Matrix of double
+ * 
  */
 struct MatrixDOUBLE {
-  int rows; /* the height coordinate. */
-  int columns; /* the width coordinate. */ 
-  double* cells; /* Cells of the matrix. */
+/**
+ * @struct MatrixDOUBLE 
+ * matrix composed by doubles.
+ */
+
+  /**
+   * @brief The height coordinate.
+   * 
+   */
+  int rows;
+
+  /**
+   * @brief The width coordinate.
+   * 
+   */
+  int columns;
+
+  /**
+   * @copydoc MatrixINT::cells
+   */
+  double* cells;
 };
 
 /**
- * @struct Define a matrix 
- * composed by unsigned chararacters.
+ * @brief Matrix of unsigned characters
+ * 
  */
 struct MatrixUCHAR {
-  int rows; /* the height coordinate. */
-  int columns; /* the width coordinate. */ 
-  double* cells; /* Cells of the matrix. */
+/**
+ * @struct MatrixUCHAR 
+ * matrix composed by unsigned characters.
+ */
+
+  /**
+   * @brief The height coordinate.
+   * 
+   */
+  int rows;
+
+  /**
+   * @brief The width coordinate.
+   * 
+   */
+  int columns;
+
+  /**
+   * @copydoc MatrixINT::cells
+   */
+  unsigned char* cells;
 };
 
 /**

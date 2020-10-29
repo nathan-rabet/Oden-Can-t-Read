@@ -44,10 +44,10 @@ int show_matrix_to_img(struct MatrixUCHAR matrix);
 int ShowImg(SDL_Surface *image);
 
 /**
- * @brief Apply the median filter on the image
+ * @brief Apply the median filter on the image.
  * 
- * @param image SDL_Surface to work with
- * @param px number of neighbours 3, 5, 7
- * @return  
+ * @param image SDL_Surface to work with.
+ * @param px number of neighbours.
+ * @return The modified SDL_Surface.
  */
 SDL_Surface* MedianFilter(SDL_Surface *image, int px);

@@ -4,7 +4,7 @@
 #include "../matrix/matrix.h"
 
 //To be remplaced/improved with RLSA once ready
-TextBlock GetTextBlock(struct MatrixUCHAR m)
+struct TextBlock GetTextBlock(struct MatrixUCHAR m)
 {
     int FirstValue=0; // 0 if NoneFound 1 otherwise
     int FirstValueX=0;
@@ -45,11 +45,11 @@ TextBlock GetTextBlock(struct MatrixUCHAR m)
             matrixSetUCHAR(newMatrix,i,j,K);
         }
   }
-    TextBlock newTextBlock;
+    struct TextBlock newTextBlock;
     newTextBlock.matrix=&newMatrix;
 }
 
-int GetLines(TextBlock *tblock, struct MatrixUCHAR m)
+int GetLines(struct TextBlock *tblock, struct MatrixUCHAR m)
 {
     int nbLines=0;
     int height=m.rows;
@@ -85,7 +85,7 @@ int GetLines(TextBlock *tblock, struct MatrixUCHAR m)
         if (isInLine && Blank_line)
         {
             // We create a Line object, and fill the lines[] array
-            Line newLine;
+            struct Line newLine;
             newLine.FirstPoint = FirstPoint; //first y found
             newLine.LastPoint = y; //current height y
             tblock->lines[nbLines] = newLine;
@@ -96,7 +96,7 @@ int GetLines(TextBlock *tblock, struct MatrixUCHAR m)
     // Last line
     if (isInLine)
     {
-        Line newLine;
+        struct Line newLine;
         newLine.FirstPoint = FirstPoint;
         newLine.LastPoint = height - 1;
         tblock->lines[nbLines] = newLine;
@@ -105,7 +105,7 @@ int GetLines(TextBlock *tblock, struct MatrixUCHAR m)
     return nbLines;
 }
 
-int Find_Characters(Line *line, struct MatrixUCHAR m)
+int Find_Characters(struct Line *line, struct MatrixUCHAR m)
 {
     int upperBound = line->FirstPoint;
     int lowerBound = line->LastPoint;
@@ -148,7 +148,7 @@ int Find_Characters(Line *line, struct MatrixUCHAR m)
         // In the case we are at the end of a character
         if (isInChar && Blank_Line!=0)
         {
-            Character character;
+            struct Character character;
             character.FirstPoint = FirstPoint;
             character.LastPoint = x;
             line->characters[nbCharacters] = character;
@@ -178,22 +178,4 @@ int Find_Characters(Line *line, struct MatrixUCHAR m)
     }
     return nbCharacters;
 }
-
-
-struct MatrixUCHAR *MatrixOfChar(struct MatrixUCHAR m, Line *l, Character *c)
-{
-    int CHeight=l->LastPoint-l->FirstPoint;//Character Height
-    int CWidth=c->LastPoint-c->FirstPoint;//Character Width
-    struct MatrixUCHAR newMatrix = createMatrixUCHAR(CHeight, CWidth);
-    for (int i=0; i<CHeight;i++)
-    {
-        for (int j=0;i<CWidth;j++)
-        {
-            unsigned char Value=matrixGetUCHAR(m,l->FirstPoint+x,c->FirstPoint+y);
-            matrixSetUCHAR(newMatrix,x,y,Value);
-        }
-    }
-    return &newMatrix;
-}
-
 

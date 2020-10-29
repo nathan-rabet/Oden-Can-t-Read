@@ -4,14 +4,14 @@
 #include "neurone.h"
 
 /**
- * @brief ML Layer
+ * @brief ML layer
  * 
  */
 struct Layer {    
     /**
      * @brief Point the next direct layer.
      * 
-     * @see l0 -> l1 -> l2 -> ... -> ln -> ∅
+     * @see l0 -> l1 -> l2 -> ... -> ln -> NULL
      * 
      */
     struct Layer *nextLayer; 
@@ -34,7 +34,7 @@ struct Layer {
 /**
  * @brief Create a Layer object.
  * 
- * @param neurones The configured neurones.
+ * @param neurones The configured neurones
  * you want to include in the layer.
  * @param nb_neurones The number of neurones your layer will have.
  * @return struct Layer 
@@ -46,7 +46,7 @@ struct Layer CreateLayer(struct Neurone neurones[], int nb_neurones);
  * 
  * @param layer The layer to work with.
  * @param intput The input list you want to calculate output with.
- * @return A list of outputs.
+ * @return The list of outputs.
  */
 double * CalculateLayerOutput(struct Layer layer, double intput[]);
 
