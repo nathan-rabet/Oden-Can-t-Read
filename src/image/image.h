@@ -51,3 +51,19 @@ int ShowImg(SDL_Surface *image);
  * @return The modified SDL_Surface.
  */
 SDL_Surface* MedianFilter(SDL_Surface *image, int px);
+
+/**
+ * @brief Convert to an grayscale image.
+ * 
+ * @param image SDL_Surface to work with.
+ * @return The modified SDL_Surface.
+ */
+SDL_Surface* Grayscale(SDL_Surface *image);
+
+/**
+ * @brief Renforce contrast of an surface.
+ * 
+ * @param image SDL_Surface to work with.
+ * @return The modified SDL_Surface.
+ */
+SDL_Surface* laplacien(SDL_Surface *image);

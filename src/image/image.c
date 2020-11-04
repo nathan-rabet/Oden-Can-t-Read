@@ -232,3 +232,62 @@ SDL_Surface* MedianFilter(SDL_Surface *image, int px)
     
     return outImage;
 }
+
+SDL_Surface* Grayscale(SDL_Surface *image)
+{
+    SDL_Surface *outImage = SDL_CreateRGBSurface(image->flags,image->w,image->h,image->format->BitsPerPixel,image->format->Rmask,image->format->Gmask,image->format->Bmask,image->format->Amask);
+    for (int i = 1; i < image->w - 1; i++)
+    {
+        for (int j = 1; j < image->h - 1; j++)
+        {
+            SDL_Color color;
+            Uint32 pixel = getPixel(image, i, j);
+            SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
+
+            Uint8 newcolor = (0.2126*color.r) + (0.7152*color.g) + (0.0722*color.b);
+
+            // Set pixel value
+            SDL_Rect surface_rect = {i, j, 1, 1};
+            SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, newcolor, newcolor, newcolor));
+        }
+    }
+    return outImage;
+}
+
+SDL_Surface* laplacien(SDL_Surface *image)
+{
+    SDL_Surface *outImage = SDL_CreateRGBSurface(image->flags,image->w,image->h,image->format->BitsPerPixel,image->format->Rmask,image->format->Gmask,image->format->Bmask,image->format->Amask);
+    for (int i = 1; i < image->w - 1; i++)
+    {
+        for (int j = 1; j < image->h - 1; j++)
+        {
+            SDL_Color finalColor;
+            SDL_Color color1;
+            SDL_Color color2;
+            SDL_Color color3;
+            SDL_Color color4;
+            SDL_Color color5;
+
+            Uint32 pixel1 = getPixel(image, i, j - 1);
+            Uint32 pixel2 = getPixel(image, i - 1, j);
+            Uint32 pixel3 = getPixel(image, i + 1, j);
+            Uint32 pixel4 = getPixel(image, i, j + 1);
+            Uint32 pixel5 = getPixel(image, i, j);
+
+            SDL_GetRGB(pixel1, image->format, &color1.r, &color1.g, &color1.b);
+            SDL_GetRGB(pixel2, image->format, &color2.r, &color2.g, &color2.b);
+            SDL_GetRGB(pixel3, image->format, &color3.r, &color3.g, &color3.b);
+            SDL_GetRGB(pixel4, image->format, &color4.r, &color4.g, &color4.b);
+            SDL_GetRGB(pixel5, image->format, &color5.r, &color5.g, &color5.b);
+
+            finalColor.r = color1.r + color2.r + color3.r + color4.r - (4*color5.r);
+            finalColor.g = color1.g + color2.g + color3.g + color4.g - (4*color5.g);
+            finalColor.b = color1.b + color2.b + color3.b + color4.b - (4*color5.b);
+
+            // Set pixel value
+            SDL_Rect surface_rect = {i, j, 1, 1};
+            SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, finalColor.r, finalColor.r, finalColor.r));
+        }
+    }
+    return outImage;
+}
