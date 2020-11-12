@@ -1,6 +1,7 @@
 #ifndef LAYER
 #define LAYER
 
+#include <stdio.h>
 #include "neurone.h"
 
 /**
@@ -18,7 +19,7 @@ struct Layer {
 
     struct Neurone *neurones; /* Point to the first neurone of the current layer */
 
-    int nb_neurones; /* The number of neurones that the layer contains */
+    size_t nb_neurones; /* The number of neurones that the layer contains */
 
     /**
      * @brief The calculus output of the layer.

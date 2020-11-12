@@ -32,10 +32,10 @@ double smooth_relu(double x) {
     return log(1 + exp(x));
 }
 
-double CalculateNeuroneOutput(struct Neurone neurone,double input[]) {
+double calculateNeuroneOutput(struct Neurone neurone,double input[]) {
         double outputNeurone = 0;
         
-        for (int i = 0; i < neurone.nb_inputs; i++)
+        for (size_t i = 0; i < neurone.nb_inputs; i++)
         {
             double w = neurone.weights[i];
             double in = input[i];

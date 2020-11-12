@@ -1,6 +1,7 @@
 #ifndef NETWORK
 #define NETWORK
 
+#include <stdio.h>
 #include "layer.h"
 
 /**
@@ -18,7 +19,7 @@ struct Network {
      * @brief The number of layers that the network has.
      * 
      */
-    int nb_layers;
+    size_t nb_layers;
 };
 
 /**
@@ -50,9 +51,10 @@ int networkNbOutput(struct Network network);
  * 
  * @param network The network to work with.
  * @param intput The inputs the network
+ * @param nb_input The number of inputs (eq. len(input))
  * will perform calculus on.
  * @return The list of outputs.
  */
-double * CalculateNetworkOutput(struct Network network, double intput[]);
+double * calculateNetworkOutput(struct Network network, double intput[],size_t nb_input);
 
 #endif

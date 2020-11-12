@@ -8,12 +8,12 @@ CLIBS = `sdl2-config --cflags --libs` -lSDL2_image
 CLIBS += $(shell pkg-config --libs json-c) #json-c libs
 
 #SRC = main.c
-SRC = src/matrix/matrix.c 
+SRC =  src/matrix/matrix.c 
 SRC += src/image/image.c 
 SRC += src/image/binarization.c 
-SRC += src/ml/network.c
-SRC += src/ml/layer.c 
-SRC += src/ml/neurone.c
+SRC += src/ml/struct/network.c
+SRC += src/ml/struct/layer.c 
+SRC += src/ml/struct/neurone.c
 SRC += src/math/sortalgo.c
 SRC += src/rotate/rotate.c
 SRC += src/math/analysis.c

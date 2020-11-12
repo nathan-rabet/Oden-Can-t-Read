@@ -1,6 +1,8 @@
 #ifndef NEURONE
 #define NEURONE
 
+#include <stdio.h>
+
 /**
  * @brief ML neurone
  * 
@@ -27,7 +29,7 @@ struct Neurone {
      * @brief The number of input the neurone can handle.
      * 
      */
-    int nb_inputs;
+    size_t nb_inputs;
 
     /**
      * @brief The bias of the neurone
@@ -87,7 +89,7 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
  * @param input The input to give to the neurone.
  * @return The result of the calculus as a double. 
  */
-double CalculateNeuroneOutput(struct Neurone neurone,double input[]);
+double calculateNeuroneOutput(struct Neurone neurone,double input[]);
 
 double threshold(double x);
 

@@ -15,9 +15,9 @@ double * CalculateLayerOutput(struct Layer layer, double input[]) {
     outputLayer = malloc(sizeof(double) * layer.nb_neurones);
     struct Neurone *workingNeurone = layer.neurones;
 
-    int n = 0;
+    size_t n = 0;
     while (n < layer.nb_neurones) {
-        outputLayer[n] = CalculateNeuroneOutput(*workingNeurone,input);
+        outputLayer[n] = calculateNeuroneOutput(*workingNeurone,input);
         workingNeurone = workingNeurone->nextNeuroneSameLayer;
         n++;
     }
