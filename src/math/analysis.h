@@ -1,0 +1,1 @@
+double derive(double (*f)(double), double a);

@@ -16,6 +16,7 @@ SRC += src/ml/layer.c
 SRC += src/ml/neurone.c
 SRC += src/math/sortalgo.c
 SRC += src/rotate/rotate.c
+SRC += src/math/analysis.c
 
 
 OUT = ocr
