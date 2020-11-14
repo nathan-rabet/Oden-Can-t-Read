@@ -61,9 +61,11 @@ SDL_Surface* MedianFilter(SDL_Surface *image, int px);
 SDL_Surface* Grayscale(SDL_Surface *image);
 
 /**
- * @brief Renforce contrast of an surface.
+ * @brief Renforce contrast of an grayscaled image.
  * 
  * @param image SDL_Surface to work with.
+ * @param c Multiply parameter. By default equal to 1.
+ * @param y Power parameter. For 2 Stretch dark region and suppress bright region. For 1/3 expand bright region. This parameter have to be between 0.04 and 25.
  * @return The modified SDL_Surface.
  */
-SDL_Surface* laplacien(SDL_Surface *image);
+SDL_Surface* PowerLaw(SDL_Surface *image, double c, double y);
