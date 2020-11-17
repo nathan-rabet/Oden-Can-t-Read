@@ -15,4 +15,4 @@
  * @param image Image to binarize.
  * @return The binarized image as a unsigned char matrix.
  */
-struct MatrixUCHAR binarization(SDL_Surface* image);
+struct MatrixDOUBLE binarization(SDL_Surface* image);

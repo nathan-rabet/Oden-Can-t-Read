@@ -16,7 +16,7 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
     if (nbtrainimages > 0)
     {
         neurone.delta_bias = malloc(nbtrainimages * sizeof(double));
-        neurone.delta_weight = malloc(20000* nbtrainimages * sizeof(double));
+        neurone.delta_weight = malloc(20000 * nbtrainimages * sizeof(double));
     }
     return neurone;
 }
@@ -56,7 +56,7 @@ double calculateNeuroneOutput(struct Neurone neurone, double input[]) {
 
         neurone.outputWithoutActivation += neurone.bias;
 
-        return activtionFunction(neurone);
+        return activationFunction(neurone);
 }
 
 double activationFunction(struct Neurone neurone)
@@ -89,4 +89,5 @@ double activationFunction(struct Neurone neurone)
             return smooth_relu(neurone.outputWithoutActivation);
             break;
         }
+        return neurone.outputWithoutActivation;
 }

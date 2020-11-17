@@ -102,9 +102,10 @@ struct Neurone {
     4 -> Smooth ReLU
  * @param nb_input The number of input
  *  the neurone can handle.
+ * @param nbtrainimages The number of images to train. Default 0 if not training
  * @return struct Neurone
  */
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input);
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages);
 
 /**
  * @brief Calculate a neurone output.

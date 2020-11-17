@@ -17,7 +17,7 @@
 #define FUNCTION_MID_LAYER 3
 #define FUNCTION_LAST_LAYER 2
 
-struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[]) {
+struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[], size_t nbtrainimages) {
     
     struct Layer *layers = malloc(sizeof(struct Layer) * (nb_layers - 1));
     for (size_t i = 1; i < nb_layers; i++) // start at "real" layer, not the input one!
@@ -36,7 +36,7 @@ struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_laye
                 weights[k] = doubleRand(-1000,1000);
             }
 
-            neurones[j] = CreateNeurone(weights,doubleRand(-1000,1000),activation_functions_per_layer[i],nb_weights);
+            neurones[j] = CreateNeurone(weights,doubleRand(-1000,1000),activation_functions_per_layer[i],nb_weights,nbtrainimages);
 
             if (j+1 < nb_neurone_per_layer[i]) {
                 neurones[j].nextNeuroneSameLayer = &neurones[j+1];

@@ -76,7 +76,7 @@ size_t networkNbNeurones(struct Network network);
  * @param network The network to work with.
  * @return The number of weights.
  */
-size_t networkNbWeights(struct Network network)
+size_t networkNbWeights(struct Network network);
 
 /**
  * @brief Calculate a network output.

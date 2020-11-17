@@ -13,6 +13,7 @@
  * the characters corresponding to an activation function. For example, if you want the layer 1 to
  * have a sigmoïd function and the layer 2 to have a ReLU function, then 
  * activation_functions_per_layer = {2,3}.
+ * @param nbtrainimages Number of images. 
  * @return struct Network 
  */
-struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[]);
+struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[], size_t nbtrainimages);

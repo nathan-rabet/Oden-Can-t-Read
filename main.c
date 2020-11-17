@@ -18,7 +18,7 @@ int main()
 
    size_t npl[] = {5,2,3,4};
    char afpl[] = {0,1,2,3};
-   struct Network net = generateRandomNetwork(4,npl,afpl);
+   struct Network net = generateRandomNetwork(4,npl,afpl,10000);
    printf("nb_layers : %ld",net.nb_layers);
 
    trainingNetwork(net, "/home/maxou/Documents/gitrepos/by_class", 200, 50, 10000);

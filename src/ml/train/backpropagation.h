@@ -3,11 +3,11 @@
 
 #include <stdint.h>
 #include <math.h>
-#include "network.h"
-#include "neurone.h"
-#include "../matrix/matrix.h"
-#include "../image/binarization.h"
-#include "../math/analysis.h"
+#include "../struct/network.h"
+#include "../struct/neurone.h"
+#include "../../matrix/matrix.h"
+#include "../../image/binarization.h"
+#include "../../math/analysis.h"
 
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
@@ -30,7 +30,7 @@ void trainingNetwork(struct Network network, char* databasepath, size_t minibatc
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network network, struct MatrixUCHAR* minibatchinputs, size_t* targets, size_t nbimages);
+void minibatch(struct Network network, struct MatrixDOUBLE* minibatchinputs, size_t* targets, size_t nbimages);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones
@@ -46,8 +46,8 @@ void backpropagation(struct Network network);
  * @param numberofneurones The number of neurones of the neural network we are working on.
  * @return Return a array of the inputs.
  */
-double* loadmatrixasinputs(struct MatrixUCHAR imgmat, int numberofneurones);
+double* loadmatrixasinputs(struct MatrixDOUBLE imgmat, int numberofneurones);
 
-struct MatrixUCHAR loadDataBase(char* databasepath, char letter, size_t imagenumber);
+struct MatrixDOUBLE loadDataBase(char* databasepath, char letter, size_t imagenumber);
 
 #endif

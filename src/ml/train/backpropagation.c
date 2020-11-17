@@ -22,16 +22,17 @@ void trainingNetwork(struct Network network, char* databasepath, size_t minibatc
     }
 
     //Define minibatch
-    struct MatrixUCHAR* minibatchinputs = malloc(minibatchsize*sizeof(struct MatrixUCHAR));
+    struct MatrixDOUBLE* minibatchinputs = malloc(minibatchsize*sizeof(struct MatrixUCHAR));
     size_t* minibatchletters = malloc(minibatchsize*sizeof(size_t));
     
     for (size_t nb = 0; nb < minibatchnumber; nb++)
     {
+        printf("minibatch num°%lu", nb);
         for (size_t i = 0; i < minibatchsize; i++)
         {
             minibatchletters[i] = rand() % 62;
             char letter = letters[minibatchletters[i]];
-            minibatchinputs[i] = loadDataBase(databasepath, letter, rand() % 3000);
+            minibatchinputs[i] = loadDataBase(databasepath, letter, rand() % 1000);
         }
         for (size_t j = 0; j < minibatchtrain; j++)
         {
@@ -41,7 +42,7 @@ void trainingNetwork(struct Network network, char* databasepath, size_t minibatc
     
 }
 
-void minibatch(struct Network network, struct MatrixUCHAR* minibatchinputs, size_t* targets, size_t nbimages)
+void minibatch(struct Network network, struct MatrixDOUBLE* minibatchinputs, size_t* targets, size_t nbimages)
 {
     //Train
     for (size_t i = 0; i < nbimages; i++)
@@ -50,12 +51,16 @@ void minibatch(struct Network network, struct MatrixUCHAR* minibatchinputs, size
         double* output = calculateNetworkOutput(network, minibatchinputs[i].cells);
 
         //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * sigmoid'(z)
-        size_t lastlayerindex = network.nb_layers-1;
+        struct Layer* lastlayer = network.layers;
+        for (size_t layer = 0; layer < network.nb_layers-1; layer++)
+        {
+            lastlayer = lastlayer->nextLayer;
+        }
         for (size_t k = 0; k < networkNbOutput(network); k++)
         {
-            struct Neurone n = network.layers[lastlayerindex].neurones[k];
+            struct Neurone n = lastlayer->neurones[k];
             
-            n.delta_error = (activationFunction(n) - k == targets[i]);
+            n.delta_error = (output[k] - k == targets[i]);
 
             // TODO
             //Need impletation for other activation fonction than the sigmoid.
@@ -112,6 +117,7 @@ void minibatch(struct Network network, struct MatrixUCHAR* minibatchinputs, size
 void backpropagation(struct Network network)
 {
     //For each l=L−1,L−2,…,2 compute deltal = (45)
+    //struct Layer* layer = network.layers;
     for (size_t l = network.nb_layers-2; l > 0; l++)
     {
         for (size_t j = 0; j < network.layers[l].nb_neurones; j++)
@@ -125,7 +131,7 @@ void backpropagation(struct Network network)
     }
 }
 
-struct MatrixUCHAR loadDataBase(char* databasepath, char letter, size_t imagenumber)
+struct MatrixDOUBLE loadDataBase(char* databasepath, char letter, size_t imagenumber)
 {
     //Convert a imagenumber to a "12345" string
     char *imagename = malloc(6*sizeof(char));
@@ -145,6 +151,6 @@ struct MatrixUCHAR loadDataBase(char* databasepath, char letter, size_t imagenum
 
     free(imagepath);
     free(imagename);
-    struct MatrixUCHAR img = binarization(image);
+    struct MatrixDOUBLE img = binarization(image);
     return img;
 }

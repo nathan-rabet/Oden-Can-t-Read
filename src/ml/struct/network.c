@@ -2,7 +2,7 @@
 #include "layer.h"
 #include "neurone.h"
 
-#include <json.h>
+#include <json-c/json.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -19,7 +19,7 @@ void appendFirstLayerToNetwork(struct Network *network) {
     *uniqueWeight = 1;
     for (size_t i = 0; i < network->layers->neurones->nb_inputs; i++)
     {
-        firstNeurones[i] = CreateNeurone(uniqueWeight,0,0,1);
+        firstNeurones[i] = CreateNeurone(uniqueWeight,0,0,1,0);
         firstNeurones[i].nextNeuroneSameLayer = &firstNeurones[i+1];
     }
 
@@ -114,7 +114,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
                     weights[w] = json_object_get_double(JSONweight);
                 }
 
-                neurones[n] = CreateNeurone(weights,bias,activationFunction,nb_weights);
+                neurones[n] = CreateNeurone(weights,bias,activationFunction,nb_weights,0);
                 
                 // Neurones linking
                 if (n >= 1) {

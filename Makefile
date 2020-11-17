@@ -19,6 +19,7 @@ SRC += src/rotate/rotate.c
 SRC += src/math/analysis.c
 SRC += src/ml/train/generate.c
 SRC += src/math/random.c
+SRC += src/ml/train/backpropagation.c
 
 
 OUT = ocr
