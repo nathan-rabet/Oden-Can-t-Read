@@ -63,6 +63,30 @@ struct Neurone {
      * 4 -> Smooth ReLU
      */
     unsigned char activationFunction;
+
+    /**
+     * @brief ouput = activationFunction(outputWithoutActivation)
+     * (Just for training)
+     */
+    double outputWithoutActivation;
+
+    /**
+     * @brief Delta error of the neurone to reach the target value.
+     * (Just for training)
+     */
+    double delta_error;
+
+    /**
+     * @brief Delta error of the bias to reach the target value.
+     * (Just for training)
+     */
+    double* delta_bias;
+
+    /**
+     * @brief Delta error of the weights to reach the target value.
+     * (Just for training)
+     */
+    double* delta_weight;
 };
 
 /**
@@ -91,9 +115,20 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
  */
 double calculateNeuroneOutput(struct Neurone neurone,double input[]);
 
+/**
+ * @brief Apply the activation function with the last output without activation. 
+ * (Use calculateNeuroneOutput to get with a custom value)
+ * 
+ * @param neurone The neurone to work with.
+ * @return The neurone activation. 
+ */
+double activationFunction(struct Neurone neurone);
+
 double threshold(double x);
 
 double sigmoid(double x);
+
+double sigmoid_derivate(double x);
 
 double relu(double x);
 

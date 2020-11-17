@@ -9,10 +9,35 @@
 #include "../image/binarization.h"
 #include "../math/analysis.h"
 
-void trainingNetwork(struct Network network, double learningrate, char* databasepath, size_t imagesbyletters, size_t trainnumber);
+/**
+ * @brief Train the network to reconize letters. Inputs are 128x128 images
+ * 
+ * @param network The network to work with.
+ * @param databasepath The path to the data base.
+ * @param minibatchsize The size of mini batch.
+ * @param minibatchnumber The number of the batch.
+ * @param minibatchtrain The number of train of batch.
+ * @return Return a array of the inputs.
+ */
+void trainingNetwork(struct Network network, char* databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain);
 
-void backpropagation(struct Network network, double learningrate, struct MatrixUCHAR imagematrice, size_t nb_outputTarget, double *outputTarget
-, double *delta_bias, double delta_weight[][][]);
+/**
+ * @brief Train the network to reconize letters. Inputs are 128x128 images
+ * 
+ * @param network The network to work with.
+ * @param minibatchinputs The list of matrix of images.
+ * @param targets The list of index of letters according to minibatchinputs.
+ * @param nbimages The number of images of batch.
+ * @return Return a array of the inputs.
+ */
+void minibatch(struct Network network, struct MatrixUCHAR* minibatchinputs, size_t* targets, size_t nbimages);
+
+/**
+ * @brief Sets the delta_bias and delta_weights of eavery neurones
+ * 
+ * @param network The network to work with.
+ */
+void backpropagation(struct Network network);
 
 /**
  * @brief Gives the array of the inputs.
@@ -23,19 +48,6 @@ void backpropagation(struct Network network, double learningrate, struct MatrixU
  */
 double* loadmatrixasinputs(struct MatrixUCHAR imgmat, int numberofneurones);
 
-
 struct MatrixUCHAR loadDataBase(char* databasepath, char letter, size_t imagenumber);
-
-/**
- * @brief Gives the cost of a network with inputs and a target.
- * 
- * @param network The network to work with.
- * @param intput The inputs to work with.
- * @param nb_input The number of inputs.
- * @param outputTarget The ouput we want.
- * @param nb_outputTarget The number of outputTarget.
- * @return The cost.
- */
-double cost(struct Network network, double *intput, size_t nb_input, double *outputTarget, size_t nb_outputTarget);
 
 #endif

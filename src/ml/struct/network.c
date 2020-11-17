@@ -177,6 +177,21 @@ size_t networkNbNeurones(struct Network network) {
     return nb_neurones;
 }
 
+size_t networkNbWeights(struct Network network) {
+    
+    size_t nb_weights = 0;
+
+    struct Layer *workingLayer = network.layers;
+
+    while (workingLayer != NULL) {
+        size_t weights = workingLayer->nb_neurones;
+        workingLayer = workingLayer->nextLayer;
+        nb_weights += weights * workingLayer->nb_neurones;
+    }
+    
+    return nb_weights;
+}
+
 double * calculateNetworkOutput(struct Network network, double input[]) {
     double *nextInput = input;
     double *outputNetwork;

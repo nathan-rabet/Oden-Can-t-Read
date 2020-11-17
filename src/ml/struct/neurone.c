@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // If no activation function, set activationFunction to 0
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input) {
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages) {
     struct Neurone neurone;
     neurone.weights = malloc(sizeof(double) * nb_input);
     neurone.weights = weights;
@@ -11,6 +11,13 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
     neurone.bias = bias;
     neurone.activationFunction = activationFunction;
     neurone.nextNeuroneSameLayer = NULL;
+    neurone.outputWithoutActivation = 0;
+    neurone.delta_error = 0;
+    if (nbtrainimages > 0)
+    {
+        neurone.delta_bias = malloc(nbtrainimages * sizeof(double));
+        neurone.delta_weight = malloc(20000* nbtrainimages * sizeof(double));
+    }
     return neurone;
 }
 
@@ -25,6 +32,10 @@ double sigmoid(double x) {
     return 1 / (1 + exp(-x));
 }
 
+double sigmoid_derivate(double x) {
+    return exp(-x)/pow((1+exp(-x)), 2);
+}
+
 double relu(double x) {
     return fmax(0,x);
 }
@@ -33,46 +44,49 @@ double smooth_relu(double x) {
     return log(1 + exp(x));
 }
 
-double calculateNeuroneOutput(struct Neurone neurone,double input[]) {
-        double outputNeurone = 0;
-        
+double calculateNeuroneOutput(struct Neurone neurone, double input[]) {
+        neurone.outputWithoutActivation = 0;
+
         for (size_t i = 0; i < neurone.nb_inputs; i++)
         {
             double w = neurone.weights[i];
             double in = input[i];
-            outputNeurone += w * in;
+            neurone.outputWithoutActivation += w * in;
         }
 
-        outputNeurone += neurone.bias;
+        neurone.outputWithoutActivation += neurone.bias;
 
+        return activtionFunction(neurone);
+}
+
+double activationFunction(struct Neurone neurone)
+{
         // Activation functions
         switch (neurone.activationFunction)
         {
         // Identity
         case 0:
-            // Nothing to change
+            return neurone.outputWithoutActivation;
             break;
-        
+
         // Threshold
         case 1:
-            outputNeurone = threshold(outputNeurone);
+            return threshold(neurone.outputWithoutActivation);
             break;
-        
+
         // Sigmoïd
         case 2:
-            outputNeurone = sigmoid(outputNeurone);
+            return sigmoid(neurone.outputWithoutActivation);
             break;
 
         // ReLU
         case 3:
-            outputNeurone = relu(outputNeurone);
+            return relu(neurone.outputWithoutActivation);
             break;
 
         // Smooth ReLU
         case 4:
-            outputNeurone = smooth_relu(outputNeurone);
+            return smooth_relu(neurone.outputWithoutActivation);
             break;
         }
-
-        return outputNeurone;
 }

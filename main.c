@@ -4,6 +4,7 @@
 
 #include "src/ml/struct/network.h"
 #include "src/ml/train/generate.h"
+#include "src/ml/train/backpropagation.h"
 
 void mustcall()
 {
@@ -19,5 +20,8 @@ int main()
    char afpl[] = {0,1,2,3};
    struct Network net = generateRandomNetwork(4,npl,afpl);
    printf("nb_layers : %ld",net.nb_layers);
+
+   trainingNetwork(net, "/home/maxou/Documents/gitrepos/by_class", 200, 50, 10000);
+
    return 0;
 }
