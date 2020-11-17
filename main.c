@@ -15,9 +15,9 @@ int main()
 
    mustcall();
 
-   size_t npl[] = {1024,2,3,4};
+   size_t npl[] = {5,2,3,4};
    char afpl[] = {0,1,2,3};
-   struct Network net = generateRandomNetwork(3,npl,afpl);
+   struct Network net = generateRandomNetwork(4,npl,afpl);
    printf("nb_layers : %ld",net.nb_layers);
    return 0;
 }

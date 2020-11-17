@@ -7,6 +7,7 @@ struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones) {
 
     layer.nb_neurones = nb_neurones;
     layer.neurones = neurones;
+    layer.nextLayer = NULL;
     return layer;
 }
 

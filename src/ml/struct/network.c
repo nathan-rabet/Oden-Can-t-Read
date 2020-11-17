@@ -20,7 +20,10 @@ void appendFirstLayerToNetwork(struct Network *network) {
     for (size_t i = 0; i < network->layers->neurones->nb_inputs; i++)
     {
         firstNeurones[i] = CreateNeurone(uniqueWeight,0,0,1);
+        firstNeurones[i].nextNeuroneSameLayer = &firstNeurones[i+1];
     }
+
+    firstNeurones[network->layers->neurones->nb_inputs - 1].nextNeuroneSameLayer = NULL;
 
     struct Layer *firstLayer = malloc(sizeof(struct Layer)); 
     *firstLayer = CreateLayer(firstNeurones,network->layers->neurones->nb_inputs);

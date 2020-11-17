@@ -20,14 +20,6 @@ struct Layer {
     struct Neurone *neurones; /* Point to the first neurone of the current layer */
 
     size_t nb_neurones; /* The number of neurones that the layer contains */
-
-    /**
-     * @brief The calculus output of the layer.
-     * 
-     * @deprecated This will MAYBE be deleted in the future.
-     * 
-     */
-    double *output;
 };
 
 // Initiate a layer (which includes neurones)
