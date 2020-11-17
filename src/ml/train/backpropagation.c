@@ -49,30 +49,18 @@ void trainingNetwork(struct Network network, double learningrate, char* database
             struct MatrixUCHAR imagemat = loadDataBase(databasepath, letters[letter], imagesbyletters);
 
             //Define delta weight and bias
-            double *delta_bias = malloc(50000 * sizeof(double));
-            double *delta_weight[network.nb_layers][20000][20000];
+            size_t nb_neurones = networkNbNeurones(network);
+            double **delta_bias = malloc(nb_neurones * sizeof(double));
+            double ***delta_weight = malloc(sizeof(delta_bias)*nb_neurones);
             
 
             //Train the network for this image
             for (size_t train = 0; train < trainnumber; train++)
             {
                 //Clear delta_bias
-                for (size_t i = 0; i < 50000; i++)
+                for (size_t i = 0; i < nb_neurones; i++)
                 {
-                    delta_bias[i] = 0;
-                }
-                //Clear delta_weight
-                for (size_t i = 0; i < network.nb_layers; i++)
-                {
-                    for (size_t j = 0; j < 20000; j++)
-                    {
-                        for (size_t k = 0; k < 20000; k++)
-                        {
-                            delta_weight[i][j][k] = 0;
-                        }
-                        
-                    }
-                    
+                    delta_bias[i][j] = 0;
                 }
 
                 backpropagation(network, learningrate, imagemat, nb_outputTarget, outputTarget, delta_bias, delta_weight);
@@ -108,7 +96,7 @@ struct MatrixUCHAR loadDataBase(char* databasepath, char letter, size_t imagenum
 }
 
 void backpropagation(struct Network network, double learningrate, struct MatrixUCHAR imagematrice, size_t nb_outputTarget, double *outputTarget
-, double *delta_bias, double delta_weight[][][])
+, double **delta_bias, double ***delta_weight)
 {
     //Feedforward
     double *zs = malloc(50000 * sizeof(double));
@@ -131,13 +119,15 @@ void backpropagation(struct Network network, double learningrate, struct MatrixU
 
     //Ouput error
     double* layerdelta = malloc(nb_outputTarget * sizeof(double)); //define delta for the last layer
+    
+    size_t layer = network.nb_layers-2//layer - 1
     for (size_t i = 0; i < nb_outputTarget; i++) //Update last layer
     {
         //Calculating delta of a layer
         layerdelta[i] = (activations[matPos + i] - outputTarget[i])*derive(sigmoid,zs[matPos + i]);
         
         //Change bias
-        delta_bias[matPos + i] = layerdelta[i];
+        delta_bias[matPos][i] = layerdelta[i];
         //Change delta weight for
         for (size_t j = 0; j < network.layers[network.nb_layers-2].nb_neurones; j++)
         {
@@ -169,6 +159,15 @@ void backpropagation(struct Network network, double learningrate, struct MatrixU
     
     free(zs);
     free(activations);
+}
+
+void Hadamardproduct(double* mat1, double* mat2, double* r, size_t size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        r[i] = mat1[i] * mat2[i];
+    }
+    
 }
 
 double* loadmatrixasinputs(struct MatrixUCHAR imgmat, int numberofneurones)

@@ -142,13 +142,13 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
     return network;
 }
 
-int networkNbInput(struct Network network) {
+size_t networkNbInput(struct Network network) {
     return network.layers[0].nb_neurones;
 }
 
-int networkNbOutput(struct Network network) {
+size_t networkNbOutput(struct Network network) {
     
-    int nb_output = 0;
+    size_t nb_output = 0;
 
     struct Layer *workingLayer = network.layers;
 
@@ -158,6 +158,20 @@ int networkNbOutput(struct Network network) {
     }
     
     return nb_output;
+}
+
+size_t networkNbNeurones(struct Network network) {
+    
+    size_t nb_neurones = 0;
+
+    struct Layer *workingLayer = network.layers;
+
+    while (workingLayer != NULL) {
+        nb_neurones += workingLayer->nb_neurones;
+        workingLayer = workingLayer->nextLayer;
+    }
+    
+    return nb_neurones;
 }
 
 double * calculateNetworkOutput(struct Network network, double input[]) {

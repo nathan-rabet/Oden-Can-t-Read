@@ -52,7 +52,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]);
  * @param network The network to work with.
  * @return The number of inputs.
  */
-int networkNbInput(struct Network network);
+size_t networkNbInput(struct Network network);
 
 /**
  * @brief Give the number of output that a network has.
@@ -60,7 +60,15 @@ int networkNbInput(struct Network network);
  * @param network The network to work with.
  * @return The number of outputs.
  */
-int networkNbOutput(struct Network network);
+size_t networkNbOutput(struct Network network);
+
+/**
+ * @brief Give the number of neurones that a network has.
+ * 
+ * @param network The network to work with.
+ * @return The number of neurones.
+ */
+size_t networkNbNeurones(struct Network network);
 
 /**
  * @brief Calculate a network output.
