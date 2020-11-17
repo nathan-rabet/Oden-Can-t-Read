@@ -23,6 +23,22 @@ struct Network {
 };
 
 /**
+ * @brief Create a Network object
+ * 
+ * @param layers The configured layers.
+ * @param nb_layers The number of layers.
+ * @return struct Network 
+ */
+struct Network CreateNetwork(struct Layer *layers,size_t nb_layers);
+
+/**
+ * @brief Append an input layer to a nework.
+ * 
+ * @param network The network which need the input layer.
+ */
+void appendFirstLayerToNetwork(struct Network *network);
+
+/**
  * @brief Create a C99 struct Network
  * by parsing a JSON file.
  * 
@@ -55,6 +71,6 @@ int networkNbOutput(struct Network network);
  * will perform calculus on.
  * @return The list of outputs.
  */
-double * calculateNetworkOutput(struct Network network, double intput[],size_t nb_input);
+double * calculateNetworkOutput(struct Network network, double intput[]);
 
 #endif

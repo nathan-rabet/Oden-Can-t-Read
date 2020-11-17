@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // If no activation function, set activationFunction to 0
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input) {
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input) {
     struct Neurone neurone;
     neurone.weights = malloc(sizeof(double) * nb_input);
     neurone.weights = weights;

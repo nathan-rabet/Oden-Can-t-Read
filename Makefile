@@ -17,6 +17,8 @@ SRC += src/ml/struct/neurone.c
 SRC += src/math/sortalgo.c
 SRC += src/rotate/rotate.c
 SRC += src/math/analysis.c
+SRC += src/ml/train/generate.c
+SRC += src/math/random.c
 
 
 OUT = ocr
@@ -24,13 +26,13 @@ DEBUG_OUT = a.out
 
 
 all: ${SRC} ${SRC}
-	${CC} main.c ${SRC} ${CLIBS} ${CFLAGS} -g -o a.out
+	${CC} main.c ${SRC} ${CLIBS} ${CFLAGS} -g -o main
 
 xor : ${SRC} ${SRC}
-	${CC} mainXOR.c ${SRC} ${CLIBS} ${CFLAGS} -o xor.out
+	${CC} mainXOR.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainXOR
 
 binarization : ${SRC} ${SRC}
-	${CC} mainBINARIZATION.c ${SRC} ${CLIBS} ${CFLAGS} -o binarization.out
+	${CC} mainBINARIZATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainBINARIZATION
 
 rotation : ${SRC} ${SRC}
-	${CC} mainROTATION.c ${SRC} ${CLIBS} ${CFLAGS} -o rotation.out
+	${CC} mainROTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainROTATION

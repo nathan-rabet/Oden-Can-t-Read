@@ -6,6 +6,28 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+struct Network CreateNetwork(struct Layer *layers,size_t nb_layers) {
+    struct Network network;
+    network.layers = layers;
+    network.nb_layers = nb_layers;
+    return network;
+}
+
+void appendFirstLayerToNetwork(struct Network *network) {
+    struct Neurone *firstNeurones = malloc(sizeof(struct Neurone) * network->layers->neurones->nb_inputs);
+    double *uniqueWeight = malloc(sizeof(double));
+    *uniqueWeight = 1;
+    for (size_t i = 0; i < network->layers->neurones->nb_inputs; i++)
+    {
+        firstNeurones[i] = CreateNeurone(uniqueWeight,0,0,1);
+    }
+
+    struct Layer *firstLayer = malloc(sizeof(struct Layer)); 
+    *firstLayer = CreateLayer(firstNeurones,network->layers->neurones->nb_inputs);
+    firstLayer->nextLayer = network->layers;
+    network->layers = firstLayer;
+}
+
 struct Network LoadNetworkFromJSON(char jsonFilePath[]) {    
     struct Network network;
 
@@ -114,6 +136,8 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
     else {
         fprintf(stderr, "The file '%s' doesn't exist.", jsonFilePath);
     }
+
+    appendFirstLayerToNetwork(&network);
     
     return network;
 }
@@ -136,22 +160,11 @@ int networkNbOutput(struct Network network) {
     return nb_output;
 }
 
-double * calculateNetworkOutput(struct Network network, double input[],size_t nb_input) {
+double * calculateNetworkOutput(struct Network network, double input[]) {
     double *nextInput = input;
     double *outputNetwork;
-
-    // Mock first layer
-    struct Neurone firstNeurones[nb_input];
-    double uniqueWeight[1] = {1};
-    for (size_t i = 0; i < nb_input; i++)
-    {
-        firstNeurones[i] = CreateNeurone(uniqueWeight,0,0,1);
-    }
-
-    struct Layer firstLayer = CreateLayer(firstNeurones,nb_input);
-    firstLayer.nextLayer = network.layers;
     
-    struct Layer *workingLayer = &firstLayer;
+    struct Layer *workingLayer = network.layers;
 
     // Entry
     outputNetwork = malloc(sizeof(double) * (workingLayer->nb_neurones));

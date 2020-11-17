@@ -40,7 +40,7 @@ struct Layer {
  * @param nb_neurones The number of neurones your layer will have.
  * @return struct Layer 
  */
-struct Layer CreateLayer(struct Neurone neurones[], int nb_neurones);
+struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones);
 
 /**
  * @brief Calculate an output of a layer.

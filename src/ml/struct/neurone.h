@@ -80,7 +80,7 @@ struct Neurone {
  *  the neurone can handle.
  * @return struct Neurone
  */
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input);
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input);
 
 /**
  * @brief Calculate a neurone output.
