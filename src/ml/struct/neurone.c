@@ -10,6 +10,7 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
     neurone.nb_inputs = nb_input;
     neurone.bias = bias;
     neurone.activationFunction = activationFunction;
+    neurone.nextNeuroneSameLayer = NULL;
     return neurone;
 }
 
