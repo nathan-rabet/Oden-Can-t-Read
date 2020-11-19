@@ -1,5 +1,6 @@
 {
-    "nb_layers": 2,
+	"nb_inputs":2,
+	"nb_layers": 3,
     "layers": [
 		{
 			"nb_neurones": 2,

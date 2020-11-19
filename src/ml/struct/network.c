@@ -61,19 +61,42 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
         struct json_object *JSONnb_layers = NULL;
         struct json_object *JSONlayers = NULL;
 
+        struct json_object *JSONnb_input = NULL;
+
         json_object_object_get_ex(parsed_json,"nb_layers",&JSONnb_layers);
         json_object_object_get_ex(parsed_json,"layers",&JSONlayers);
+
+        json_object_object_get_ex(parsed_json,"nb_inputs",&JSONnb_input);
+
+        int nb_inputs = json_object_get_int(JSONnb_input);
 
         network.nb_layers = json_object_get_int(JSONnb_layers);
         
         // ? Layers
 		struct Layer *layers = NULL;
-        layers = malloc(sizeof(struct Layer) * network.nb_layers);
-        
-        for (size_t l = 0; l < network.nb_layers; l++)
+        layers = malloc(sizeof(struct Layer) * (network.nb_layers));
+
+
+        struct Neurone *neurones = NULL;
+
+        // ? First layer special parameters
+        neurones = malloc(sizeof(struct Neurone) * nb_inputs);
+        double *uniqueWeight = malloc(sizeof(double));
+        *uniqueWeight = 1;
+        for (int i = 0; i < nb_inputs; i++)
         {
+            neurones[i] = CreateNeurone(uniqueWeight,0,0,1);
+            neurones[i].nextNeuroneSameLayer = &neurones[i+1];
+        }
+        neurones[nb_inputs-1].nextNeuroneSameLayer = NULL;
+        layers[0] = CreateLayer(neurones,nb_inputs);
+        
+        for (size_t l = 1; l < network.nb_layers; l++)
+        {
+            neurones = NULL;
+
             // Point to a layer l of the network
-            struct json_object *JSONlayer = json_object_array_get_idx(JSONlayers,l);
+            struct json_object *JSONlayer = json_object_array_get_idx(JSONlayers,l-1);
 
             struct json_object *JSONnb_neurones;
             json_object_object_get_ex(JSONlayer,"nb_neurones",&JSONnb_neurones);
@@ -85,7 +108,6 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
             json_object_object_get_ex(JSONlayer,"neurones",&JSONneurones);
 
             // ? Neurones
-            struct Neurone *neurones = NULL;
             neurones = malloc(sizeof(struct Neurone) * nb_neurones);
             for (size_t n = 0; n < nb_neurones; n++)
             {
@@ -127,9 +149,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
             layers[l] = CreateLayer(neurones,nb_neurones);
             
             // Layers linking
-            if (l >= 1) {
-                layers[l-1].nextLayer = &layers[l];
-            }
+            layers[l-1].nextLayer = &layers[l];
         }
         layers[network.nb_layers - 1].nextLayer = NULL;
 
@@ -139,8 +159,6 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
     else {
         fprintf(stderr, "The file '%s' doesn't exist.", jsonFilePath);
     }
-
-    appendFirstLayerToNetwork(&network);
     
     return network;
 }

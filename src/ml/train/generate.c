@@ -19,10 +19,24 @@
 
 struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[], size_t nbtrainimages) {
     
-    struct Layer *layers = malloc(sizeof(struct Layer) * (nb_layers - 1));
+    struct Layer *layers = malloc(sizeof(struct Layer) * nb_layers);
+
+        struct Neurone *neurones = NULL;
+        // ? First layer special parameters
+        neurones = malloc(sizeof(struct Neurone) * nb_neurone_per_layer[0]);
+        double *uniqueWeight = malloc(sizeof(double));
+        *uniqueWeight = 1;
+        for (size_t i = 0; i < nb_neurone_per_layer[0]; i++)
+        {
+            neurones[i] = CreateNeurone(uniqueWeight,0,0,1);
+            neurones[i].nextNeuroneSameLayer = &neurones[i+1];
+        }
+        neurones[nb_neurone_per_layer[0]-1].nextNeuroneSameLayer = NULL;
+        layers[0] = CreateLayer(neurones,nb_neurone_per_layer[0]);
+
     for (size_t i = 1; i < nb_layers; i++) // start at "real" layer, not the input one!
     {
-        struct Neurone *neurones = NULL;
+        neurones = NULL;
         neurones = malloc(sizeof(struct Neurone) * nb_neurone_per_layer[i]);
 
         for (size_t j = 0; j < nb_neurone_per_layer[i]; j++) // same than the last comment
@@ -46,14 +60,13 @@ struct Network generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_laye
             }
         }
         
-        layers[i-1] = CreateLayer(neurones,nb_neurone_per_layer[i]);
+        layers[i] = CreateLayer(neurones,nb_neurone_per_layer[i]);
         layers[i-1].nextLayer = &layers[i];
     }
 
-    layers[nb_layers-2].nextLayer = NULL;
+    layers[nb_layers-1].nextLayer = NULL;
 
     struct Network network = CreateNetwork(layers,nb_layers);
-    appendFirstLayerToNetwork(&network);
     return network;
     
 }
