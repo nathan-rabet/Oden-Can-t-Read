@@ -59,6 +59,13 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]);
  * @param network The network to work with.
  * @return The number of inputs.
  */
+void SaveNetworkToJson(struct Network, char jsonFilePath[]);
+/**
+ *@brief Save a selected network to a selected json file.
+ *
+ *@param Network the network selected to be saved
+ *       jsonFilePath the path of the file where the network is saved
+ */
 size_t networkNbInput(struct Network *network);
 
 /**

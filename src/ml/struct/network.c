@@ -224,3 +224,46 @@ double *calculateNetworkOutput(struct Network *network, double input[]) {
 
     return outputNetwork;
 } 
+
+void SaveNetworkToJson(struct Network, char jsonFilePath[]) {
+    FILE *f = fopen (jsonFilePath, "w");
+    size_t nb_i = Network.nb_inputs;
+    size_t nb_l = Network.nb_layers;
+
+    fprint(f, "{\n    \"nb_inputs\":%lu,\n    \"nb_layers\":%lu,\n    \"layers"
+    "\": [\n", nb_i, nb_l);
+
+    for (size_t i = 0; i < nb_l - 1; i++) {
+        size_t nb_n = Network.layers[i].nb_neurone; //On recup le nb de neurone du layers i
+        fprint(f, "         {\n             \"nb_neurone\":%lu\n             \""
+        "neurones\": [\n", nb_n);
+        for (size_t j = 0; j < nb_n; j++) {
+            size_t Neur_j = Network.layer[i].neurones //On recup les info du neurone j dans le layer i
+            size_t b, aF, nb_w;
+            b = Neur_j.bias;
+            aF = Neur_j.activationFunction;
+            nb_w = Neur_j;
+            fprint(f, "                {\n                    \"bias\":%lu,\n"                     
+            "\"activationFunction\":%lu,                     \"nb_weights\":%lu"
+            ",\n                     \"weights\": [\n", b, aF, nb_j);
+            for (size_t k = 0; k < nb_w; k++) {
+                size_t W_k = Neur_j.weight[k];
+                fprint(f, "                         %lu");
+                if (k < nb_w - 1)
+                    fprint(f,",");
+                fprint(f,"\n");
+            }
+            fprint(f, "                     ]\n                 }");
+            if (j < nb_n - 1)
+                fprint(f, ",");
+            fprint(f, "\n");
+        }
+        fprint(f, "             ]\n         }");
+        if (i < nb_l - 1)
+            fprint(f, ",");
+        fprint(f, "\n");
+    }
+    fprint(f, "     ]\n}");
+
+    fclose(f);
+}
