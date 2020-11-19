@@ -13,24 +13,6 @@ struct Network CreateNetwork(struct Layer *layers,size_t nb_layers) {
     return network;
 }
 
-void appendFirstLayerToNetwork(struct Network *network) {
-    struct Neurone *firstNeurones = malloc(sizeof(struct Neurone) * network->layers->neurones->nb_inputs);
-    double *uniqueWeight = malloc(sizeof(double));
-    *uniqueWeight = 1;
-    for (size_t i = 0; i < network->layers->neurones->nb_inputs; i++)
-    {
-        firstNeurones[i] = CreateNeurone(uniqueWeight,0,0,1);
-        firstNeurones[i].nextNeuroneSameLayer = &firstNeurones[i+1];
-    }
-
-    firstNeurones[network->layers->neurones->nb_inputs - 1].nextNeuroneSameLayer = NULL;
-
-    struct Layer *firstLayer = malloc(sizeof(struct Layer)); 
-    *firstLayer = CreateLayer(firstNeurones,network->layers->neurones->nb_inputs);
-    firstLayer->nextLayer = network->layers;
-    network->layers = firstLayer;
-}
-
 struct Network LoadNetworkFromJSON(char jsonFilePath[]) {    
     struct Network network;
 
