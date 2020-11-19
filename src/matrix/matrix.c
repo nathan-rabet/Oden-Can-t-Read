@@ -25,6 +25,12 @@ struct MatrixDOUBLE createMatrixDOUBLE(int x, int y)
   return matrix;
 }
 
+void freeMatrixDOUBLE(struct MatrixDOUBLE *matrix)
+{
+  free(matrix->cells);
+  //free(matrix);
+}
+
 struct MatrixUCHAR createMatrixUCHAR(int x, int y)
 {
   struct MatrixUCHAR matrix;

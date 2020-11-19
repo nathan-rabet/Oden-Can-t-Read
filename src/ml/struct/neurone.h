@@ -108,6 +108,13 @@ struct Neurone {
 struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages);
 
 /**
+ * @brief Free the neurone.
+ * 
+ * @param neurone The neurone to work with.
+ */
+void FreeNeurone(struct Neurone *neurone);
+
+/**
  * @brief Calculate a neurone output.
  * 
  * @param neurone The neurone to work with.

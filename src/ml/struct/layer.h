@@ -35,6 +35,13 @@ struct Layer {
 struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones);
 
 /**
+ * @brief Free a Layer object.
+ * 
+ * @param layer The layer
+ */
+void FreeLayer(struct Layer* layer);
+
+/**
  * @brief Calculate an output of a layer.
  * 
  * @param layer The layer to work with.

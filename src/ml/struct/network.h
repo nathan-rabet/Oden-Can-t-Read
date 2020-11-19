@@ -32,6 +32,13 @@ struct Network {
 struct Network CreateNetwork(struct Layer *layers,size_t nb_layers);
 
 /**
+ * @brief Free a Network object
+ * 
+ * @param Network to free
+ */
+void FreeNetwork(struct Network *network);
+
+/**
  * @brief Append an input layer to a nework.
  * 
  * @param network The network which need the input layer.
@@ -52,7 +59,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]);
  * @param network The network to work with.
  * @return The number of inputs.
  */
-size_t networkNbInput(struct Network network);
+size_t networkNbInput(struct Network *network);
 
 /**
  * @brief Give the number of output that a network has.
@@ -60,7 +67,7 @@ size_t networkNbInput(struct Network network);
  * @param network The network to work with.
  * @return The number of outputs.
  */
-size_t networkNbOutput(struct Network network);
+size_t networkNbOutput(struct Network *network);
 
 /**
  * @brief Give the number of neurones that a network has.
@@ -68,7 +75,7 @@ size_t networkNbOutput(struct Network network);
  * @param network The network to work with.
  * @return The number of neurones.
  */
-size_t networkNbNeurones(struct Network network);
+size_t networkNbNeurones(struct Network *network);
 
 /**
  * @brief Give the number of weights that a network has.
@@ -76,7 +83,7 @@ size_t networkNbNeurones(struct Network network);
  * @param network The network to work with.
  * @return The number of weights.
  */
-size_t networkNbWeights(struct Network network);
+size_t networkNbWeights(struct Network *network);
 
 /**
  * @brief Calculate a network output.
@@ -87,6 +94,6 @@ size_t networkNbWeights(struct Network network);
  * will perform calculus on.
  * @return The list of outputs.
  */
-double * calculateNetworkOutput(struct Network network, double intput[]);
+double * calculateNetworkOutput(struct Network *network, double intput[]);
 
 #endif

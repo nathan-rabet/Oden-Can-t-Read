@@ -19,7 +19,7 @@
  * @param minibatchtrain The number of train of batch.
  * @return Return a array of the inputs.
  */
-void trainingNetwork(struct Network network, char* databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain);
+void trainingNetwork(struct Network *network, char* databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain);
 
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
@@ -30,14 +30,14 @@ void trainingNetwork(struct Network network, char* databasepath, size_t minibatc
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network network, struct MatrixDOUBLE* minibatchinputs, size_t* targets, size_t nbimages);
+void minibatch(struct Network *network, char* databasepath, size_t minibatchsize, char* letters);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones
  * 
  * @param network The network to work with.
  */
-void backpropagation(struct Network network);
+void backpropagation(struct Network *network);
 
 /**
  * @brief Gives the array of the inputs.
@@ -46,7 +46,7 @@ void backpropagation(struct Network network);
  * @param numberofneurones The number of neurones of the neural network we are working on.
  * @return Return a array of the inputs.
  */
-double* loadmatrixasinputs(struct MatrixDOUBLE imgmat, int numberofneurones);
+double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
 struct MatrixDOUBLE loadDataBase(char* databasepath, char letter, size_t imagenumber);
 

@@ -5,7 +5,7 @@
 // If no activation function, set activationFunction to 0
 struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages) {
     struct Neurone neurone;
-    neurone.weights = malloc(sizeof(double) * nb_input);
+    //neurone.weights = malloc(sizeof(double) * nb_input);
     neurone.weights = weights;
     neurone.nb_inputs = nb_input;
     neurone.bias = bias;
@@ -19,6 +19,16 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
         neurone.delta_weight = malloc(20000 * nbtrainimages * sizeof(double));
     }
     return neurone;
+}
+
+void FreeNeurone(struct Neurone *neurone)
+{
+    //free(neurone->weights);
+    //free(neurone->delta_bias);
+    //free(neurone->delta_weight);
+    if (neurone->nextNeuroneSameLayer != NULL)
+        FreeNeurone(neurone->nextNeuroneSameLayer);
+    //free(neurone);
 }
 
 double threshold(double x) {

@@ -11,6 +11,14 @@ struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones) {
     return layer;
 }
 
+void FreeLayer(struct Layer* layer)
+{
+    FreeNeurone(layer->neurones);
+    if (layer->nextLayer != NULL)    
+        FreeLayer(layer->nextLayer);
+    //free(layer);
+}
+
 double * CalculateLayerOutput(struct Layer layer, double input[]) {
     double *outputLayer = NULL;
     outputLayer = malloc(sizeof(double) * layer.nb_neurones);
