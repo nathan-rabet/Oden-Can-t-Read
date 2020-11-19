@@ -76,6 +76,13 @@ struct MatrixDOUBLE {
 };
 
 /**
+ * @brief Free Matrix memory
+ * 
+ * @param matrix to free
+ */
+void freeMatrixDOUBLE(struct MatrixDOUBLE *matrix);
+
+/**
  * @brief Matrix of unsigned characters
  * 
  */

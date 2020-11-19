@@ -12,7 +12,7 @@
  * @see 1 correspond to a white pixel
  * and 0 to a black pixel.
  * 
- * @param path The path of the image file.
+ * @param image Image to binarize.
  * @return The binarized image as a unsigned char matrix.
  */
-struct MatrixUCHAR binarization(char path[]);
+struct MatrixDOUBLE binarization(SDL_Surface* image);

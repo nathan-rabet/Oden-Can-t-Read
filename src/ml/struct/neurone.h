@@ -1,6 +1,8 @@
 #ifndef NEURONE
 #define NEURONE
 
+#include <stdio.h>
+
 /**
  * @brief ML neurone
  * 
@@ -27,7 +29,7 @@ struct Neurone {
      * @brief The number of input the neurone can handle.
      * 
      */
-    int nb_inputs;
+    size_t nb_inputs;
 
     /**
      * @brief The bias of the neurone
@@ -61,6 +63,30 @@ struct Neurone {
      * 4 -> Smooth ReLU
      */
     unsigned char activationFunction;
+
+    /**
+     * @brief ouput = activationFunction(outputWithoutActivation)
+     * (Just for training)
+     */
+    double outputWithoutActivation;
+
+    /**
+     * @brief Delta error of the neurone to reach the target value.
+     * (Just for training)
+     */
+    double delta_error;
+
+    /**
+     * @brief Delta error of the bias to reach the target value.
+     * (Just for training)
+     */
+    double* delta_bias;
+
+    /**
+     * @brief Delta error of the weights to reach the target value.
+     * (Just for training)
+     */
+    double* delta_weight;
 };
 
 /**
@@ -76,9 +102,17 @@ struct Neurone {
     4 -> Smooth ReLU
  * @param nb_input The number of input
  *  the neurone can handle.
+ * @param nbtrainimages The number of images to train. Default 0 if not training
  * @return struct Neurone
  */
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, int nb_input);
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages);
+
+/**
+ * @brief Free the neurone.
+ * 
+ * @param neurone The neurone to work with.
+ */
+void FreeNeurone(struct Neurone *neurone);
 
 /**
  * @brief Calculate a neurone output.
@@ -87,11 +121,22 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
  * @param input The input to give to the neurone.
  * @return The result of the calculus as a double. 
  */
-double CalculateNeuroneOutput(struct Neurone neurone,double input[]);
+double calculateNeuroneOutput(struct Neurone neurone,double input[]);
+
+/**
+ * @brief Apply the activation function with the last output without activation. 
+ * (Use calculateNeuroneOutput to get with a custom value)
+ * 
+ * @param neurone The neurone to work with.
+ * @return The neurone activation. 
+ */
+double activationFunction(struct Neurone neurone);
 
 double threshold(double x);
 
 double sigmoid(double x);
+
+double sigmoid_derivate(double x);
 
 double relu(double x);
 

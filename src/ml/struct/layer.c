@@ -2,12 +2,21 @@
 #include "layer.h"
 
 
-struct Layer CreateLayer(struct Neurone neurones[], int nb_neurones) {
+struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones) {
     struct Layer layer;
 
     layer.nb_neurones = nb_neurones;
     layer.neurones = neurones;
+    layer.nextLayer = NULL;
     return layer;
+}
+
+void FreeLayer(struct Layer* layer)
+{
+    FreeNeurone(layer->neurones);
+    if (layer->nextLayer != NULL)    
+        FreeLayer(layer->nextLayer);
+    //free(layer);
 }
 
 double * CalculateLayerOutput(struct Layer layer, double input[]) {
@@ -15,9 +24,9 @@ double * CalculateLayerOutput(struct Layer layer, double input[]) {
     outputLayer = malloc(sizeof(double) * layer.nb_neurones);
     struct Neurone *workingNeurone = layer.neurones;
 
-    int n = 0;
+    size_t n = 0;
     while (n < layer.nb_neurones) {
-        outputLayer[n] = CalculateNeuroneOutput(*workingNeurone,input);
+        outputLayer[n] = calculateNeuroneOutput(*workingNeurone,input);
         workingNeurone = workingNeurone->nextNeuroneSameLayer;
         n++;
     }

@@ -1,6 +1,7 @@
 #ifndef LAYER
 #define LAYER
 
+#include <stdio.h>
 #include "neurone.h"
 
 /**
@@ -18,15 +19,7 @@ struct Layer {
 
     struct Neurone *neurones; /* Point to the first neurone of the current layer */
 
-    int nb_neurones; /* The number of neurones that the layer contains */
-
-    /**
-     * @brief The calculus output of the layer.
-     * 
-     * @deprecated This will MAYBE be deleted in the future.
-     * 
-     */
-    double *output;
+    size_t nb_neurones; /* The number of neurones that the layer contains */
 };
 
 // Initiate a layer (which includes neurones)
@@ -39,7 +32,14 @@ struct Layer {
  * @param nb_neurones The number of neurones your layer will have.
  * @return struct Layer 
  */
-struct Layer CreateLayer(struct Neurone neurones[], int nb_neurones);
+struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones);
+
+/**
+ * @brief Free a Layer object.
+ * 
+ * @param layer The layer
+ */
+void FreeLayer(struct Layer* layer);
 
 /**
  * @brief Calculate an output of a layer.

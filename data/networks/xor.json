@@ -1,27 +1,7 @@
 {
-    "nb_layers": 3,
+	"nb_inputs":2,
+	"nb_layers": 3,
     "layers": [
-        {
-            "nb_neurones": 2,
-            "neurones": [
-                {
-                    "bias": 0,
-                    "activationFunction": 0,
-                    "nb_weights": 1,
-                    "weights": [
-                        1
-                    ]
-                },
-                {
-                    "bias": 0,
-                    "activationFunction": 0,
-                    "nb_weights": 1,
-                    "weights": [
-                        1
-                    ]
-                }
-            ]
-		},
 		{
 			"nb_neurones": 2,
 			"neurones": [
