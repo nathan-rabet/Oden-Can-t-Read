@@ -51,3 +51,21 @@ int ShowImg(SDL_Surface *image);
  * @return The modified SDL_Surface.
  */
 SDL_Surface* MedianFilter(SDL_Surface *image, int px);
+
+/**
+ * @brief Convert to an grayscale image.
+ * 
+ * @param image SDL_Surface to work with.
+ * @return The modified SDL_Surface.
+ */
+SDL_Surface* Grayscale(SDL_Surface *image);
+
+/**
+ * @brief Renforce contrast of an grayscaled image.
+ * 
+ * @param image SDL_Surface to work with.
+ * @param c Multiply parameter. By default equal to 1.
+ * @param y Power parameter. For 2 Stretch dark region and suppress bright region. For 1/3 expand bright region. This parameter have to be between 0.04 and 25.
+ * @return The modified SDL_Surface.
+ */
+SDL_Surface* PowerLaw(SDL_Surface *image, double c, double y);
