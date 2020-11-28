@@ -20,6 +20,21 @@ void trainingNetwork(struct Network *network, char* databasepath, size_t minibat
         letters[j] = i;
         j++;
     }
+    //Fresh neurones
+    for (size_t i = 1; i < network->nb_layers; i++)
+    {
+        for (size_t n = 0; n < network->layers[i].nb_neurones; n++)
+        {
+            if ((network->layers[i].neurones[n].delta_bias) != NULL && network->layers[i].neurones[n].delta_weight != NULL)
+            {
+                free(network->layers[i].neurones[n].delta_bias);
+                free(network->layers[i].neurones[n].delta_weight);
+            }
+            network->layers[i].neurones[n].delta_bias = malloc(minibatchsize * sizeof(double));
+            network->layers[i].neurones[n].delta_weight = malloc(network->layers[i-1].nb_neurones * minibatchsize * sizeof(double));
+        }
+        
+    }
 
     
     for (size_t nb = 0; nb < minibatchnumber; nb++)
@@ -35,31 +50,36 @@ void trainingNetwork(struct Network *network, char* databasepath, size_t minibat
 
 void minibatch(struct Network *network, char* databasepath, size_t minibatchsize, char* letters)
 {
+    
     for (size_t i = 0; i < minibatchsize; i++)
     {
         //Define minibatch
         char letter = letters[rand() % 62];
-        struct MatrixDOUBLE minibatchinput = loadDataBase(databasepath, letter, rand() % 1000);
+        double *input = loadDataBase(databasepath, letter, rand() % 1000);
 
         //Feedforward (run the network with input to set the z and activation values)
-        double *output = calculateNetworkOutput(network, minibatchinput.cells);
-        freeMatrixDOUBLE(&minibatchinput);
+        double *output = calculateNetworkOutput(network, input);
+
+
+        printf("Lettre %c:\n", letter);
+        //PrintInput(input, 128, 128);
+        //PrintOuput(output, letters, 62);
+
+        free(input);
+
 
         //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * sigmoid'(z)
-        struct Layer *lastlayer = network->layers;
-        for (size_t layer = 0; layer < network->nb_layers - 1; layer++)
-        {
-            lastlayer = lastlayer->nextLayer;
-        }
         for (size_t k = 0; k < networkNbOutput(network); k++)
         {
-            struct Neurone n = lastlayer->neurones[k];
-            n.delta_error = (output[k] - k == letter);
+            struct Neurone* n = &(network->layers[network->nb_layers-1].neurones[k]);
+            n->delta_error = (output[k] - (k == (size_t)letter));
 
             // TODO
             //Need impletation for other activation fonction than the sigmoid.
-            n.delta_error *= sigmoid_derivate(n.outputWithoutActivation);
+            n->delta_error *= sigmoid_derivate(n->outputWithoutActivation);
         }
+
+        free(output);
 
         //Backpropagate the error
         backpropagation(network);
@@ -69,15 +89,17 @@ void minibatch(struct Network *network, char* databasepath, size_t minibatchsize
         {
             for (size_t n = 0; n < network->layers[l].nb_neurones; n++)
             {
-                struct Neurone neurone = network->layers[l].neurones[n];
-                neurone.delta_bias[i] = neurone.delta_error;
+                struct Neurone* neurone = &(network->layers[l].neurones[n]);
+                neurone->delta_bias[i] = neurone->delta_error;
 
                 for (size_t k = 0; k < network->layers[l - 1].nb_neurones; k++)
                 {
-                    neurone.delta_weight[k + i * minibatchsize] = activationFunction(network->layers[l - 1].neurones[k]) * neurone.delta_error;
+                    neurone->delta_weight[k*minibatchsize + i] = activationFunction(network->layers[l - 1].neurones[k]) * neurone->delta_error;
                 }
             }
         }
+
+        //PrintNetwork(network);
     }
 
     //Average bias and weight
@@ -85,7 +107,7 @@ void minibatch(struct Network *network, char* databasepath, size_t minibatchsize
     {
         for (size_t n = 0; n < network->layers[l].nb_neurones; n++)
         {
-            struct Neurone neurone = network->layers[l].neurones[n];
+            struct Neurone* neurone = &(network->layers[l].neurones[n]);
             double sumbias = 0;
 
             for (size_t k = 0; k < network->layers[l-1].nb_neurones; k++)
@@ -94,14 +116,14 @@ void minibatch(struct Network *network, char* databasepath, size_t minibatchsize
 
                 for (size_t i = 0; i < minibatchsize; i++)
                 {
-                    sumbias += neurone.delta_bias[i];
+                    sumbias += neurone->delta_bias[i];
 
-                    sumweights += neurone.delta_weight[k + i*minibatchsize];
+                    sumweights += neurone->delta_weight[k*minibatchsize + i];
                 }
 
-                neurone.weights[k] = sumweights/minibatchsize;
+                neurone->weights[k] -= 0.15*(sumweights/minibatchsize);
             }
-            neurone.bias -= sumbias/minibatchsize;
+            neurone->bias -= 0.15*(sumbias/minibatchsize);
         }
     }
 }
@@ -125,7 +147,7 @@ void backpropagation(struct Network *network)
     }
 }
 
-struct MatrixDOUBLE loadDataBase(char* databasepath, char letter, size_t imagenumber)
+double* loadDataBase(char* databasepath, char letter, size_t imagenumber)
 {
     //Convert a imagenumber to a "12345" string
     char *imagename = malloc(6*sizeof(char));
@@ -144,7 +166,37 @@ struct MatrixDOUBLE loadDataBase(char* databasepath, char letter, size_t imagenu
     SDL_Surface *image = loadImage(imagepath);
     free(imagepath);
     free(imagename);
-    struct MatrixDOUBLE mat = binarization(image);
+    double* imagebin = binarizationpointer(image);
     SDL_FreeSurface(image);
-    return mat;
+    return imagebin;
+}
+
+void PrintInput(double *input, size_t height, size_t with)
+{
+   printf("Input:\n");
+   for (size_t i = 0; i < height; i++)
+   {
+        for (size_t j = 0; j < with; j++)
+        {
+            if (*(input + i*with + j)>0.5)
+                printf("%i", 1);
+            else
+                printf(" ");
+                
+        }
+       printf("|\n");
+   }
+   scanf("\n");
+   
+}
+
+void PrintOuput(double *output, char *letters, size_t size)
+{
+   printf("Output: { ");
+   for (size_t i = 0; i < size; i++)
+   {
+      printf("%c: %f; ", *(letters + i), *(output + i));
+   }
+   printf("}\n");
+   
 }

@@ -32,3 +32,13 @@ double * CalculateLayerOutput(struct Layer layer, double input[]) {
     }
     return outputLayer;
 }
+
+void PrintLayer(struct Layer* layer)
+{
+    for (size_t n = 0; n < layer->nb_neurones; n++)
+    {
+        printf("%f;",layer->neurones[n].bias);
+    }
+    printf("\n");
+    
+}

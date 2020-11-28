@@ -2,6 +2,7 @@
 #define BACKPROPAGATION
 
 #include <stdint.h>
+#include <stdio.h>
 #include <math.h>
 #include "../struct/network.h"
 #include "../struct/neurone.h"
@@ -48,6 +49,9 @@ void backpropagation(struct Network *network);
  */
 double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
-struct MatrixDOUBLE loadDataBase(char* databasepath, char letter, size_t imagenumber);
+double* loadDataBase(char* databasepath, char letter, size_t imagenumber);
 
+void PrintInput(double *input, size_t height, size_t with);
+
+void PrintOuput(double *output, char *letters, size_t size);
 #endif

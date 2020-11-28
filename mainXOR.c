@@ -14,7 +14,7 @@ int main()
 		for (double j = 0; j <= 1; j++)
 		{
 			double dataInput[2] = {i,j};
-			printf("XOR(%lf,%lf) => %lf\n",i,j,*calculateNetworkOutput(net, dataInput));
+			printf("XOR(%lf,%lf) => %lf\n",i,j,*calculateNetworkOutput(&net, dataInput));
 		}		
 	}
 	

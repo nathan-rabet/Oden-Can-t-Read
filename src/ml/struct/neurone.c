@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 // If no activation function, set activationFunction to 0
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages) {
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input) {
     struct Neurone neurone;
     //neurone.weights = malloc(sizeof(double) * nb_input);
     neurone.weights = weights;
@@ -13,19 +13,30 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
     neurone.nextNeuroneSameLayer = NULL;
     neurone.outputWithoutActivation = 0;
     neurone.delta_error = 0;
-    if (nbtrainimages > 0)
-    {
-        neurone.delta_bias = malloc(nbtrainimages * sizeof(double));
-        neurone.delta_weight = malloc(20000 * nbtrainimages * sizeof(double));
-    }
+    neurone.delta_bias = NULL;
+    neurone.delta_weight = NULL;
     return neurone;
+}
+
+void FreshNeuroneForTraining(struct Neurone neurone, size_t nblastLayer ,size_t nbtrainimages)
+{
+    if (neurone.delta_bias != NULL)
+    {
+        free(neurone.delta_bias);
+        free(neurone.delta_weight);
+    }
+    neurone.delta_bias = malloc(nbtrainimages * sizeof(double));
+    neurone.delta_weight = malloc(nblastLayer * nbtrainimages * sizeof(double));
 }
 
 void FreeNeurone(struct Neurone *neurone)
 {
     //free(neurone->weights);
-    //free(neurone->delta_bias);
-    //free(neurone->delta_weight);
+    if ((neurone->delta_bias) != NULL && (neurone->delta_bias) != NULL)
+    {
+        free(neurone->delta_bias);
+        free(neurone->delta_weight);
+    }
     if (neurone->nextNeuroneSameLayer != NULL)
         FreeNeurone(neurone->nextNeuroneSameLayer);
     //free(neurone);
