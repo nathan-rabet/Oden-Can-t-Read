@@ -5,71 +5,57 @@
 #include "src/ml/struct/network.h"
 #include "src/ml/train/generate.h"
 #include "src/ml/train/backpropagation.h"
+#include "src/ml/train/generate.h"
 
 void mustcall()
 {
-   srand(time(NULL));   // Initialization, should only be called once.
+   srand(time(NULL)); // Initialization, should only be called once.
 }
 
 int main()
 {
-
+   
    mustcall();
 
-   size_t npl[] = {5,2,3,4};
-   char afpl[] = {0,1,2,3};
-   struct Network *net = generateRandomNetwork(4,npl,afpl,10000);
-   printf("nb_layers : %ld",net->nb_layers);
-   char* databasepath = "/home/maxou/Documents/gitrepos/by_class";
-   trainingNetwork(net, databasepath, 400, 10, 10);
+   size_t npl[] = {16384, 100, 100, 62};
+   char afpl[] = {0, 1, 1, 1};
+   struct Network *net = generateRandomNetwork(4, npl, afpl);
+   PrintNetwork(net);
+   scanf(" coucou");
+   char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
+   trainingNetwork(net, databasepath, 80, 5, 150);
 
-   //FreeNetwork(&net);
+   FreeNetwork(net);
 
    char letter = 'a';
 
    //Define letters
-    char* letters = malloc(62*sizeof(char));
-    size_t j = 0;
-    for (char i = '0'; i <= '9'; i++) //Integers 0 to 9
-    {
-        letters[j] = i;
-        j++;
-    }
-    for (char i = 'A'; i <= 'Z'; i++) //Uppercase letters
-    {
-        letters[j] = i;
-        j++;
-    }
-    for (char i = 'a'; i <= 'z'; i++) //Lowercase letters
-    {
-        letters[j] = i;
-        j++;
-    }
-
-   while (letter != 0)
+   char *letters = malloc(62 * sizeof(char));
+   size_t j = 0;
+   for (char i = '0'; i <= '9'; i++) //Integers 0 to 9
    {
-      printf("Enter a character: ");
-      scanf("%c", &letter);
-      
-      struct MatrixDOUBLE minibatchinput = loadDataBase(databasepath, letter, rand() % 1000);
-
-      //Feedforward (run the network with input to set the z and activation values)
-      double *output = calculateNetworkOutput(net, minibatchinput.cells);
-      freeMatrixDOUBLE(&minibatchinput);
-      letter = 0;
-      char w = 0;
-      while (letter == 0)
-      {
-         if (*(output+w) == 1)
-         {
-            letter = *(letters+w);
-         }
-         w++;
-      }
-      
-      printf("The AI thinks it's a: %c\n", letter);
+      letters[j] = i;
+      j++;
    }
-   
+   for (char i = 'A'; i <= 'Z'; i++) //Uppercase letters
+   {
+      letters[j] = i;
+      j++;
+   }
+   for (char i = 'a'; i <= 'z'; i++) //Lowercase letters
+   {
+      letters[j] = i;
+      j++;
+   }
+
+   printf("Calculating for a\n");
+
+   double* inputs = loadDataBase(databasepath, letter, rand() % 1000);
+
+   //Feedforward (run the network with input to set the z and activation values)
+   double *output = calculateNetworkOutput(net, inputs);
+   free(inputs);
+   PrintOuput(output, letters, j-1);
 
    return 0;
 }

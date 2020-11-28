@@ -16,4 +16,7 @@
  * @param nbtrainimages Number of images. 
  * @return struct Network 
  */
-struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[], size_t nbtrainimages);
+struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[]);
+
+
+double Gaussian();

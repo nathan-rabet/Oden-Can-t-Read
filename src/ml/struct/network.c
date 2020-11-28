@@ -72,7 +72,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
         *uniqueWeight = 1;
         for (int i = 0; i < nb_inputs; i++)
         {
-            neurones[i] = CreateNeurone(uniqueWeight,0,0,1,0);
+            neurones[i] = CreateNeurone(uniqueWeight,0,0,1);
             neurones[i].nextNeuroneSameLayer = &neurones[i+1];
         }
         neurones[nb_inputs-1].nextNeuroneSameLayer = NULL;
@@ -123,7 +123,7 @@ struct Network LoadNetworkFromJSON(char jsonFilePath[]) {
                     weights[w] = json_object_get_double(JSONweight);
                 }
 
-                neurones[n] = CreateNeurone(weights,bias,activationFunction,nb_weights,0);
+                neurones[n] = CreateNeurone(weights,bias,activationFunction,nb_weights);
                 
                 // Neurones linking
                 if (n >= 1) {
@@ -197,8 +197,8 @@ size_t networkNbWeights(struct Network *network) {
     return nb_weights;
 }
 
-double *calculateNetworkOutput(struct Network *network, double input[]) {
-    double *nextInput = input;
+double *calculateNetworkOutput(struct Network *network, double* input) {
+    double *nextInput;
     double *outputNetwork;
     
     struct Layer *workingLayer = network->layers;
@@ -215,13 +215,11 @@ double *calculateNetworkOutput(struct Network *network, double input[]) {
 
     // General case
     while(workingLayer != NULL) {
-        outputNetwork = malloc(sizeof(double) * (workingLayer->nb_neurones));
         outputNetwork = CalculateLayerOutput(*workingLayer, nextInput);
-
+        free(nextInput);
         nextInput = outputNetwork;
         workingLayer = workingLayer->nextLayer;
     }
-
     return outputNetwork;
 } 
 
@@ -266,4 +264,17 @@ void SaveNetworkToJson(struct Network *Network, char jsonFilePath[]) {
     fprintf(f, " \t]\n}");
 
     fclose(f);
+}
+
+
+void PrintNetwork(struct Network* network)
+{
+    printf("Network:\n");
+    for (size_t l = 1; l < network->nb_layers; l++)
+    {
+        printf("Layer n°%lu:\n", l);
+        PrintLayer(&network->layers[l]);
+    }
+    
+
 }
