@@ -22,8 +22,13 @@ int main()
    struct Network *net = generateRandomNetwork(3, npl, afpl);
    PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
+   trainingNetwork(net, databasepath, 80, 1, 10000);
 
-//Define letters
+   FreeNetwork(net);
+
+   char letter = 'a';
+
+   //Define letters
    char *letters = malloc(62 * sizeof(char));
    size_t j = 0;
    for (char i = '0'; i <= '9'; i++) //Integers 0 to 9
@@ -44,20 +49,12 @@ int main()
 
    printf("Calculating for a\n");
 
-   for (char i = 'a'; i < 'z'; i++)
-   {
-      double* inputs = loadDataBase(databasepath, i, rand() % 1000);
+   double* inputs = loadDataBase(databasepath, letter, rand() % 1000);
 
-      //Feedforward (run the network with input to set the z and activation values)
-      double *output = calculateNetworkOutput(net, inputs);
-      free(inputs);
-      PrintLayerOutput(&net->layers[0].neurones[0]);
-      PrintOuput(output, letters, 62);
-      free(output);
-   }
-   
-
-   
+   //Feedforward (run the network with input to set the z and activation values)
+   double *output = calculateNetworkOutput(net, inputs);
+   free(inputs);
+   PrintOuput(output, letters, j-1);
 
    return 0;
 }

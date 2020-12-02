@@ -1,5 +1,7 @@
 #include "backpropagation.h"
 
+#define LEARNINGRATE 0.15
+
 void trainingNetwork(struct Network *network, char* databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain)
 {
     //Define letters
@@ -63,20 +65,19 @@ void minibatch(struct Network *network, char* databasepath, size_t minibatchsize
 
         printf("Lettre %c:\n", letter);
         //PrintInput(input, 128, 128);
-        //PrintOuput(output, letters, 62);
+        PrintOuput(output, letters, 62);
 
         free(input);
 
 
-        //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * sigmoid'(z)
+        //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * actvation_fonction'(z)
         for (size_t k = 0; k < networkNbOutput(network); k++)
         {
             struct Neurone* n = &(network->layers[network->nb_layers-1].neurones[k]);
             n->delta_error = (output[k] - (k == (size_t)letter));
 
-            // TODO
-            //Need impletation for other activation fonction than the sigmoid.
-            n->delta_error *= sigmoid_derivate(n->outputWithoutActivation);
+            
+            n->delta_error *= actvation_fonction_derivate(n);
         }
 
         free(output);
@@ -121,9 +122,9 @@ void minibatch(struct Network *network, char* databasepath, size_t minibatchsize
                     sumweights += neurone->delta_weight[k*minibatchsize + i];
                 }
 
-                neurone->weights[k] -= 0.15*(sumweights/minibatchsize);
+                neurone->weights[k] -= LEARNINGRATE*(sumweights/minibatchsize);
             }
-            neurone->bias -= 0.15*(sumbias/minibatchsize);
+            neurone->bias -= LEARNINGRATE*(sumbias/minibatchsize);
         }
     }
 }
@@ -142,7 +143,7 @@ void backpropagation(struct Network *network)
                 sum += network->layers[l+1].neurones[k].weights[j] * network->layers[l+1].neurones[k].delta_error;
             }
 
-            network->layers[l].neurones[j].delta_error = sum * sigmoid_derivate(network->layers[l].neurones[j].outputWithoutActivation);
+            network->layers[l].neurones[j].delta_error = sum * actvation_fonction_derivate(&network->layers[l].neurones[j]);
         }
     }
 }

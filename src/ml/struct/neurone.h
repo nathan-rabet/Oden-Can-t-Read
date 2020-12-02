@@ -143,5 +143,11 @@ double sigmoid_derivate(double x);
 
 double relu(double x);
 
+double smooth_relu_derivate(double x);
+
 double smooth_relu(double x);
+
+double actvation_fonction_derivate(struct Neurone* neurone);
+
+void PrintLayerOutput(struct Neurone *neurone);
 #endif
