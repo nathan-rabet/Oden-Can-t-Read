@@ -19,7 +19,8 @@ int main()
 
    size_t npl[] = {16384, 200, 62};
    char afpl[] = {0, 2, 2};
-   struct Network *net = generateRandomNetwork(3, npl, afpl);
+   struct Network network = LoadNetworkFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/coucou.json");
+   struct Network *net = &network;
    PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
 

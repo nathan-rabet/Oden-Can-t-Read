@@ -231,22 +231,22 @@ void SaveNetworkToJson(struct Network *Network, char jsonFilePath[]) {
     fprintf(f, "{\"nb_inputs\":%lu,\n  \t\"nb_layers\":%lu,\n  \t\"layers"
     "\": [\n", nb_i, nb_l);
 
-    for (size_t i = 1; i < nb_l - 1; i++) {
+    for (size_t i = 1; i < nb_l; i++) {
         size_t nb_n = Network->layers[i].nb_neurones; //On recup le nb de neurone du layers i
-        fprintf(f, " \t\t{\n \t\t\t\"nb_neurone\":%lu\n  \t\t\t\""
+        fprintf(f, " \t\t{\n \t\t\t\"nb_neurones\":%lu,\n  \t\t\t\""
         "neurones\": [\n", nb_n);
         for (size_t j = 0; j < nb_n; j++) {
-            struct Neurone *Neur_j = Network->layers[i].neurones; //On recup les info du neurone j dans le layer i
+            struct Neurone *Neur_j = &(Network->layers[i].neurones[j]); //On recup les info du neurone j dans le layer i
             size_t aF, nb_w;
             double b;
-            b = Neur_j[j].bias;
-            aF = Neur_j[j].activationFunction;
+            b = Neur_j->bias;
+            aF = Neur_j->activationFunction;
             nb_w = Network->layers[i - 1].nb_neurones;
             fprintf(f, "{\n\"bias\":%lf,"                     
             "\"activationFunction\":%lu,\"nb_weights\":%lu"
             ",\n\"weights\":\n[", b, aF, nb_w);
             for (size_t k = 0; k < nb_w; k++) {
-                double W_k = Neur_j[j].weights[k];  //On recup les info du poid k du neurone j dans layer i
+                double W_k = Neur_j->weights[k];  //On recup les info du poid k du neurone j dans layer i
                 fprintf(f, "%lf", W_k);
                 if (k < nb_w - 1)
                     fprintf(f,",");

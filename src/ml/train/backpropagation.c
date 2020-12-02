@@ -90,6 +90,8 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
             n->delta_error = (output[k] - (k == (size_t)desired_output[i]));
 
             n->delta_error *= actvation_fonction_derivate(n);
+
+            //printf("%f %f; ", n->bias, n->delta_error);
         }
 
         free(output);
@@ -129,12 +131,15 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
 
                 for (size_t i = 0; i < minibatchsize; i++)
                 {
-                    sumbias += neurone->delta_bias[i];
 
                     sumweights += neurone->delta_weight[k * minibatchsize + i];
                 }
 
                 neurone->weights[k] -= LEARNINGRATE * (sumweights / minibatchsize);
+            }
+            for (size_t i = 0; i < minibatchsize; i++)
+            {
+                sumbias += neurone->delta_bias[i];
             }
             neurone->bias -= LEARNINGRATE * (sumbias / minibatchsize);
         }
