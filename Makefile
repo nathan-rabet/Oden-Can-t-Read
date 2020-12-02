@@ -37,3 +37,6 @@ binarization : ${SRC} ${SRC}
 
 rotation : ${SRC} ${SRC}
 	${CC} mainROTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainROTATION
+
+test : ${SRC} ${SRC}
+	${CC} maintest.c ${SRC} ${CLIBS} ${CFLAGS} -g -o test

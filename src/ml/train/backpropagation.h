@@ -31,7 +31,7 @@ void trainingNetwork(struct Network *network, char* databasepath, size_t minibat
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network *network, char* databasepath, size_t minibatchsize, char* letters);
+void minibatch(struct Network *network, size_t minibatchsize, char *letters, char *minibatchLetters, double **inputs);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones

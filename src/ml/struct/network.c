@@ -208,7 +208,7 @@ double *calculateNetworkOutput(struct Network *network, double* input) {
     for (size_t i = 0; i < workingLayer->nb_neurones; i++)
     {
         double *entry = &input[i];
-        outputNetwork[i] = calculateNeuroneOutput(workingLayer->neurones[i],entry);
+        outputNetwork[i] = calculateNeuroneOutput(&(workingLayer->neurones[i]),entry);
     }
     workingLayer = workingLayer->nextLayer;
     nextInput = outputNetwork;

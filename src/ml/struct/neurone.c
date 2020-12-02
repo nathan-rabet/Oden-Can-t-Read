@@ -70,52 +70,52 @@ double smooth_relu_derivate(double x) {
     return (ex)/(1+ex);
 }
 
-double calculateNeuroneOutput(struct Neurone neurone, double input[]) {
-        neurone.outputWithoutActivation = 0;
+double calculateNeuroneOutput(struct Neurone* neurone, double input[]) {
+        neurone->outputWithoutActivation = 0;
 
-        for (size_t i = 0; i < neurone.nb_inputs; i++)
+        for (size_t i = 0; i < neurone->nb_inputs; i++)
         {
-            double w = neurone.weights[i];
+            double w = neurone->weights[i];
             double in = input[i];
-            neurone.outputWithoutActivation += w * in;
+            neurone->outputWithoutActivation += w * in;
         }
 
-        neurone.outputWithoutActivation += neurone.bias;
+        neurone->outputWithoutActivation += neurone->bias;
 
         return activationFunction(neurone);
 }
 
-double activationFunction(struct Neurone neurone)
+double activationFunction(struct Neurone* neurone)
 {
         // Activation functions
-        switch (neurone.activationFunction)
+        switch (neurone->activationFunction)
         {
         // Identity
         case 0:
-            return neurone.outputWithoutActivation;
+            return neurone->outputWithoutActivation;
             break;
 
         // Threshold
         case 1:
-            return threshold(neurone.outputWithoutActivation);
+            return threshold(neurone->outputWithoutActivation);
             break;
 
         // Sigmoïd
         case 2:
-            return sigmoid(neurone.outputWithoutActivation);
+            return sigmoid(neurone->outputWithoutActivation);
             break;
 
         // ReLU
         case 3:
-            return relu(neurone.outputWithoutActivation);
+            return relu(neurone->outputWithoutActivation);
             break;
 
         // Smooth ReLU
         case 4:
-            return smooth_relu(neurone.outputWithoutActivation);
+            return smooth_relu(neurone->outputWithoutActivation);
             break;
         }
-        return neurone.outputWithoutActivation;
+        return neurone->outputWithoutActivation;
 }
 
 double actvation_fonction_derivate(struct Neurone* neurone)

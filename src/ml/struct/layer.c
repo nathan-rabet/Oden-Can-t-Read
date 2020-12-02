@@ -26,7 +26,7 @@ double * CalculateLayerOutput(struct Layer layer, double input[]) {
 
     size_t n = 0;
     while (n < layer.nb_neurones) {
-        outputLayer[n] = calculateNeuroneOutput(*workingNeurone,input);
+        outputLayer[n] = calculateNeuroneOutput(workingNeurone,input);
         workingNeurone = workingNeurone->nextNeuroneSameLayer;
         n++;
     }
@@ -37,7 +37,7 @@ void PrintLayer(struct Layer* layer)
 {
     for (size_t n = 0; n < layer->nb_neurones; n++)
     {
-        printf("%f;",layer->neurones[n].bias);
+        printf("%lf;",layer->neurones[n].bias);
     }
     printf("\n");
     
