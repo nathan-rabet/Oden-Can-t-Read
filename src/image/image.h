@@ -33,7 +33,7 @@ Uint32 getPixel(SDL_Surface *image, int x, int y);
  * contains 0 and 1.
  * @return 0 if no error, 1 if there is one.
  */
-int show_matrix_to_img(struct MatrixUCHAR matrix);
+int show_matrix_to_img(struct MatrixDOUBLE matrix);
 
 /**
  * @brief Display an SDL_Surface image to the screen

@@ -37,7 +37,7 @@ Uint32 getPixel(SDL_Surface *image, int x, int y)
     return *p/24;
 }
 
-int show_matrix_to_img(struct MatrixUCHAR matrix)
+int show_matrix_to_img(struct MatrixDOUBLE matrix)
 {
     
     /* Find window size*/
@@ -73,7 +73,7 @@ int show_matrix_to_img(struct MatrixUCHAR matrix)
             Uint32 grey = 0;
             SDL_Rect r = {j * coef, i * coef, coef, coef};
 
-            grey = matrixGetUCHAR(matrix, i, j) * 255;
+            grey = matrixGetDOUBLE(matrix, i, j) * 255;
             SDL_SetRenderDrawColor( renderer, grey, grey, grey, 0 );
 
             SDL_RenderFillRect( renderer, &r );

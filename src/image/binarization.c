@@ -33,7 +33,7 @@ double* binarizationpointer(SDL_Surface* image)
           pixel = getPixel(image, j, i);
 
           SDL_GetRGB(pixel,(image)->format,&color.r, &color.g, &color.b);
-          *(imagebin+ i*image->w +j) = (double)((color.r + color.g + color.b) / 3 < 128 ? 1 : 0);
+          *(imagebin+ i*image->w +j) = (double)((color.r + color.g + color.b) / 3 < 128 ? 0 : 1);
         }
     }
     return imagebin;
