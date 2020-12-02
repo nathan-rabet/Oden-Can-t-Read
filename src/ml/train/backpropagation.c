@@ -59,6 +59,9 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
             free(inputs[i]);
         }
         free(inputs);
+        char *path = malloc(sizeof(char)*100);
+        sprintf(path,"network.minibatch%lu.json",nb);
+        SaveNetworkToJson(network, path);
     }
     free(letters);
 }
