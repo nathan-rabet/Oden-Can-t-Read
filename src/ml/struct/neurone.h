@@ -105,7 +105,10 @@ struct Neurone {
  * @param nbtrainimages The number of images to train. Default 0 if not training
  * @return struct Neurone
  */
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input, size_t nbtrainimages);
+struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input);
+
+
+void FreshNeuroneForTraining(struct Neurone neurone, size_t nblastLayer ,size_t nbtrainimages);
 
 /**
  * @brief Free the neurone.
@@ -140,5 +143,11 @@ double sigmoid_derivate(double x);
 
 double relu(double x);
 
+double smooth_relu_derivate(double x);
+
 double smooth_relu(double x);
+
+double actvation_fonction_derivate(struct Neurone* neurone);
+
+void PrintLayerOutput(struct Neurone *neurone);
 #endif

@@ -50,4 +50,5 @@ void FreeLayer(struct Layer* layer);
  */
 double * CalculateLayerOutput(struct Layer layer, double intput[]);
 
+void PrintLayer(struct Layer *layer);
 #endif
