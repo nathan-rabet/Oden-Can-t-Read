@@ -18,11 +18,11 @@ int main()
    mustcall();
 
    size_t npl[] = {16384, 200, 62};
-   char afpl[] = {0, 4, 2};
+   char afpl[] = {0, 2, 2};
    struct Network *net = generateRandomNetwork(3, npl, afpl);
    //PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
-   trainingNetwork(net, databasepath, 1, 1, 1);
+   trainingNetwork(net, databasepath, 60, 10, 10);
 
    FreeNetwork(net);
 

@@ -1,6 +1,6 @@
 #include "backpropagation.h"
 
-#define LEARNINGRATE 1
+#define LEARNINGRATE 0.15
 
 void trainingNetwork(struct Network *network, char *databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain)
 {
@@ -39,21 +39,21 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
 
     for (size_t nb = 0; nb < minibatchnumber; nb++)
     {
-        char *minibatchLetters = malloc(sizeof(char) * minibatchsize);
+        char *desired_output = malloc(sizeof(char) * minibatchsize);
         double **inputs = malloc(sizeof(double *) * minibatchsize);
         for (size_t i = 0; i < minibatchsize; i++)
         {
             //Define minibatch
-            minibatchLetters[i] = letters[rand() % 62];
-            inputs[i] = loadDataBase(databasepath, minibatchLetters[i], rand() % 1000);
+            desired_output[i] = rand() % 62;
+            inputs[i] = loadDataBase(databasepath, letters[desired_output[i]], rand() % 1000);
         }
 
         printf("minibatch num°%lu\n", nb);
         for (size_t j = 0; j < minibatchtrain; j++)
         {
-            minibatch(network, minibatchsize, letters, minibatchLetters, inputs);
+            minibatch(network, minibatchsize, letters, desired_output, inputs);
         }
-        free(minibatchLetters);
+        free(desired_output);
         for (size_t i = 0; i < minibatchsize; i++)
         {
             free(inputs[i]);
@@ -63,13 +63,13 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
     free(letters);
 }
 
-void minibatch(struct Network *network, size_t minibatchsize, char *letters, char *minibatchLetters, double **inputs)
+void minibatch(struct Network *network, size_t minibatchsize, char *letters, char *desired_output, double **inputs)
 {
 
     for (size_t i = 0; i < minibatchsize; i++)
     {
         //Define minibatch TO UP
-        char letter = minibatchLetters[i];
+        char letter = letters[(size_t)desired_output[i]];
         double *input = inputs[i];
 
         //Feedforward (run the network with input to set the z and activation values)
@@ -84,7 +84,7 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
         for (size_t k = 0; k < networkNbOutput(network); k++)
         {
             struct Neurone *n = &(network->layers[network->nb_layers - 1].neurones[k]);
-            n->delta_error = (output[k] - (k == (size_t)letter));
+            n->delta_error = (output[k] - (k == (size_t)desired_output[i]));
 
             n->delta_error *= actvation_fonction_derivate(n);
         }

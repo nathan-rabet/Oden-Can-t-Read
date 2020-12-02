@@ -32,7 +32,7 @@ struct Layer {
  * @param nb_neurones The number of neurones your layer will have.
  * @return struct Layer 
  */
-struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones);
+struct Layer CreateLayer(struct Neurone *neurones, size_t nb_neurones);
 
 /**
  * @brief Free a Layer object.
@@ -48,7 +48,7 @@ void FreeLayer(struct Layer* layer);
  * @param intput The input list you want to calculate output with.
  * @return The list of outputs.
  */
-double * CalculateLayerOutput(struct Layer layer, double intput[]);
+double * CalculateLayerOutput(struct Layer *layer, double intput[]);
 
 void PrintLayer(struct Layer *layer);
 #endif

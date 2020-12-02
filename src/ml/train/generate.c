@@ -52,7 +52,7 @@ struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_lay
                 weights[k] = Gaussian();
             }
 
-            neurones[j] = CreateNeurone(weights,Gaussian(),activation_functions_per_layer[i],nb_weights);
+            neurones[j] = CreateNeurone(weights,Gaussian()-68,activation_functions_per_layer[i],nb_weights);
 
             if (j+1 < nb_neurone_per_layer[i]) {
                 neurones[j].nextNeuroneSameLayer = &neurones[j+1];
