@@ -1,4 +1,5 @@
 #include "image.h"
+#include <math.h>
 
 
 SDL_Surface* loadImage(char* path) {
@@ -230,5 +231,48 @@ SDL_Surface* MedianFilter(SDL_Surface *image, int px)
         
     }
     
+    return outImage;
+}
+
+SDL_Surface* Grayscale(SDL_Surface *image)
+{
+    SDL_Surface *outImage = SDL_CreateRGBSurface(image->flags,image->w,image->h,image->format->BitsPerPixel,image->format->Rmask,image->format->Gmask,image->format->Bmask,image->format->Amask);
+    for (int i = 1; i < image->w - 1; i++)
+    {
+        for (int j = 1; j < image->h - 1; j++)
+        {
+            SDL_Color color;
+            Uint32 pixel = getPixel(image, i, j);
+            SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
+
+            Uint8 newcolor = (0.2126*color.r) + (0.7152*color.g) + (0.0722*color.b);
+
+            // Set pixel value
+            SDL_Rect surface_rect = {i, j, 1, 1};
+            SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, newcolor, newcolor, newcolor));
+        }
+    }
+    return outImage;
+}
+
+SDL_Surface* PowerLaw(SDL_Surface *image, double c, double y)
+{
+    SDL_Surface *outImage = SDL_CreateRGBSurface(image->flags,image->w,image->h,image->format->BitsPerPixel,image->format->Rmask,image->format->Gmask,image->format->Bmask,image->format->Amask);
+    for (int i = 1; i < image->w - 1; i++)
+    {
+        for (int j = 1; j < image->h - 1; j++)
+        {
+            SDL_Color color;
+            Uint32 pixel = getPixel(image, i, j);
+            SDL_GetRGB(pixel, image->format, &color.r, &color.g, &color.b);
+
+            Uint8 newcolor = 255;
+            newcolor = c * pow(color.r, y);
+            
+            // Set pixel value
+            SDL_Rect surface_rect = {i, j, 1, 1};
+            SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, newcolor, newcolor, newcolor));
+        }
+    }
     return outImage;
 }
