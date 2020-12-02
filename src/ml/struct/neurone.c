@@ -18,15 +18,15 @@ struct Neurone CreateNeurone(double weights[],double bias, unsigned char activat
     return neurone;
 }
 
-void FreshNeuroneForTraining(struct Neurone neurone, size_t nblastLayer ,size_t nbtrainimages)
+void FreshNeuroneForTraining(struct Neurone *neurone, size_t nblastLayer ,size_t nbtrainimages)
 {
-    if (neurone.delta_bias != NULL)
+    if (neurone->delta_bias != NULL)
     {
-        free(neurone.delta_bias);
-        free(neurone.delta_weight);
+        free(neurone->delta_bias);
+        free(neurone->delta_weight);
     }
-    neurone.delta_bias = malloc(nbtrainimages * sizeof(double));
-    neurone.delta_weight = malloc(nblastLayer * nbtrainimages * sizeof(double));
+    neurone->delta_bias = malloc(nbtrainimages * sizeof(double));
+    neurone->delta_weight = malloc(nblastLayer * nbtrainimages * sizeof(double));
 }
 
 void FreeNeurone(struct Neurone *neurone)

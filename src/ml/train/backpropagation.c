@@ -45,7 +45,7 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
         {
             //Define minibatch
             desired_output[i] = rand() % 62;
-            inputs[i] = loadDataBase(databasepath, letters[desired_output[i]], rand() % 1000);
+            inputs[i] = loadDataBase(databasepath, letters[(size_t)desired_output[i]], rand() % 1000);
         }
 
         printf("minibatch num°%lu\n", nb);
@@ -76,8 +76,8 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
         double *output = calculateNetworkOutput(network, input);
 
         printf("Lettre %c:\n", letter);
-        PrintInput(input, 128, 128);
-        //PrintOuput(output, letters, 62);
+        //PrintInput(input, 128, 128);
+        PrintOuput(output, letters, 62);
 
 
         //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * actvation_fonction'(z)
