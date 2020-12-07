@@ -17,13 +17,12 @@ int main()
    
    mustcall();
 
-   size_t npl[] = {10, 10, 62};
+   size_t npl[] = {16384, 1000, 62};
    char afpl[] = {0, 2, 2};
    struct Network *net = generateRandomNetwork(3, npl, afpl);
    //PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
-   SaveNetworkToJson(net, "coucou.json");
-   //trainingNetwork(net, databasepath, 60, 10, 10);
+   trainingNetwork(net, databasepath, 5, 500, 1000);
 
    FreeNetwork(net);
 

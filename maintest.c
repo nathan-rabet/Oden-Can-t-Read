@@ -19,9 +19,9 @@ int main()
 
    size_t npl[] = {16384, 200, 62};
    char afpl[] = {0, 2, 2};
-   struct Network network = LoadNetworkFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/coucou.json");
+   struct Network network = LoadNetworkFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/network.minibatch9complet.json");
    struct Network *net = &network;
-   PrintNetwork(net);
+   //PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
 
 //Define letters
@@ -43,32 +43,39 @@ int main()
       j++;
    }
 
-   printf("Calculating for a\n");
-
-   for (char i = 'a'; i < 'z'; i++)
+   printf("Calculating score...\n");
+   int numberoftest = 10;
+   int sumoftest = 0;
+   for (int i = 0; i < numberoftest; i++)
    {
-      double* inputs = loadDataBase(databasepath, i, rand() % 1000);
+      int letter = rand() % 62;
+      double* inputs = loadDataBase(databasepath, letters[letter], rand() % 1000);
 
       //Feedforward (run the network with input to set the z and activation values)
-      double *output = calculateNetworkOutput(net, inputs);
+      double *outputs = calculateNetworkOutput(net, inputs);
       free(inputs);
       //PrintLayerOutput(&net->layers[0].neurones[0]);
-      //PrintOuput(output, letters, 62);
-      for (size_t i = 1; i < 3; i++)
+      PrintOuput(outputs, letters, 62);
+
+      double max = 0;
+      int maxindex = 0;
+      for (size_t output = 0; output < 62; output++)
       {
-         printf("Layer %lu:\n", i);
-         for (size_t n = 0; n < net->layers[i].nb_neurones; n++)
+         if (outputs[output] > max)
          {
-            printf("%f\n", net->layers[i].neurones[n].outputWithoutActivation);
+            max = outputs[output];
+            maxindex = output;
          }
-         
       }
+      if(letter == maxindex)
+         sumoftest += 1;
+      //printf("max = %lf\n\n", max);
       
-      free(output);
+      free(outputs);
    }
    
 
-   
+   printf("AI guess correctly %d%% letters. [%d/%d]\n", ((100*sumoftest)/numberoftest), sumoftest, numberoftest);
 
    return 0;
 }

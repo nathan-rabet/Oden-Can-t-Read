@@ -1,6 +1,6 @@
 #include "backpropagation.h"
 
-#define LEARNINGRATE 0.15
+#define LEARNINGRATE 0.01
 
 void trainingNetwork(struct Network *network, char *databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain)
 {
@@ -52,6 +52,13 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
         for (size_t j = 0; j < minibatchtrain; j++)
         {
             minibatch(network, minibatchsize, letters, desired_output, inputs);
+            if (j%1000 == 0)
+            {
+                char *path = malloc(sizeof(char)*100);
+                sprintf(path,"network.%luminibatch%lu.json",nb+j, nb);
+                SaveNetworkToJson(network, path);
+                free(path);
+            }
         }
         free(desired_output);
         for (size_t i = 0; i < minibatchsize; i++)
@@ -60,8 +67,9 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
         }
         free(inputs);
         char *path = malloc(sizeof(char)*100);
-        sprintf(path,"network.minibatch%lu.json",nb);
+        sprintf(path,"network.minibatch%lucomplet.json",nb);
         SaveNetworkToJson(network, path);
+        free(path);
     }
     free(letters);
 }
@@ -78,9 +86,9 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
         //Feedforward (run the network with input to set the z and activation values)
         double *output = calculateNetworkOutput(network, input);
 
-        printf("Lettre %c:\n", letter);
+        //printf("Lettre %c:\n", letter);
         //PrintInput(input, 128, 128);
-        PrintOuput(output, letters, 62);
+        //PrintOuput(output, letters, 62);
 
 
         //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * actvation_fonction'(z)
