@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "layer.h"
 
+#include <math.h>
+
 struct Layer *CreateLayer(struct Neurone **neurones, size_t nb_neurones)
 {
     struct Layer *layer = malloc(sizeof(struct Layer));
@@ -23,13 +25,16 @@ double *CalculateLayerOutput(struct Layer *layer, double input[])
 {
     double *outputLayer = NULL;
     outputLayer = malloc(sizeof(double) * layer->nb_neurones);
+    layer->output = malloc(sizeof(double) * layer->nb_neurones);
 
     size_t n = 0;
     while (n < layer->nb_neurones)
     {
         outputLayer[n] = calculateNeuroneOutput(layer->neurones[n], input);
+        layer->output[n] = layer->neurones[n]->outputWithoutActivation;
         n++;
     }
+
     return outputLayer;
 }
 
@@ -51,4 +56,24 @@ void PrintLayerOutput(struct Layer *layer)
         printf("n°%ld: %f", n, output);
     }
     printf("\n");
+}
+
+double * softmax(struct Layer layer) {
+
+    double softed[layer.nb_neurones];
+    double sum = 0;
+    for (size_t k = 0; k < layer.nb_neurones; k++)
+    {
+        sum += exp(layer.output[k]);
+    }
+    
+
+
+    for (size_t i = 0; i < layer.nb_neurones; i++)
+    {
+        softed[i] = exp(layer.output[i]) / sum;
+    }
+    
+    return softed;
+
 }

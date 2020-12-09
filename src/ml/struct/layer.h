@@ -13,6 +13,9 @@ struct Layer {
     struct Neurone **neurones; /* Point to the first neurone of the current layer */
 
     size_t nb_neurones; /* The number of neurones that the layer contains */
+
+    double *output; /* The output of the layer*/
+    
 };
 
 // Initiate a layer (which includes neurones)
@@ -46,4 +49,12 @@ double * CalculateLayerOutput(struct Layer *layer, double intput[]);
 void PrintLayer(struct Layer *layer);
 
 void PrintLayerOutput(struct Layer* layer);
+
+/**
+ * @brief Apply softmax function to a layer output
+ * 
+ * @param layer The layer to work with
+ * @return double* 
+ */
+double * softmax(struct Layer layer);
 #endif
