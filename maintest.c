@@ -17,10 +17,10 @@ int main()
    
    mustcall();
 
-   size_t npl[] = {16384, 200, 62};
+   size_t npl[] = {784, 200, 62};
    char afpl[] = {0, 2, 2};
-   struct Network network = LoadNetworkFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/network.minibatch9complet.json");
-   struct Network *net = &network;
+   struct Network *net = LoadNetworkFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/network.1000minibatch0.json");
+   //struct Network *net = generateRandomNetwork(3, npl, afpl);
    //PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
 
@@ -44,7 +44,7 @@ int main()
    }
 
    printf("Calculating score...\n");
-   int numberoftest = 10;
+   int numberoftest = 1000;
    int sumoftest = 0;
    for (int i = 0; i < numberoftest; i++)
    {
@@ -54,7 +54,7 @@ int main()
       //Feedforward (run the network with input to set the z and activation values)
       double *outputs = calculateNetworkOutput(net, inputs);
       free(inputs);
-      //PrintLayerOutput(&net->layers[0].neurones[0]);
+      //PrintLayerOutput(&net->layers[0]);
       PrintOuput(outputs, letters, 62);
 
       double max = 0;

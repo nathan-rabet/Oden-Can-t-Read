@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include "loadmnist.h"
 #include "../struct/network.h"
 #include "../struct/neurone.h"
 #include "../../matrix/matrix.h"
@@ -53,5 +54,5 @@ double* loadDataBase(char* databasepath, char letter, size_t imagenumber);
 
 void PrintInput(double *input, size_t height, size_t with);
 
-void PrintOuput(double *output, char *letters, size_t size);
+void PrintOuput(double *output, char *letters, size_t size, size_t dout);
 #endif

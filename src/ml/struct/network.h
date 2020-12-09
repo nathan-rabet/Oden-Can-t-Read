@@ -13,7 +13,7 @@ struct Network {
      * @brief Point to the first layer of the network
      * 
      */
-    struct Layer *layers;
+    struct Layer **layers;
 
     /**
      * @brief The number of layers that the network has.
@@ -29,7 +29,7 @@ struct Network {
  * @param nb_layers The number of layers.
  * @return struct Network 
  */
-struct Network CreateNetwork(struct Layer *layers,size_t nb_layers);
+struct Network* CreateNetwork(struct Layer **layers,size_t nb_layers);
 
 /**
  * @brief Free a Network object
@@ -52,7 +52,7 @@ void appendFirstLayerToNetwork(struct Network *network);
  * @param jsonFilePath The path of the JSON file.
  * @return struct Network 
  */
-struct Network LoadNetworkFromJSON(char jsonFilePath[]);
+struct Network* LoadNetworkFromJSON(char jsonFilePath[]);
 /**
  * @brief Give the number of input that a network has.
  * 

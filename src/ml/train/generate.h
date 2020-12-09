@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+
 /**
  * @brief Generate a network with a random configuration.
  * 

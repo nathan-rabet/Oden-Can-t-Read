@@ -17,12 +17,12 @@ int main()
    
    mustcall();
 
-   size_t npl[] = {16384, 1000, 62};
+   size_t npl[] = {256, 300, 62};
    char afpl[] = {0, 2, 2};
    struct Network *net = generateRandomNetwork(3, npl, afpl);
    //PrintNetwork(net);
    char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
-   trainingNetwork(net, databasepath, 5, 500, 1000);
+   trainingNetwork(net, databasepath, 100, 500, 10000);
 
    FreeNetwork(net);
 
@@ -52,8 +52,8 @@ int main()
    double* inputs = loadDataBase(databasepath, letter, rand() % 1000);
 
    //Feedforward (run the network with input to set the z and activation values)
-   double *output = calculateNetworkOutput(net, inputs);
    free(inputs);
+   //double *output = calculateNetworkOutput(net, inputs);
    //PrintOuput(output, letters, j-1);
 
    return 0;

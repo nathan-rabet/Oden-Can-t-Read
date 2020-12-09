@@ -8,16 +8,9 @@
  * @brief ML layer
  * 
  */
-struct Layer {    
-    /**
-     * @brief Point the next direct layer.
-     * 
-     * @see l0 -> l1 -> l2 -> ... -> ln -> NULL
-     * 
-     */
-    struct Layer *nextLayer; 
+struct Layer {
 
-    struct Neurone *neurones; /* Point to the first neurone of the current layer */
+    struct Neurone **neurones; /* Point to the first neurone of the current layer */
 
     size_t nb_neurones; /* The number of neurones that the layer contains */
 };
@@ -32,7 +25,7 @@ struct Layer {
  * @param nb_neurones The number of neurones your layer will have.
  * @return struct Layer 
  */
-struct Layer CreateLayer(struct Neurone *neurones, size_t nb_neurones);
+struct Layer* CreateLayer(struct Neurone **neurones, size_t nb_neurones);
 
 /**
  * @brief Free a Layer object.
@@ -51,4 +44,6 @@ void FreeLayer(struct Layer* layer);
 double * CalculateLayerOutput(struct Layer *layer, double intput[]);
 
 void PrintLayer(struct Layer *layer);
+
+void PrintLayerOutput(struct Layer* layer);
 #endif

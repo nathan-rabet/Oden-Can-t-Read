@@ -8,22 +8,6 @@
  * 
  */
 struct Neurone {
-    //  ◯
-    //  | nextNeuroneSameLayer
-    //  ◯
-    //  | nextNeuroneSameLayer
-    //  ◯
-    //  | nextNeuroneSameLayer
-    //  ◯ 
-    //  |
-    // NULL
-    //  
-
-    /**
-     * @brief Point to the next 
-     * bottom neurone of a same layer.
-     */
-    struct Neurone *nextNeuroneSameLayer;
     
     /**
      * @brief The number of input the neurone can handle.
@@ -105,7 +89,7 @@ struct Neurone {
  * @param nbtrainimages The number of images to train. Default 0 if not training
  * @return struct Neurone
  */
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input);
+struct Neurone* CreateNeurone(double *weights,double bias, unsigned char activation_Function, size_t nb_input);
 
 
 void FreshNeuroneForTraining(struct Neurone *neurone, size_t nblastLayer ,size_t nbtrainimages);
@@ -148,6 +132,4 @@ double smooth_relu_derivate(double x);
 double smooth_relu(double x);
 
 double actvation_fonction_derivate(struct Neurone* neurone);
-
-void PrintLayerOutput(struct Neurone *neurone);
 #endif

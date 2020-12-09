@@ -3,18 +3,16 @@
 #include <stdlib.h>
 
 // If no activation function, set activationFunction to 0
-struct Neurone CreateNeurone(double weights[],double bias, unsigned char activationFunction, size_t nb_input) {
-    struct Neurone neurone;
-    //neurone.weights = malloc(sizeof(double) * nb_input);
-    neurone.weights = weights;
-    neurone.nb_inputs = nb_input;
-    neurone.bias = bias;
-    neurone.activationFunction = activationFunction;
-    neurone.nextNeuroneSameLayer = NULL;
-    neurone.outputWithoutActivation = 0;
-    neurone.delta_error = 0;
-    neurone.delta_bias = NULL;
-    neurone.delta_weight = NULL;
+struct Neurone* CreateNeurone(double *weights,double bias, unsigned char activation_Function, size_t nb_input) {
+    struct Neurone* neurone = malloc(sizeof(struct Neurone));
+    neurone->weights = weights;
+    neurone->nb_inputs = nb_input;
+    neurone->bias = bias;
+    neurone->activationFunction = activation_Function;
+    neurone->outputWithoutActivation = 0;
+    neurone->delta_error = 0;
+    neurone->delta_bias = NULL;
+    neurone->delta_weight = NULL;
     return neurone;
 }
 
@@ -37,8 +35,6 @@ void FreeNeurone(struct Neurone *neurone)
         free(neurone->delta_bias);
         free(neurone->delta_weight);
     }
-    if (neurone->nextNeuroneSameLayer != NULL)
-        FreeNeurone(neurone->nextNeuroneSameLayer);
     //free(neurone);
 }
 
@@ -149,21 +145,4 @@ double actvation_fonction_derivate(struct Neurone* neurone)
             break;
         }
         return neurone->outputWithoutActivation;
-}
-
-void PrintLayerOutput(struct Neurone* neurone)
-{
-    int i = 0;
-    struct Neurone* nextn = neurone;
-    double output = 0;
-    while (nextn != NULL)
-    {
-        output = neurone->outputWithoutActivation;
-        if (output != 0)
-            printf("n°%d: %f",i,output);  
-
-        nextn = nextn->nextNeuroneSameLayer;
-        i++;
-    }
-    printf("\n");
 }
