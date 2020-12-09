@@ -52,7 +52,7 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
         printf("minibatch num°%lu\n", nb);
         for (size_t j = 0; j < minibatchtrain; j++)
         {
-            minibatch(network, minibatchsize, letters, desired_output, inputs);
+            minibatch(network, minibatchsize, letters, desired_output, inputs, nb+1);
             if (j % 1000 == 0)
             {
                 char *path = malloc(sizeof(char) * 100);
@@ -61,6 +61,45 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
                 free(path);
             }
         }
+
+
+
+        printf("Calculating score...\n");
+        int numberoftest = 1000;
+        int sumoftest = 0;
+        for (int i = 0; i < numberoftest; i++)
+        {
+            int letter = rand() % 62;
+            double* inputs = loadDataBase(databasepath, letters[letter], rand() % 1000);
+
+            //Feedforward (run the network with input to set the z and activation values)
+            double *outputs = calculateNetworkOutput(network, inputs);
+            free(inputs);
+            //PrintLayerOutput(&net->layers[0]);
+            PrintOuput(outputs, letters, 62, letter);
+
+            double max = 0;
+            int maxindex = 0;
+            for (size_t output = 0; output < 62; output++)
+            {
+                if (outputs[output] > max)
+                {
+                    max = outputs[output];
+                    maxindex = output;
+                }
+            }
+            if(letter == maxindex)
+                sumoftest += 1;
+            //printf("max = %lf\n\n", max);
+            
+            free(outputs);
+        }
+    
+
+        printf("AI guess correctly %d%% letters. [%d/%d]\n", ((100*sumoftest)/numberoftest), sumoftest, numberoftest);
+
+
+
         free(desired_output);
         for (size_t i = 0; i < minibatchsize; i++)
         {
@@ -75,9 +114,8 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
     free(letters);
 }
 
-void minibatch(struct Network *network, size_t minibatchsize, char *letters, char *desired_output, double **inputs)
+void minibatch(struct Network *network, size_t minibatchsize, char *letters, char *desired_output, double **inputs, size_t minibatch_i)
 {
-
     for (size_t i = 0; i < minibatchsize; i++)
     {
         //Define minibatch TO UP
@@ -87,9 +125,9 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
         //Feedforward (run the network with input to set the z and activation values)
         double *output = calculateNetworkOutput(network, input);
 
-        printf("\nLettre %c:\n", letter);
+        //printf("\nLettre %c:\n", letter);
         //PrintInput(input, 16, 16);
-        PrintOuput(output, letters, 62, (size_t)desired_output[i]);
+        //PrintOuput(output, letters, 62, (size_t)desired_output[i]);
 
         //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * actvation_fonction'(z)
         for (size_t k = 0; k < networkNbOutput(network); k++)
@@ -102,7 +140,7 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
 
             n->delta_error *= actvation_fonction_derivate(n);
 
-            printf("%c:%f; ", letters[k], n->delta_error);
+            //printf("%c:%f; ", letters[k], n->delta_error);
         }
 
         free(output);
@@ -146,13 +184,13 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
                     sumweights += neurone->delta_weight[k * minibatchsize + i];
                 }
 
-                neurone->weights[k] -= LEARNINGRATE * (sumweights / minibatchsize);
+                neurone->weights[k] -= (LEARNINGRATE/minibatch_i) * activationFunction(network->layers[l-1]->neurones[k]) * neurone->delta_error;
             }
             for (size_t i = 0; i < minibatchsize; i++)
             {
                 sumbias += neurone->delta_bias[i];
             }
-            neurone->bias -= LEARNINGRATE * (sumbias / minibatchsize);
+            neurone->bias -= (LEARNINGRATE/minibatch_i) * neurone->delta_error;
         }
     }
 }

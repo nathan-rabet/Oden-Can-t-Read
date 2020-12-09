@@ -2,6 +2,11 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include <unistd.h>
+#include <limits.h>
+#include <string.h>
+
+
 #include "src/ml/struct/network.h"
 #include "src/ml/train/generate.h"
 #include "src/ml/train/backpropagation.h"
@@ -21,8 +26,10 @@ int main()
    char afpl[] = {0, 2, 2};
    struct Network *net = generateRandomNetwork(3, npl, afpl);
    //PrintNetwork(net);
-   char *databasepath = "/home/maxou/Documents/gitrepos/by_class";
-   trainingNetwork(net, databasepath, 100, 500, 10000);
+
+   char cwd[PATH_MAX];
+   char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/by_class");
+   trainingNetwork(net, datasetpath , 100, 500, 1000);
 
    FreeNetwork(net);
 
@@ -49,7 +56,7 @@ int main()
 
    printf("Calculating for a\n");
 
-   double* inputs = loadDataBase(databasepath, letter, rand() % 1000);
+   double* inputs = loadDataBase(datasetpath, letter, rand() % 1000);
 
    //Feedforward (run the network with input to set the z and activation values)
    free(inputs);
