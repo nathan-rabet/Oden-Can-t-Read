@@ -50,7 +50,7 @@ double sigmoid(double x) {
 }
 
 double sigmoid_derivate(double x) {
-    return exp(-x)/pow((1+exp(-x)), 2);
+    return exp(-x) / pow( (1 + exp(-x) ), 2);
 }
 
 double relu(double x) {

@@ -87,19 +87,22 @@ void minibatch(struct Network *network, size_t minibatchsize, char *letters, cha
         //Feedforward (run the network with input to set the z and activation values)
         double *output = calculateNetworkOutput(network, input);
 
-        printf("Lettre %c:\n", letter);
-        //PrintInput(input, 128, 128);
+        printf("\nLettre %c:\n", letter);
+        //PrintInput(input, 16, 16);
         PrintOuput(output, letters, 62, (size_t)desired_output[i]);
 
         //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * actvation_fonction'(z)
         for (size_t k = 0; k < networkNbOutput(network); k++)
         {
             struct Neurone *n = (network->layers[network->nb_layers - 1]->neurones[k]);
-            n->delta_error = (output[k] - (k == (size_t)desired_output[i]));
+            if (k == (size_t)desired_output[i])
+                n->delta_error = (double)(output[k] - 0.99);
+            else
+                n->delta_error = (double)(output[k] + 0.99);
 
             n->delta_error *= actvation_fonction_derivate(n);
 
-            //printf("%f %f; ", n->bias, n->delta_error);
+            printf("%c:%f; ", letters[k], n->delta_error);
         }
 
         free(output);
