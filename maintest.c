@@ -16,9 +16,6 @@ int main()
 {
    
    mustcall();
-
-   size_t npl[] = {784, 200, 62};
-   char afpl[] = {0, 2, 2};
    struct Network *net = LoadNetworkFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/network.1000minibatch0.json");
    //struct Network *net = generateRandomNetwork(3, npl, afpl);
    //PrintNetwork(net);
@@ -55,7 +52,7 @@ int main()
       double *outputs = calculateNetworkOutput(net, inputs);
       free(inputs);
       //PrintLayerOutput(&net->layers[0]);
-      PrintOuput(outputs, letters, 62);
+      PrintOuput(outputs, letters, 62, letter);
 
       double max = 0;
       int maxindex = 0;

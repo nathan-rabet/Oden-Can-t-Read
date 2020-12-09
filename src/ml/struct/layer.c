@@ -60,7 +60,7 @@ void PrintLayerOutput(struct Layer *layer)
 
 double * softmax(struct Layer layer) {
 
-    double softed[layer.nb_neurones];
+    double *softed = malloc(sizeof(double) * layer.nb_neurones);
     double sum = 0;
     for (size_t k = 0; k < layer.nb_neurones; k++)
     {
