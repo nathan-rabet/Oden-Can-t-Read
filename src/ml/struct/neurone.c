@@ -50,7 +50,8 @@ double sigmoid(double x) {
 }
 
 double sigmoid_derivate(double x) {
-    return exp(-x) / pow( (1 + exp(-x) ), 2);
+    double e = sigmoid(x);
+    return e * (1 - e);
 }
 
 double relu(double x) {
@@ -121,7 +122,7 @@ double actvation_fonction_derivate(struct Neurone* neurone)
         {
         // Identity
         case 0:
-            return 0;
+            return 1;
             break;
 
         // Threshold

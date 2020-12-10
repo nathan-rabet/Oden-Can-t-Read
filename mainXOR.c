@@ -6,7 +6,7 @@
 
 int main()
 {
-	char* file_name = "data/networks/xor.json";
+	char* file_name = "network.minibatch0complet.json";
 
 	struct Network *net = LoadNetworkFromJSON(file_name);
 
@@ -17,7 +17,7 @@ int main()
 			double dataInput[2] = {i,j};
 			double *output = calculateNetworkOutput(net, dataInput);
 			printf("XOR(%lf,%lf) => %lf\n",i,j,*output);
-			PrintOuput(output, "R", 1);
+			//PrintOuput(output, "R");
 		}		
 	}
 	

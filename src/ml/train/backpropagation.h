@@ -32,8 +32,7 @@ void trainingNetwork(struct Network *network, char* databasepath, size_t minibat
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network *network, size_t minibatchsize, 
-char *letters, char *desired_output, double **inputs, size_t minibatch_i);
+void minibatch(struct Network *network, size_t minibatchsize, double **inputs, char *inputschar, size_t minibatch_i);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones
@@ -51,9 +50,11 @@ void backpropagation(struct Network *network);
  */
 double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
+void CalculateScore(struct Network *network, char *databasepath);
+
 double* loadDataBase(char* databasepath, char letter, size_t imagenumber);
 
 void PrintInput(double *input, size_t height, size_t with);
 
-void PrintOuput(double *output, char *letters, size_t size, size_t dout);
+void PrintOuput(double *output, char letter);
 #endif

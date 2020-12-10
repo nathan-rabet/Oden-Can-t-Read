@@ -2,7 +2,7 @@
 
 #define CHAR "abcdefghijklmopqrstuvwxyz"
 #define LENCHAR 25
-#define LEARNINGRATE 0.01
+#define LEARNINGRATE 0.5
 // 1/30
 
 void trainingNetwork(struct Network *network, char *databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain)
@@ -25,39 +25,35 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
 
     for (size_t nb = 0; nb < minibatchnumber; nb++)
     {
-        double **inputs = malloc(sizeof(double *) * minibatchsize);
         char *inputschar = malloc(sizeof(char) * minibatchsize);
-        inputschar[0] = 0;
-        inputschar[1] = 1;
-        inputschar[2] = 1;
-        inputschar[3] = 0;
-        double* datainput = malloc(sizeof(double) * 2);
-        datainput[0] = 0;
-        datainput[1] = 0;
-        inputs[0] = datainput;
-        double* datainput1 = malloc(sizeof(double) * 2);
-        datainput1[0] = 0;
-        datainput1[1] = 0;
-        inputs[1] = datainput1;
-        double* datainput2 = malloc(sizeof(double) * 2);
-        datainput2[0] = 0;
-        datainput2[1] = 0;
-        inputs[2] = datainput2;
-        double* datainput3 = malloc(sizeof(double) * 2);
-        datainput3[0] = 0;
-        datainput3[1] = 0;
-        inputs[3] = datainput3;
+        double **inputs = malloc(sizeof(double *) * minibatchsize);
+        for (size_t i = 0; i < minibatchsize; i++)
+        {
+            //Define minibatch
+            inputschar[i] = rand() % LENCHAR;
+            inputs[i] = loadDataBase(databasepath, CHAR[inputschar[i]], rand() % 1000);
+        }
 
         printf("minibatch num°%lu\n", nb);
         for (size_t j = 0; j < minibatchtrain; j++)
         {
             minibatch(network, minibatchsize, inputs, inputschar, nb + 1);
+            if ((j + 1) % 1000 == 0)
+            {
+                char *path = malloc(sizeof(char) * 100);
+                sprintf(path, "network.%luminibatch%lu.json", nb + j, nb);
+                SaveNetworkToJson(network, path);
+                free(path);
+            }
         }
+
+        CalculateScore(network, databasepath);
 
         for (size_t i = 0; i < minibatchsize; i++)
         {
             free(inputs[i]);
         }
+        free(inputschar);
         free(inputs);
         char *path = malloc(sizeof(char) * 100);
         sprintf(path, "network.minibatch%lucomplet.json", nb);
@@ -84,11 +80,14 @@ void minibatch(struct Network *network, size_t minibatchsize, double **inputs, c
         for (size_t k = 0; k < networkNbOutput(network); k++)
         {
             struct Neurone *n = (network->layers[network->nb_layers - 1]->neurones[k]);
-            n->delta_error = (double)((output[k] - inputschar[i]));
+            if (network->character == CHAR[inputschar[i]])
+                n->delta_error = (double)(output[k] - 0.99);
+            else
+                n->delta_error = (double)(output[k] - 0.01);
 
-            //n->delta_error *= actvation_fonction_derivate(n);
+            n->delta_error *= actvation_fonction_derivate(n);
 
-            printf("%c:%f; ", 'c', n->delta_error);
+            //printf("%c:%f; ", letters[k], n->delta_error);
         }
 
         free(output);
@@ -132,13 +131,13 @@ void minibatch(struct Network *network, size_t minibatchsize, double **inputs, c
                     sumweights += neurone->delta_weight[k * minibatchsize + i];
                 }
 
-                neurone->weights[k] = neurone->weights[k] - (LEARNINGRATE) * (sumweights/minibatchsize);
+                neurone->weights[k] -= (LEARNINGRATE / minibatch_i) * (sumweights / minibatchsize);
             }
             for (size_t i = 0; i < minibatchsize; i++)
             {
                 sumbias += neurone->delta_bias[i];
             }
-            neurone->bias = neurone->bias - (LEARNINGRATE) * (sumbias/minibatchsize);
+            neurone->bias -= (LEARNINGRATE / minibatch_i) * (sumbias / minibatchsize);
         }
     }
 }
@@ -156,6 +155,7 @@ void backpropagation(struct Network *network)
             {
                 sum += network->layers[l + 1]->neurones[k]->weights[j] * network->layers[l + 1]->neurones[k]->delta_error;
             }
+
             network->layers[l]->neurones[j]->delta_error = sum * actvation_fonction_derivate(network->layers[l]->neurones[j]);
         }
     }
@@ -176,7 +176,7 @@ void CalculateScore(struct Network *network, char *databasepath)
         //PrintLayerOutput(&network->layers[0]);
         //PrintOuput(outputs, letters, 62, letter);
 
-        if (letter == 0)
+        if (letter == network->character)
         {
             if (*outputs > 0.9)
                 sumoftest += 1;

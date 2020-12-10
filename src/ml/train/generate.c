@@ -42,10 +42,10 @@ struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_lay
             for (size_t k = 0; k < nb_weights; k++)
             {
                 //weights[k] = Gaussian();
-                weights[k] = doubleRand(-11,11);
+                weights[k] = doubleRand(-0.5,0.5);
             }
 
-            neurones[j] = CreateNeurone(weights,doubleRand(-68, -60),activation_functions_per_layer[i],nb_weights);
+            neurones[j] = CreateNeurone(weights,doubleRand(-1, 0),activation_functions_per_layer[i],nb_weights);
         }
         
         layers[i] = CreateLayer(neurones,nb_neurone_per_layer[i]);
