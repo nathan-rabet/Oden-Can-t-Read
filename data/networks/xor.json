@@ -2,7 +2,7 @@
 	"nb_networks": 1,
 	"networks": [
 		{
-			"character": 120,
+			"character": 0,
 			"nb_inputs": 2,
 			"nb_layers": 3,
 			"layers": [

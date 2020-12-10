@@ -17,7 +17,6 @@ SRC += src/ml/struct/neurone.c
 SRC += src/math/sortalgo.c
 SRC += src/rotate/rotate.c
 SRC += src/math/analysis.c
-SRC += src/ml/train/generate.c
 SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
 SRC += src/ml/struct/networks.c

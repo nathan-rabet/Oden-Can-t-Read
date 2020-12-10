@@ -1,7 +1,6 @@
 #include "backpropagation.h"
+#include "../struct/networks.h"
 
-#define CHAR "abcdefghijklmopqrstuvwxyz"
-#define LENCHAR 25
 #define LEARNINGRATE 0.01
 // 1/30
 
@@ -61,7 +60,7 @@ void trainingNetwork(struct Network *network, char *databasepath, size_t minibat
         free(inputs);
         char *path = malloc(sizeof(char) * 100);
         sprintf(path, "network.minibatch%lucomplet.json", nb);
-        SaveNetworkToJson(network, path);
+        //SaveNetworksToJSON(network, path);
         free(path);
     }
 }
@@ -168,7 +167,7 @@ void CalculateScore(struct Network *network, char *databasepath)
     int sumoftest = 0;
     for (int i = 0; i < numberoftest; i++)
     {
-        char letter = CHAR[rand() % LENCHAR];
+        char letter = CHARS[rand() % CHARSLEN];
         double *inputs = loadDataBase(databasepath, letter, rand() % 1000);
         //Feedforward (run the network with input to set the z and activation values)
         double *outputs = calculateNetworkOutput(network, inputs);
