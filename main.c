@@ -7,19 +7,16 @@
 #include <string.h>
 
 
-#include "src/ml/struct/network.h"
-#include "src/ml/train/generate.h"
-#include "src/ml/train/backpropagation.h"
-#include "src/ml/train/generate.h"
+#include "src/ml/struct/networks.h"
 
 void mustcall()
 {
    srand(time(NULL)); // Initialization, should only be called once.
 }
 
+
 int main()
-{
-   
+{   
    mustcall();
 
    size_t npl[] = {2, 2, 1};

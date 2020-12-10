@@ -5,7 +5,7 @@
 #include "layer.h"
 
 /**
- * @brief ML network
+ * @brief ML network for one single character
  * 
  */
 struct Network {
@@ -20,6 +20,12 @@ struct Network {
      * 
      */
     size_t nb_layers;
+
+    /**
+     * @brief The character the network will be able to confirm.
+     * 
+     */
+    char character;
 };
 
 /**
@@ -29,7 +35,7 @@ struct Network {
  * @param nb_layers The number of layers.
  * @return struct Network 
  */
-struct Network* CreateNetwork(struct Layer **layers,size_t nb_layers);
+struct Network* CreateNetwork(struct Layer **layers, size_t nb_layers,char expected_char);
 
 /**
  * @brief Free a Network object
@@ -38,28 +44,6 @@ struct Network* CreateNetwork(struct Layer **layers,size_t nb_layers);
  */
 void FreeNetwork(struct Network *network);
 
-/**
- * @brief Append an input layer to a nework.
- * 
- * @param network The network which need the input layer.
- */
-void appendFirstLayerToNetwork(struct Network *network);
-
-/**
- * @brief Create a C99 struct Network
- * by parsing a JSON file.
- * 
- * @param jsonFilePath The path of the JSON file.
- * @return struct Network 
- */
-struct Network* LoadNetworkFromJSON(char jsonFilePath[]);
-/**
- * @brief Give the number of input that a network has.
- * 
- * @param network The network to work with.
- * @return The number of inputs.
- */
-void SaveNetworkToJson(struct Network *network, char jsonFilePath[]);
 /**
  *@brief Save a selected network to a selected json file.
  *

@@ -1,43 +1,49 @@
 {
-	"nb_inputs":2,
-	"nb_layers": 3,
-    "layers": [
+	"nb_networks": 1,
+	"networks": [
 		{
-			"nb_neurones": 2,
-			"neurones": [
+			"character": 120,
+			"nb_inputs": 2,
+			"nb_layers": 3,
+			"layers": [
 				{
-					"bias": 0,
-					"activationFunction":1,
-					"nb_weights":2,
-					"weights": [
-						1,
-						1
+					"nb_neurones": 2,
+					"neurones": [
+						{
+							"bias": 0,
+							"activationFunction": 1,
+							"nb_weights": 2,
+							"weights": [
+								1,
+								1
+							]
+						},
+						{
+							"bias": 2,
+							"activationFunction": 1,
+							"nb_weights": 2,
+							"weights": [
+								-1,
+								-1
+							]
+						}
 					]
 				},
 				{
-					"bias": 2,
-					"activationFunction":1,
-					"nb_weights":2,
-					"weights": [
-						-1,
-						-1
+					"nb_neurones": 1,
+					"neurones": [
+						{
+							"bias": -1,
+							"actvationFunction": 1,
+							"nb_weights": 2,
+							"weights": [
+								1,
+								1
+							]
+						}
 					]
 				}
 			]
-		},
-		{
-			"nb_neurones": 1,
-			"neurones": [
-				{
-					"bias": -1,
-					"actvationFunction": 1,
-					"nb_weights":2,
-					"weights": [
-						1,
-						1
-					]
-				}
-    			]
 		}
-    ]
+	]
 }

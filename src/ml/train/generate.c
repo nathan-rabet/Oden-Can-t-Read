@@ -51,7 +51,7 @@ struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_lay
         layers[i] = CreateLayer(neurones,nb_neurone_per_layer[i]);
     }
 
-    return CreateNetwork(layers,nb_layers);
+    return CreateNetwork(layers,nb_layers,0);
     
 }
 
