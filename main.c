@@ -20,9 +20,9 @@ int main()
 {   
    mustcall();
 
-   size_t npl[] = {256, 20, 1};
-   char afpl[] = {0, 2, 2};
-   struct Networks *net = generateRandomNetworks(3, npl, afpl);
+   size_t npl[] = {16384, 20, 20, 1};
+   char afpl[] = {0, 2, 2, 2};
+   struct Networks *net = generateRandomNetworks(4, npl, afpl);
    //PrintNetwork(net);
 
    char cwd[PATH_MAX];

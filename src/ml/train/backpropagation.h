@@ -57,7 +57,7 @@ void CalculateScore(struct Network *network, char *databasepath);
 
 double* loadDataBase(char* databasepath, char letter, size_t imagenumber);
 
-void PrintInput(double *input, size_t height, size_t with);
+void PrintInput(double *input, size_t height, size_t with, char letter);
 
-void PrintOuput(double *output, char letter);
+void PrintOuput(double *output, char letter, char network_character);
 #endif

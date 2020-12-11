@@ -5,9 +5,9 @@
 #include "../../miscellaneous/color.h"
 
 #define LEARNINGRATE 0.01
-#define MINIBATCH_SIZE 100
-#define NB_TRAINING_PER_MINIBATCH 9
-#define NB_MINIBATCH 1000000
+#define MINIBATCH_SIZE 30
+#define NB_TRAINING_PER_MINIBATCH 100
+#define NB_MINIBATCH 50
 // 1/30
 
 double cost(struct Network *network, size_t expected_outputs_index)
@@ -72,17 +72,20 @@ void train(struct Networks *networks, char *datasetpath)
                     /!\ 
                     Implementation for charcters only
                 */
-                int char_index_list = rand() % CHARSLEN;
+                char letter = CHARS[rand() % CHARSLEN];
+                if (rand() % 100 < 30)
+                {
+                    letter = network->character;
+                }
 
                 // Check if the random letter is the one managed by the network
-                if (CHARS[char_index_list] == network->character)
+                if (letter == network->character)
                     expected_output[i][0] = 1;
 
-                double *tamerelapute = loadDataBase(datasetpath, CHARS[char_index_list], (rand() % 1000) + 1);
-                inputs[i] = tamerelapute;
+                inputs[i] = loadDataBase(datasetpath, letter, (rand() % 1000) + 1);
             }
 
-            printf("MINI-BATCH n°%lu\n", b);
+            printf("MINI-BATCH n°%lu/%u\n", b, NB_MINIBATCH);
 
             for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
             {
@@ -218,13 +221,17 @@ void CalculateScore(struct Network *network, char *databasepath)
     for (int i = 0; i < number_of_test; i++)
     {
         char letter = CHARS[rand() % CHARSLEN];
+        if (i < number_of_test/2)
+            letter = network->character;
 
         // Dataset loading
         double *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
 
         // Feedforward
         double *outputs = calculateNetworkOutput(network, inputs);
+        
 
+        PrintOuput(outputs, letter, network->character);
         if (letter == network->character)
         {
             if (*outputs > 0.8)
@@ -236,7 +243,7 @@ void CalculateScore(struct Network *network, char *databasepath)
                 nb_success += 1;
         }
 
-        cost_average += cost(network, letter == network->character ? 0 : 42);
+        cost_average += cost(network, letter == network->character ? 0 : 45615);
 
         free(outputs);
         free(inputs);
@@ -254,7 +261,7 @@ void CalculateScore(struct Network *network, char *databasepath)
     else
         color = RED;
 
-    printf("COST : %f\n", cost_average);
+    printf("\nCOST : %f\n", cost_average);
     printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n", color, percentage_of_success, RST, nb_success, number_of_test);
 }
 
@@ -278,14 +285,14 @@ double *loadDataBase(char *databasepath, char letter, size_t imagenumber)
     free(imagepath);
     free(imagename);
 
-    double *imagebin = binarizationpointer(image, 8);
+    double *imagebin = binarizationpointer(image, 1);
     SDL_FreeSurface(image);
     return imagebin;
 }
 
-void PrintInput(double *input, size_t height, size_t with)
+void PrintInput(double *input, size_t height, size_t with, char letter)
 {
-    printf("Input:\n");
+    printf("Input for %c:\n", letter);
     for (size_t i = 0; i < height; i++)
     {
         for (size_t j = 0; j < with; j++)
@@ -297,12 +304,21 @@ void PrintInput(double *input, size_t height, size_t with)
         }
         printf("|\n");
     }
-    scanf("\n");
 }
 
-void PrintOuput(double *output, char letter)
+void PrintOuput(double *output, char letter, char network_character)
 {
-    printf("Output: { ");
-    printf("%c=%f", letter, *output);
-    printf(" }\n");
+    char* color = RED;
+    if (letter == network_character)
+    {
+        if (*output > 0.8)
+            color = YEL;
+    }
+    else
+        if (*output < 0.5)
+            color = GRN;
+
+    printf(" ");
+    printf("%s%c=%f%s", color, letter, *output, RST);
+    printf(" |");
 }
