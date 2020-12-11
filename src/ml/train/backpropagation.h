@@ -11,6 +11,14 @@
 #include "../../matrix/matrix.h"
 #include "../../image/binarization.h"
 #include "../../math/analysis.h"
+#include "../../miscellaneous/color.h"
+
+
+#define LEARNINGRATE 0.01
+#define MINIBATCH_SIZE 30
+#define NB_TRAINING_PER_MINIBATCH 10000
+#define NB_MINIBATCH 15
+#define NB_INPUTS 32*32
 
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images

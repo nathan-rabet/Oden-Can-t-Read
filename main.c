@@ -20,7 +20,7 @@ int main()
 {   
    mustcall();
 
-   size_t npl[] = {16384, 20, 20, 1};
+   size_t npl[] = {NB_INPUTS, 20, 20, 1};
    char afpl[] = {0, 2, 2, 2};
    struct Networks *net = generateRandomNetworks(4, npl, afpl);
    //PrintNetwork(net);

@@ -1,13 +1,4 @@
 #include "backpropagation.h"
-#include "../struct/networks.h"
-#include "../struct/network.h"
-
-#include "../../miscellaneous/color.h"
-
-#define LEARNINGRATE 0.01
-#define MINIBATCH_SIZE 30
-#define NB_TRAINING_PER_MINIBATCH 100
-#define NB_MINIBATCH 50
 // 1/30
 
 double cost(struct Network *network, size_t expected_outputs_index)
@@ -73,7 +64,7 @@ void train(struct Networks *networks, char *datasetpath)
                     Implementation for charcters only
                 */
                 char letter = CHARS[rand() % CHARSLEN];
-                if (rand() % 100 < 30)
+                if (rand() % 100 < 45)
                 {
                     letter = network->character;
                 }
@@ -102,6 +93,7 @@ void train(struct Networks *networks, char *datasetpath)
             CalculateScore(network, datasetpath);
             printf("\n");
         }
+        SaveNetworksToJSON(networks, "networks.json");
     }
 }
 
@@ -232,6 +224,10 @@ void CalculateScore(struct Network *network, char *databasepath)
         
 
         PrintOuput(outputs, letter, network->character);
+        if ((i+1) % 12 == 0)
+        {
+            printf("\n");
+        }
         if (letter == network->character)
         {
             if (*outputs > 0.8)
@@ -285,7 +281,7 @@ double *loadDataBase(char *databasepath, char letter, size_t imagenumber)
     free(imagepath);
     free(imagename);
 
-    double *imagebin = binarizationpointer(image, 1);
+    double *imagebin = binarizationpointer(image, 128/sqrt(NB_INPUTS));
     SDL_FreeSurface(image);
     return imagebin;
 }
