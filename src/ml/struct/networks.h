@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "network.h"
 
-#define CHARS "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+#define CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define CHARSLEN 62
 
 /**

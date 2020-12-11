@@ -6,8 +6,8 @@
 
 #define LEARNINGRATE 0.01
 #define MINIBATCH_SIZE 100
+#define NB_TRAINING_PER_MINIBATCH 9
 #define NB_MINIBATCH 1000000
-#define NB_TRAINING_PER_MINIBATCH 10000
 // 1/30
 
 double cost(struct Network *network, size_t expected_outputs_index)
@@ -25,15 +25,15 @@ double cost(struct Network *network, size_t expected_outputs_index)
     return sum;
 }
 
-double cost_derivate(struct Network *network, size_t expected_outputs_index)
+double cost_derivate(struct Network *network, double *expected_outputs)
 {
     // cost' = ∑a-y
 
     double sum = 0;
     for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        double o = network->layers[network->nb_layers - 1]->output[i];
-        sum += o - (i == expected_outputs_index);
+        double o_i = network->layers[network->nb_layers - 1]->output[i];
+        sum += o_i - expected_outputs[i];
     }
     return sum;
 }
@@ -53,27 +53,33 @@ void train(struct Networks *networks, char *datasetpath)
                     free(network->layers[l]->neurones[n]->delta_bias);
                     free(network->layers[l]->neurones[n]->delta_weight);
                 }
-                network->layers[l]->neurones[n]->delta_bias = malloc(NB_TRAINING_PER_MINIBATCH * sizeof(double));
-                network->layers[l]->neurones[n]->delta_weight = malloc(network->layers[l - 1]->nb_neurones * NB_TRAINING_PER_MINIBATCH * sizeof(double));
+                network->layers[l]->neurones[n]->delta_bias = malloc(MINIBATCH_SIZE * sizeof(double));
+                network->layers[l]->neurones[n]->delta_weight = malloc(network->layers[l - 1]->nb_neurones * MINIBATCH_SIZE * sizeof(double));
             }
         }
 
         // Create NB_MINIBATCH minibatches
         for (size_t b = 0; b < NB_MINIBATCH; b++)
         {
-            double **expected_output = malloc(sizeof(double *) * networkNbOutput(network));
-            double **inputs = malloc(sizeof(double *) * MINIBATCH_SIZE);
-            int char_index_list[MINIBATCH_SIZE];
+            double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
+            double **inputs = malloc(MINIBATCH_SIZE * sizeof(double *));
 
             for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             {
                 // Define one minibatch size to MINIBATCH_SIZE
-                expected_output[i] = calloc(CHARSLEN, sizeof(double));
+                expected_output[i] = calloc(networkNbOutput(network), sizeof(double)); // expected_output[i] -> Target vector : (1 0 0 0 1 0 0 1 0 0 0)
+                /* 
+                    /!\ 
+                    Implementation for charcters only
+                */
+                int char_index_list = rand() % CHARSLEN;
 
-                char_index_list[i] = rand() % (CHARSLEN - 1);
+                // Check if the random letter is the one managed by the network
+                if (CHARS[char_index_list] == network->character)
+                    expected_output[i][0] = 1;
 
-                expected_output[i][char_index_list[i]] = 1;
-                inputs[i] = loadDataBase(datasetpath, CHARS[char_index_list[i]], rand() % 1000);
+                double *tamerelapute = loadDataBase(datasetpath, CHARS[char_index_list], (rand() % 1000) + 1);
+                inputs[i] = tamerelapute;
             }
 
             printf("MINI-BATCH n°%lu\n", b);
@@ -81,12 +87,17 @@ void train(struct Networks *networks, char *datasetpath)
             for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
             {
                 minibatch(network, inputs, expected_output);
-                free(expected_output[i]);
-                free(inputs[i]);
             }
 
-            free(expected_output); // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam
-            free(inputs);
+            // Free inputs & and expected ones
+            for (size_t i = 0; i < MINIBATCH_SIZE; i++)
+                free(inputs[i]);
+            for (size_t i = 0; i < MINIBATCH_SIZE; i++)
+                free(expected_output[i]);
+            // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam
+
+            CalculateScore(network, datasetpath);
+            printf("\n");
         }
     }
 }
@@ -125,7 +136,7 @@ void minibatch(struct Network *network, double **inputs, double **expected_outpu
         }
     }
 
-    // Average ∂bias and ∂weight
+    // Update ∂bias and ∂weight
     for (size_t l = 1; l < network->nb_layers; l++)
     {
         for (size_t n = 0; n < network->layers[l]->nb_neurones; n++)
@@ -142,7 +153,7 @@ void minibatch(struct Network *network, double **inputs, double **expected_outpu
                     sumweights += neurone->delta_weight[k * MINIBATCH_SIZE + i];
                 }
 
-                neurone->weights[k] = neurone->weights[k] - (LEARNINGRATE) * (sumweights / MINIBATCH_SIZE);
+                neurone->weights[k] -= (LEARNINGRATE) * (sumweights / MINIBATCH_SIZE);
             }
 
             double sum_delta_bias = 0;
@@ -150,18 +161,18 @@ void minibatch(struct Network *network, double **inputs, double **expected_outpu
             {
                 sum_delta_bias += neurone->delta_bias[i];
             }
-            neurone->bias = neurone->bias - (LEARNINGRATE) * (sum_delta_bias / MINIBATCH_SIZE);
+            neurone->bias -= (LEARNINGRATE) * (sum_delta_bias / MINIBATCH_SIZE);
         }
     }
 }
 
-void backpropagation(struct Network *network, double expected_output[])
+void backpropagation(struct Network *network, double *expected_output)
 {
     // δL = cost'(a) * actvation_fonction'(z)
     for (size_t k = 0; k < networkNbOutput(network); k++)
     {
         struct Neurone *nk = (network->layers[network->nb_layers - 1]->neurones[k]);
-        nk->delta_error = cost_derivate(network, expected_output[k]) * actvation_fonction_derivate(nk);
+        nk->delta_error = cost_derivate(network, expected_output) * actvation_fonction_derivate(nk);
     }
 
     // δl_i = actvation_fonction'(z) * ∑(w_ji * δ_j)
@@ -199,34 +210,52 @@ void backpropagation(struct Network *network, double expected_output[])
 
 void CalculateScore(struct Network *network, char *databasepath)
 {
-    printf("Is my network autistic ?\n");
-    int numberoftest = 1000;
-    int sumoftest = 0;
-    for (int i = 0; i < numberoftest; i++)
+    printf("SCORE : network '%c'\n", network->character);
+    int number_of_test = 1000;
+    int nb_success = 0;
+
+    double cost_average = 0;
+    for (int i = 0; i < number_of_test; i++)
     {
         char letter = CHARS[rand() % CHARSLEN];
-        double *inputs = loadDataBase(databasepath, letter, rand() % 1000);
-        //Feedforward (run the network with input to set the z and activation values)
-        double *outputs = calculateNetworkOutput(network, inputs);
-        free(inputs);
-        //PrintLayerOutput(&network->layers[0]);
-        //PrintOuput(outputs, letters, 62, letter);
 
-        if (letter == 0)
+        // Dataset loading
+        double *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
+
+        // Feedforward
+        double *outputs = calculateNetworkOutput(network, inputs);
+
+        if (letter == network->character)
         {
-            if (*outputs > 0.9)
-                sumoftest += 1;
+            if (*outputs > 0.8)
+                nb_success += 1;
         }
         else
         {
             if (*outputs < 0.5)
-                sumoftest += 1;
+                nb_success += 1;
         }
 
-        //printf("max = %lf\n\n", max);
+        cost_average += cost(network, letter == network->character ? 0 : 42);
+
         free(outputs);
+        free(inputs);
     }
-    printf("AI guess correctly %d%% letters. [%d/%d]\n", ((100 * sumoftest) / numberoftest), sumoftest, numberoftest);
+
+    cost_average /= number_of_test;
+    float percentage_of_success = ((100 * nb_success) / number_of_test);
+    char *color;
+
+    if (percentage_of_success > 90)
+        color = GRN;
+
+    else if (percentage_of_success > 50)
+        color = YEL;
+    else
+        color = RED;
+
+    printf("COST : %f\n", cost_average);
+    printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n", color, percentage_of_success, RST, nb_success, number_of_test);
 }
 
 double *loadDataBase(char *databasepath, char letter, size_t imagenumber)
@@ -241,13 +270,14 @@ double *loadDataBase(char *databasepath, char letter, size_t imagenumber)
     }
 
     //Build the image path string
-    char *imagepath = malloc(150 * sizeof(char));
+    char *imagepath = malloc((strlen(databasepath) + 150) * sizeof(char));
     sprintf(imagepath, "%s/%02x/train_%02x/train_%02x_%s.png", databasepath, letter, letter, letter, imagename);
 
     //Load image
     SDL_Surface *image = loadImage(imagepath);
     free(imagepath);
     free(imagename);
+
     double *imagebin = binarizationpointer(image, 8);
     SDL_FreeSurface(image);
     return imagebin;

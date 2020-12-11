@@ -42,7 +42,7 @@ void minibatch(struct Network *network, double **inputs, double **expected_outpu
  * @param expected_output Vector containg expected output values
  * len(expected_output) = len(network.output)
  */
-void backpropagation(struct Network *network, double expected_output[]);
+void backpropagation(struct Network *network, double *expected_output);
 
 /**
  * @brief Gives the array of the inputs.
