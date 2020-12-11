@@ -34,6 +34,7 @@ void train(struct Networks *networks, char *datasetpath)
     for (size_t net = 0; net < networks->nb_networks; net++)
     {
         struct Network *network = networks->networks[net];
+        printf("Network: %c\n", network->character);
         //Initializing neurones training parameters
         for (size_t l = 1; l < network->nb_layers; l++)
         {
@@ -75,8 +76,8 @@ void train(struct Networks *networks, char *datasetpath)
 
                 inputs[i] = loadDataBase(datasetpath, letter, (rand() % 1000) + 1);
             }
-
-            printf("MINI-BATCH n°%lu/%u\n", b, NB_MINIBATCH);
+            printf("\rMINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
+            fflush(stdout);
 
             for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
             {
@@ -90,9 +91,10 @@ void train(struct Networks *networks, char *datasetpath)
                 free(expected_output[i]);
             // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam
 
-            CalculateScore(network, datasetpath);
-            printf("\n");
         }
+        printf("\n");
+        CalculateScore(network, datasetpath);
+        printf("\nSaving networks\n");
         SaveNetworksToJSON(networks, "networks.json");
     }
 }
@@ -223,11 +225,11 @@ void CalculateScore(struct Network *network, char *databasepath)
         double *outputs = calculateNetworkOutput(network, inputs);
         
 
-        PrintOuput(outputs, letter, network->character);
+        /*PrintOuput(outputs, letter, network->character);
         if ((i+1) % 12 == 0)
         {
             printf("\n");
-        }
+        }*/
         if (letter == network->character)
         {
             if (*outputs > 0.8)
