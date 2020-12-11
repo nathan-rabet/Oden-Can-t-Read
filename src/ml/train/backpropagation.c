@@ -2,6 +2,8 @@
 #include "../struct/networks.h"
 #include "../struct/network.h"
 
+#include "../../miscellaneous/color.h"
+
 #define LEARNINGRATE 0.01
 #define MINIBATCH_SIZE 100
 #define NB_MINIBATCH 1000000
@@ -59,15 +61,15 @@ void train(struct Networks *networks, char *datasetpath)
         // Create NB_MINIBATCH minibatches
         for (size_t b = 0; b < NB_MINIBATCH; b++)
         {
-            double **expected_output = malloc(sizeof(double*) * networkNbOutput(network));
+            double **expected_output = malloc(sizeof(double *) * networkNbOutput(network));
             double **inputs = malloc(sizeof(double *) * MINIBATCH_SIZE);
             int char_index_list[MINIBATCH_SIZE];
 
             for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             {
                 // Define one minibatch size to MINIBATCH_SIZE
-                expected_output[i] = calloc(CHARSLEN,sizeof(double));
-                
+                expected_output[i] = calloc(CHARSLEN, sizeof(double));
+
                 char_index_list[i] = rand() % (CHARSLEN - 1);
 
                 expected_output[i][char_index_list[i]] = 1;
@@ -76,10 +78,15 @@ void train(struct Networks *networks, char *datasetpath)
 
             printf("MINI-BATCH n°%lu\n", b);
 
-            for (size_t j = 0; j < NB_TRAINING_PER_MINIBATCH; j++)
+            for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
             {
                 minibatch(network, inputs, expected_output);
+                free(expected_output[i]);
+                free(inputs[i]);
             }
+
+            free(expected_output); // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam
+            free(inputs);
         }
     }
 }
@@ -103,7 +110,7 @@ void minibatch(struct Network *network, double **inputs, double **expected_outpu
             for (size_t n = 0; n < network->layers[l]->nb_neurones; n++)
             {
                 struct Neurone *neurone = (network->layers[l]->neurones[n]);
-                
+
                 // ∂cost/∂b_i = δl_i
                 neurone->delta_bias[i] = neurone->delta_error;
 
@@ -181,7 +188,7 @@ void backpropagation(struct Network *network, double expected_output[])
         {
             double sum = 0;
             for (size_t j = 0; j < network->layers[l + 1]->nb_neurones; j++)
-            { 
+            {
                 // neurones[j] -> change | weights[i] don't change
                 sum += network->layers[l + 1]->neurones[j]->delta_error * network->layers[l + 1]->neurones[j]->weights[i];
             }
@@ -192,7 +199,7 @@ void backpropagation(struct Network *network, double expected_output[])
 
 void CalculateScore(struct Network *network, char *databasepath)
 {
-    printf("Calculating score...\n");
+    printf("Is my network autistic ?\n");
     int numberoftest = 1000;
     int sumoftest = 0;
     for (int i = 0; i < numberoftest; i++)
