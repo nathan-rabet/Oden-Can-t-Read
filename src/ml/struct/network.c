@@ -39,14 +39,7 @@ size_t networkNbInput(struct Network *network)
 
 size_t networkNbOutput(struct Network *network)
 {
-
-    size_t nb_output = 0;
-
-    for (size_t i = 0; i < network->nb_layers; i++)
-    {
-        nb_output = network->layers[i]->nb_neurones;
-    }
-    return nb_output;
+    return network->layers[network->nb_layers-1]->nb_neurones;
 }
 
 size_t networkNbNeurones(struct Network *network)
@@ -97,6 +90,8 @@ double *calculateNetworkOutput(struct Network *network, double *input)
         free(nextInput);
         nextInput = outputNetwork;
     }
+
+    network->layers[network->nb_layers - 1]->output = outputNetwork;
     return outputNetwork;
 }
 

@@ -30,13 +30,6 @@ struct Neurone {
      */
     double *weights;
 
-    // List of implemented functions :
-    // 0 -> No activation function
-    // 1 -> Threashold
-    // 2 -> Sigmoïd
-    // 3 -> ReLU
-    // 4 -> Smooth ReLU
-
     /**
      * @brief The activation function
      * 
@@ -45,6 +38,7 @@ struct Neurone {
      * 2 -> Sigmoïd,
      * 3 -> ReLU,
      * 4 -> Smooth ReLU
+     * 5 -> Tanh
      */
     unsigned char activationFunction;
 

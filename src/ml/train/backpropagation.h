@@ -6,6 +6,7 @@
 #include <math.h>
 #include "loadmnist.h"
 #include "../struct/network.h"
+#include "../struct/networks.h"
 #include "../struct/neurone.h"
 #include "../../matrix/matrix.h"
 #include "../../image/binarization.h"
@@ -21,7 +22,7 @@
  * @param minibatchtrain The number of train of batch.
  * @return Return a array of the inputs.
  */
-void trainingNetwork(struct Network *network, char* databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain);
+void train(struct Networks *networks, char *datasetpath);
 
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
@@ -32,14 +33,16 @@ void trainingNetwork(struct Network *network, char* databasepath, size_t minibat
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network *network, size_t minibatchsize, double **inputs, char *inputschar, size_t minibatch_i);
+void minibatch(struct Network *network, double **inputs, double **expected_output);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones
  * 
  * @param network The network to work with.
+ * @param expected_output Vector containg expected output values
+ * len(expected_output) = len(network.output)
  */
-void backpropagation(struct Network *network);
+void backpropagation(struct Network *network, double expected_output[]);
 
 /**
  * @brief Gives the array of the inputs.

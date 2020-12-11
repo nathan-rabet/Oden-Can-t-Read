@@ -111,6 +111,11 @@ double activationFunction(struct Neurone* neurone)
         case 4:
             return smooth_relu(neurone->outputWithoutActivation);
             break;
+
+        // Tanh
+        case 5:
+            return tanh(neurone->outputWithoutActivation);
+            break;
         }
         return neurone->outputWithoutActivation;
 }
@@ -143,6 +148,11 @@ double actvation_fonction_derivate(struct Neurone* neurone)
         // Smooth ReLU
         case 4:
             return smooth_relu_derivate(neurone->outputWithoutActivation);
+            break;
+
+        // Tanh
+        case 5:
+            return 1 - pow(tanh(neurone->outputWithoutActivation),2);
             break;
         }
         return neurone->outputWithoutActivation;

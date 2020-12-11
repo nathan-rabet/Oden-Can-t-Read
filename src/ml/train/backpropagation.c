@@ -1,161 +1,191 @@
 #include "backpropagation.h"
 #include "../struct/networks.h"
+#include "../struct/network.h"
 
 #define LEARNINGRATE 0.01
+#define MINIBATCH_SIZE 100
+#define NB_MINIBATCH 1000000
+#define NB_TRAINING_PER_MINIBATCH 10000
 // 1/30
 
-void trainingNetwork(struct Network *network, char *databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain)
+double cost(struct Network *network, size_t expected_outputs_index)
 {
+    // cost = ½∑(a-y)²
 
-    //Fresh neurones
-    for (size_t i = 1; i < network->nb_layers; i++)
+    double sum = 0;
+    for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        for (size_t n = 0; n < network->layers[i]->nb_neurones; n++)
-        {
-            if ((network->layers[i]->neurones[n]->delta_bias) != NULL && network->layers[i]->neurones[n]->delta_weight != NULL)
-            {
-                free(network->layers[i]->neurones[n]->delta_bias);
-                free(network->layers[i]->neurones[n]->delta_weight);
-            }
-            network->layers[i]->neurones[n]->delta_bias = malloc(minibatchsize * sizeof(double));
-            network->layers[i]->neurones[n]->delta_weight = malloc(network->layers[i - 1]->nb_neurones * minibatchsize * sizeof(double));
-        }
+        double o = network->layers[network->nb_layers - 1]->output[i];
+        sum += pow(o - (i == expected_outputs_index), 2);
     }
 
-    for (size_t nb = 0; nb < minibatchnumber; nb++)
+    sum /= 2;
+    return sum;
+}
+
+double cost_derivate(struct Network *network, size_t expected_outputs_index)
+{
+    // cost' = ∑a-y
+
+    double sum = 0;
+    for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        double **inputs = malloc(sizeof(double *) * minibatchsize);
-        char *inputschar = malloc(sizeof(char) * minibatchsize);
-        inputschar[0] = 0;
-        inputschar[1] = 1;
-        inputschar[2] = 1;
-        inputschar[3] = 0;
-        double* datainput = malloc(sizeof(double) * 2);
-        datainput[0] = 0;
-        datainput[1] = 0;
-        inputs[0] = datainput;
-        double* datainput1 = malloc(sizeof(double) * 2);
-        datainput1[0] = 0;
-        datainput1[1] = 0;
-        inputs[1] = datainput1;
-        double* datainput2 = malloc(sizeof(double) * 2);
-        datainput2[0] = 0;
-        datainput2[1] = 0;
-        inputs[2] = datainput2;
-        double* datainput3 = malloc(sizeof(double) * 2);
-        datainput3[0] = 0;
-        datainput3[1] = 0;
-        inputs[3] = datainput3;
+        double o = network->layers[network->nb_layers - 1]->output[i];
+        sum += o - (i == expected_outputs_index);
+    }
+    return sum;
+}
 
-        printf("minibatch num°%lu\n", nb);
-        for (size_t j = 0; j < minibatchtrain; j++)
+void train(struct Networks *networks, char *datasetpath)
+{
+    for (size_t net = 0; net < networks->nb_networks; net++)
+    {
+        struct Network *network = networks->networks[net];
+        //Initializing neurones training parameters
+        for (size_t l = 1; l < network->nb_layers; l++)
         {
-            minibatch(network, minibatchsize, inputs, inputschar, nb + 1);
+            for (size_t n = 0; n < network->layers[l]->nb_neurones; n++)
+            {
+                if ((network->layers[l]->neurones[n]->delta_bias) != NULL && network->layers[l]->neurones[n]->delta_weight != NULL)
+                {
+                    free(network->layers[l]->neurones[n]->delta_bias);
+                    free(network->layers[l]->neurones[n]->delta_weight);
+                }
+                network->layers[l]->neurones[n]->delta_bias = malloc(NB_TRAINING_PER_MINIBATCH * sizeof(double));
+                network->layers[l]->neurones[n]->delta_weight = malloc(network->layers[l - 1]->nb_neurones * NB_TRAINING_PER_MINIBATCH * sizeof(double));
+            }
         }
 
-        for (size_t i = 0; i < minibatchsize; i++)
+        // Create NB_MINIBATCH minibatches
+        for (size_t b = 0; b < NB_MINIBATCH; b++)
         {
-            free(inputs[i]);
+            double **expected_output = malloc(sizeof(double*) * networkNbOutput(network));
+            double **inputs = malloc(sizeof(double *) * MINIBATCH_SIZE);
+            int char_index_list[MINIBATCH_SIZE];
+
+            for (size_t i = 0; i < MINIBATCH_SIZE; i++)
+            {
+                // Define one minibatch size to MINIBATCH_SIZE
+                expected_output[i] = calloc(CHARSLEN,sizeof(double));
+                
+                char_index_list[i] = rand() % (CHARSLEN - 1);
+
+                expected_output[i][char_index_list[i]] = 1;
+                inputs[i] = loadDataBase(datasetpath, CHARS[char_index_list[i]], rand() % 1000);
+            }
+
+            printf("MINI-BATCH n°%lu\n", b);
+
+            for (size_t j = 0; j < NB_TRAINING_PER_MINIBATCH; j++)
+            {
+                minibatch(network, inputs, expected_output);
+            }
         }
-        free(inputs);
-        char *path = malloc(sizeof(char) * 100);
-        sprintf(path, "network.minibatch%lucomplet.json", nb);
-        //SaveNetworksToJSON(network, path);
-        free(path);
     }
 }
 
-void minibatch(struct Network *network, size_t minibatchsize, double **inputs, char *inputschar, size_t minibatch_i)
+void minibatch(struct Network *network, double **inputs, double **expected_output)
 {
-    for (size_t i = 0; i < minibatchsize; i++)
+    for (size_t i = 0; i < MINIBATCH_SIZE; i++)
     {
-        //Define minibatch
+        // Define minibatch
         double *input = inputs[i];
 
-        //Feedforward (run the network with input to set the z and activation values)
-        double *output = calculateNetworkOutput(network, input);
+        // Feedforward (run the network with input to set the z and activation values)
+        calculateNetworkOutput(network, input);
 
-        //printf("\nLettre %c:\n", network->character);
-        //PrintInput(input, 16, 16);
-        //PrintOuput(output, network->character);
+        // Backpropagate the error
+        backpropagation(network, expected_output[i]);
 
-        //Output error (calculation delta of the last layer) delta = (activation - outputTarget) * actvation_fonction'(z)
-        for (size_t k = 0; k < networkNbOutput(network); k++)
-        {
-            struct Neurone *n = (network->layers[network->nb_layers - 1]->neurones[k]);
-            n->delta_error = (double)((output[k] - inputschar[i]));
-
-            //n->delta_error *= actvation_fonction_derivate(n);
-
-            printf("%c:%f; ", 'c', n->delta_error);
-        }
-
-        free(output);
-
-        //Backpropagate the error
-        backpropagation(network);
-
-        //Set delta
+        // Set ∂cost
         for (size_t l = 1; l < network->nb_layers; l++)
         {
             for (size_t n = 0; n < network->layers[l]->nb_neurones; n++)
             {
                 struct Neurone *neurone = (network->layers[l]->neurones[n]);
+                
+                // ∂cost/∂b_i = δl_i
                 neurone->delta_bias[i] = neurone->delta_error;
 
                 for (size_t k = 0; k < network->layers[l - 1]->nb_neurones; k++)
                 {
-                    neurone->delta_weight[k * minibatchsize + i] = activationFunction((network->layers[l - 1]->neurones[k])) * neurone->delta_error;
+                    // ∂cost/∂w_ij = a_j * δl_i
+                    // i : image i
+                    // k : data of the image i
+                    neurone->delta_weight[k * MINIBATCH_SIZE + i] = activationFunction((network->layers[l - 1]->neurones[k])) * neurone->delta_error;
                 }
             }
         }
-
-        //PrintNetwork(network);
     }
 
-    //Average bias and weight
+    // Average ∂bias and ∂weight
     for (size_t l = 1; l < network->nb_layers; l++)
     {
         for (size_t n = 0; n < network->layers[l]->nb_neurones; n++)
         {
             struct Neurone *neurone = (network->layers[l]->neurones[n]);
-            double sumbias = 0;
 
-            for (size_t k = 0; k < network->layers[l - 1]->nb_neurones; k++)
+            for (size_t k = 0; k < network->layers[l]->neurones[0]->nb_inputs; k++)
             {
                 double sumweights = 0;
 
-                for (size_t i = 0; i < minibatchsize; i++)
+                for (size_t i = 0; i < MINIBATCH_SIZE; i++)
                 {
 
-                    sumweights += neurone->delta_weight[k * minibatchsize + i];
+                    sumweights += neurone->delta_weight[k * MINIBATCH_SIZE + i];
                 }
 
-                neurone->weights[k] = neurone->weights[k] - (LEARNINGRATE) * (sumweights/minibatchsize);
+                neurone->weights[k] = neurone->weights[k] - (LEARNINGRATE) * (sumweights / MINIBATCH_SIZE);
             }
-            for (size_t i = 0; i < minibatchsize; i++)
+
+            double sum_delta_bias = 0;
+            for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             {
-                sumbias += neurone->delta_bias[i];
+                sum_delta_bias += neurone->delta_bias[i];
             }
-            neurone->bias = neurone->bias - (LEARNINGRATE) * (sumbias/minibatchsize);
+            neurone->bias = neurone->bias - (LEARNINGRATE) * (sum_delta_bias / MINIBATCH_SIZE);
         }
     }
 }
 
-void backpropagation(struct Network *network)
+void backpropagation(struct Network *network, double expected_output[])
 {
-    //For each l=L−1,L−2,…,2 compute deltal = (45)
-    //struct Layer* layer = network.layers;
+    // δL = cost'(a) * actvation_fonction'(z)
+    for (size_t k = 0; k < networkNbOutput(network); k++)
+    {
+        struct Neurone *nk = (network->layers[network->nb_layers - 1]->neurones[k]);
+        nk->delta_error = cost_derivate(network, expected_output[k]) * actvation_fonction_derivate(nk);
+    }
+
+    // δl_i = actvation_fonction'(z) * ∑(w_ji * δ_j)
+    //                               j
+    // l=L−1,L−2,…,2
+
+    //        *  *                         *  *
+    //     *        *         00        *        *
+    //    *    i0    *    --------->   *    j0    *
+    //    *          *                 *          *
+    //     *        *    \              *        *
+    //        *  *         \ 10            *  *        | δl_i = actvation_fonction'(z) * ∑(w_ji * δ_j)
+    //                       \                         |                                 j
+    //        *  *             \           *  *        | l=L−1,L−2,…,2
+    //     *        *            \      *        *
+    //    *    i1    *             \   *    j1    *
+    //    *          *              -- *          *
+    //     *        *                   *        *
+    //        *  *                         *  *
+
     for (size_t l = network->nb_layers - 2; l > 0; l--)
     {
-        for (size_t j = 0; j < network->layers[l]->nb_neurones; j++)
+        for (size_t i = 0; i < network->layers[l]->nb_neurones; i++)
         {
             double sum = 0;
-            for (size_t k = 0; k < network->layers[l + 1]->nb_neurones; k++)
-            {
-                sum += network->layers[l + 1]->neurones[k]->weights[j] * network->layers[l + 1]->neurones[k]->delta_error;
+            for (size_t j = 0; j < network->layers[l + 1]->nb_neurones; j++)
+            { 
+                // neurones[j] -> change | weights[i] don't change
+                sum += network->layers[l + 1]->neurones[j]->delta_error * network->layers[l + 1]->neurones[j]->weights[i];
             }
-            network->layers[l]->neurones[j]->delta_error = sum * actvation_fonction_derivate(network->layers[l]->neurones[j]);
+            network->layers[l]->neurones[i]->delta_error = sum * actvation_fonction_derivate(network->layers[l]->neurones[i]);
         }
     }
 }
