@@ -33,13 +33,11 @@ int main()
 
    FindCharacters(networks, Letters_Matrix);
 
-   printf("%s", Letters_Matrix->AllCharacters);
+   printf("%s\n", Letters_Matrix->AllCharacters);
 
 
 
    FreeNetworks(networks);
-   free(datasetpath);
-   free(networkpath);
 
    return 0;
 }

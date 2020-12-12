@@ -272,7 +272,7 @@ char FindCharacter(struct Networks *networks, char* letter_matrix)
 
 void FindCharacters(struct Networks *networks, struct Characters *character)
 {
-    for (size_t i = 0; i < character->Nb_Characters; i++)
+    for (size_t i = 0; i < character->Nb_Characters - 1; i++)
     {
         if (character->AllCharacters[i] != ' ')
             character->AllCharacters[i] = FindCharacter(networks, character->Character_Binarized_Matrix[i]);
