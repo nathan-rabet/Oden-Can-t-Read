@@ -220,7 +220,8 @@ void SaveNetworksToJSON(struct Networks *networks, char jsonFilePath[])
             fprintf(f, "\n");
         }
         fprintf(f, "\t\t\t]\n"
-                   "\t\t}\n");
+                   "\t\t}%s\n",
+                net != networks->nb_networks - 1 ? "," : "");
     }
     fprintf(f, "\t]\n"
                "}");
@@ -240,12 +241,13 @@ double **calculateNetworksOutput(struct Networks *networks, double input[])
     return output;
 }
 
-struct Networks* generateRandomNetworks(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[]) {
+struct Networks *generateRandomNetworks(size_t nb_layers, size_t nb_neurone_per_layer[], char activation_functions_per_layer[])
+{
 
-    struct Networks *networks = CreateNetworks(malloc(sizeof(struct Network*) * CHARSLEN),CHARSLEN);
-    for (size_t n = 0; n < CHARSLEN; n++)
+    struct Networks *networks = CreateNetworks(malloc(sizeof(struct Network *) * CHARSLEN), CHARSLEN);
+    for (size_t n = 0; n < networks->nb_networks; n++)
     {
-        networks->networks[n] = generateRandomNetwork(nb_layers,nb_neurone_per_layer,activation_functions_per_layer,CHARS[n]);
+        networks->networks[n] = generateRandomNetwork(nb_layers, nb_neurone_per_layer, activation_functions_per_layer, CHARS[n]);
     }
 
     return networks;
