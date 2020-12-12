@@ -5,7 +5,7 @@
 #include "layer.h"
 
 /**
- * @brief ML network
+ * @brief ML network for one single character
  * 
  */
 struct Network {
@@ -13,13 +13,19 @@ struct Network {
      * @brief Point to the first layer of the network
      * 
      */
-    struct Layer *layers;
+    struct Layer **layers;
 
     /**
      * @brief The number of layers that the network has.
      * 
      */
     size_t nb_layers;
+
+    /**
+     * @brief The character the network will be able to confirm.
+     * 
+     */
+    char character;
 };
 
 /**
@@ -29,7 +35,7 @@ struct Network {
  * @param nb_layers The number of layers.
  * @return struct Network 
  */
-struct Network CreateNetwork(struct Layer *layers,size_t nb_layers);
+struct Network* CreateNetwork(struct Layer **layers, size_t nb_layers,char expected_char);
 
 /**
  * @brief Free a Network object
@@ -39,25 +45,10 @@ struct Network CreateNetwork(struct Layer *layers,size_t nb_layers);
 void FreeNetwork(struct Network *network);
 
 /**
- * @brief Append an input layer to a nework.
- * 
- * @param network The network which need the input layer.
- */
-void appendFirstLayerToNetwork(struct Network *network);
-
-/**
- * @brief Create a C99 struct Network
- * by parsing a JSON file.
- * 
- * @param jsonFilePath The path of the JSON file.
- * @return struct Network 
- */
-struct Network LoadNetworkFromJSON(char jsonFilePath[]);
-/**
- * @brief Give the number of input that a network has.
- * 
- * @param network The network to work with.
- * @return The number of inputs.
+ *@brief Save a selected network to a selected json file.
+ *
+ *@param Network the network selected to be saved
+ *       jsonFilePath the path of the file where the network is saved
  */
 size_t networkNbInput(struct Network *network);
 
@@ -94,8 +85,26 @@ size_t networkNbWeights(struct Network *network);
  * will perform calculus on.
  * @return The list of outputs.
  */
-double * calculateNetworkOutput(struct Network *network, double* intput);
-
+double *calculateNetworkOutput(struct Network *network, char *input);
 
 void PrintNetwork(struct Network* network);
+
+/**
+ * @brief Generate a network with a random configuration.
+ * 
+ * @param nb_layers The number of layer the network will have 
+ * (entry layer excluded).
+ * @param nb_neurone_per_layer An array with the number of neurone per layer.
+ * For example, for a network with 2 layers, if you want the layer 1 to
+ * have 20 neurones and the layer 2 to have 10 neurones, then 
+ * nb_neurone_per_layer = {20,10}.
+ * @param activation_functions_per_layer An array containing 
+ * the characters corresponding to an activation function. For example, if you want the layer 1 to
+ * have a sigmoïd function and the layer 2 to have a ReLU function, then 
+ * activation_functions_per_layer = {2,3}.
+ * @param nbtrainimages Number of images.
+ * @param expected_character The character the network should recognize.
+ * @return struct Network 
+ */
+struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[],char expected_character);
 #endif

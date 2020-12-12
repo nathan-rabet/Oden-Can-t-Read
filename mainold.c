@@ -54,7 +54,7 @@ int main()
    //Feedforward (run the network with input to set the z and activation values)
    double *output = calculateNetworkOutput(net, inputs);
    free(inputs);
-   PrintOuput(output, letters, j-1);
+   //PrintOuput(output, letters, j-1);
 
    return 0;
 }

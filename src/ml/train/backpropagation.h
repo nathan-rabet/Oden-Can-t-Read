@@ -4,11 +4,21 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include "loadmnist.h"
 #include "../struct/network.h"
+#include "../struct/networks.h"
 #include "../struct/neurone.h"
 #include "../../matrix/matrix.h"
 #include "../../image/binarization.h"
 #include "../../math/analysis.h"
+#include "../../miscellaneous/color.h"
+
+
+#define LEARNINGRATE 0.01
+#define MINIBATCH_SIZE 30
+#define NB_TRAINING_PER_MINIBATCH 10000
+#define NB_MINIBATCH 15
+#define NB_INPUTS 32*32
 
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
@@ -20,7 +30,7 @@
  * @param minibatchtrain The number of train of batch.
  * @return Return a array of the inputs.
  */
-void trainingNetwork(struct Network *network, char* databasepath, size_t minibatchsize, size_t minibatchnumber, size_t minibatchtrain);
+void train(struct Networks *networks, char *datasetpath);
 
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
@@ -31,14 +41,16 @@ void trainingNetwork(struct Network *network, char* databasepath, size_t minibat
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network *network, char* databasepath, size_t minibatchsize, char* letters);
+void minibatch(struct Network *network, char **inputs, double **expected_output);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones
  * 
  * @param network The network to work with.
+ * @param expected_output Vector containg expected output values
+ * len(expected_output) = len(network.output)
  */
-void backpropagation(struct Network *network);
+void backpropagation(struct Network *network, double *expected_output);
 
 /**
  * @brief Gives the array of the inputs.
@@ -49,9 +61,11 @@ void backpropagation(struct Network *network);
  */
 double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
-double* loadDataBase(char* databasepath, char letter, size_t imagenumber);
+void CalculateScore(struct Network *network, char *databasepath);
 
-void PrintInput(double *input, size_t height, size_t with);
+char *loadDataBase(char *databasepath, char letter, size_t imagenumber);
 
-void PrintOuput(double *output, char *letters, size_t size);
+void PrintInput(double *input, size_t height, size_t with, char letter);
+
+void PrintOuput(double *output, char letter, char network_character);
 #endif

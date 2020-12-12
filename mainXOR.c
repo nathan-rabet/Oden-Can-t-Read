@@ -2,19 +2,22 @@
 #include <stdlib.h>
 
 #include "src/ml/struct/network.h"
+#include "src/ml/train/backpropagation.h"
 
 int main()
 {
-	char* file_name = "data/networks/xor.json";
+	char* file_name = "network.minibatch0complet.json";
 
-	struct Network net = LoadNetworkFromJSON(file_name);
+	struct Network *net = LoadNetworkFromJSON(file_name);
 
 	for (double i = 0; i <= 1; i++)
 	{
 		for (double j = 0; j <= 1; j++)
 		{
 			double dataInput[2] = {i,j};
-			printf("XOR(%lf,%lf) => %lf\n",i,j,*calculateNetworkOutput(&net, dataInput));
+			double *output = calculateNetworkOutput(net, dataInput);
+			printf("XOR(%lf,%lf) => %lf\n",i,j,*output);
+			//PrintOuput(output, "R");
 		}		
 	}
 	

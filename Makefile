@@ -17,10 +17,10 @@ SRC += src/ml/struct/neurone.c
 SRC += src/math/sortalgo.c
 SRC += src/rotate/rotate.c
 SRC += src/math/analysis.c
-SRC += src/ml/train/generate.c
 SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
 SRC += src/segmentation/segmentation.c
+SRC += src/ml/struct/networks.c
 
 
 OUT = ocr
@@ -39,5 +39,10 @@ binarization : ${SRC} ${SRC}
 rotation : ${SRC} ${SRC}
 	${CC} mainROTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainROTATION
 
+<<<<<<< HEAD
 segmentation : ${SRC} ${SRC}
 	${CC} mainSEGMENTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainSEGMENTATION
+=======
+test : ${SRC} ${SRC}
+	${CC} maintest.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintest
+>>>>>>> train

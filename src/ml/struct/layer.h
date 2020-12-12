@@ -8,18 +8,12 @@
  * @brief ML layer
  * 
  */
-struct Layer {    
-    /**
-     * @brief Point the next direct layer.
-     * 
-     * @see l0 -> l1 -> l2 -> ... -> ln -> NULL
-     * 
-     */
-    struct Layer *nextLayer; 
+struct Layer {
 
-    struct Neurone *neurones; /* Point to the first neurone of the current layer */
+    struct Neurone **neurones; /* Point to the first neurone of the current layer */
 
     size_t nb_neurones; /* The number of neurones that the layer contains */
+    
 };
 
 // Initiate a layer (which includes neurones)
@@ -32,7 +26,7 @@ struct Layer {
  * @param nb_neurones The number of neurones your layer will have.
  * @return struct Layer 
  */
-struct Layer CreateLayer(struct Neurone neurones[], size_t nb_neurones);
+struct Layer* CreateLayer(struct Neurone **neurones, size_t nb_neurones);
 
 /**
  * @brief Free a Layer object.
@@ -48,7 +42,17 @@ void FreeLayer(struct Layer* layer);
  * @param intput The input list you want to calculate output with.
  * @return The list of outputs.
  */
-double * CalculateLayerOutput(struct Layer layer, double intput[]);
+double * CalculateLayerOutput(struct Layer *layer, double intput[]);
 
 void PrintLayer(struct Layer *layer);
+
+void PrintLayerOutput(struct Layer* layer);
+
+/**
+ * @brief Apply softmax function to a layer output
+ * 
+ * @param layer The layer to work with
+ * @return double* 
+ */
+double * softmax(struct Layer layer);
 #endif
