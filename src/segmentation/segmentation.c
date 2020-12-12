@@ -2,193 +2,246 @@
 #include <stdlib.h>
 #include "segmentation.h"
 #include "../matrix/matrix.h"
+#include "../rotate/rotate.h"
 
-int RLSACompleted(struct Image Image, struct MatrixDOUBLE m)
+
+
+int RLSACompleted()
 {
-    return 1;
+    return 0;
 }
 //To be remplaced/improved with RLSA once ready
-int GetTextBlock(struct Image Image, struct MatrixDOUBLE m)
+int GetTextBlock(struct MatrixDOUBLE m, struct TextBlock *textblocks)
 {
-    int FirstValue = 0; // 0 if NoneFound 1 otherwise
-    int FirstValueX = 0;
-    int FirstValueY = 0;
-    int LastValueX = 0;
-    int LastValueY = 0;
-    for (int i = 0; i < m.rows; i++)
+  int FirstValue=0; // 0 if NoneFound 1 otherwise
+  int FirstValueX=0;
+  int FirstValueY=0;
+  int LastValueX=0;
+  int LastValueY=0;
+  for (int i=0; i<m.rows;i++)
+  {
+    for (int j=0; j<m.columns;j++)
     {
-
-        for (int j = 0; j < m.columns; j++)
+      if (matrixGetDOUBLE(m,i,j)==0)
+      {
+        LastValueX=i;
+        if (FirstValue==0)
         {
-            if (matrixGetDOUBLE(m, i, j) == 0)
-            {
-                LastValueX = i;
-                if (FirstValue == 0)
-                {
-                    FirstValueX = i;
-                    FirstValueY = j;
-                    FirstValue = 1;
-                }
-                if (j < FirstValueY)
-                {
-                    j = FirstValueY;
-                }
-                if (j > LastValueY)
-                {
-                    LastValueY = j;
-                }
-            }
+          FirstValueX=i;
+          FirstValueY=j;
+          FirstValue=1;
         }
-    }
-    struct MatrixDOUBLE newMatrix = createMatrixDOUBLE(LastValueX - FirstValueX, LastValueY - FirstValueY);
-    for (int i = FirstValueX; i < LastValueX; i++)
-    {
-        for (int j = FirstValueY; j < LastValueY; j++)
+        if(j<FirstValueY)
         {
-            double K = matrixGetDOUBLE(m, i, j);
-            matrixSetDOUBLE(newMatrix, i, j, K);
+          FirstValueY=j;
         }
+        if(j>LastValueY)
+        {
+          LastValueY=j;
+        }
+      }
     }
-    struct TextBlock newTextBlock;
-    newTextBlock.matrix = &newMatrix;
-    Image.textblocks[0] = newTextBlock;
-    return 1;
+  }
+  struct TextBlock newTextBlock;
+  newTextBlock.FirstX=FirstValueX;
+  newTextBlock.LastX=LastValueX;
+  newTextBlock.FirstY=FirstValueY;
+  newTextBlock.LastY=LastValueY;
+  
+  textblocks[0]=newTextBlock;
+  return 1;
 }
 
-int GetLines(struct TextBlock *tblock, struct MatrixDOUBLE m)
+int GetLines(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *lines)
 {
-    int nbLines = 0;
-    int height = m.rows;
-    int width = m.columns;
-    int isInLine = 0;
-    int FirstPoint = 0;
-    for (int i = 0; i < height; i++)
-    {
-        int Blank_line = 0; //Boolen False if !=0;
-        for (int j = 0; j < width; j++)
-        {
-            if (matrixGetDOUBLE(m, i, j) == 0)
-            {
-                Blank_line = 1;
-            }
-        }
+  int nbLines=0;
+  int isInLine = 0;
+  int FirstPoint=T->FirstX;
+  for (int i = T->FirstX; i <= T->LastX; i++)
+  {
+    int Blank_line = 0; //Boolen False if !=0;
 
-        // In the case we have found a new line
-        if (isInLine == 0 && Blank_line != 0)
-        {
-            FirstPoint = i;
-            isInLine = 1; //True
-        }
-
-        // In the case we are at the end of a line
-        // (precedent iteration was in a line AND no pixel found in this
-        // iteration)
-        if (isInLine && Blank_line == 0)
-        {
-            isInLine = 0;
-            // We create a Line object, and fill the lines[] array
-            struct Line newLine;
-            newLine.FirstPoint = FirstPoint; //first y found
-            newLine.LastPoint = i;           //current height y
-            tblock->lines[nbLines] = newLine;
-            nbLines++;
-        }
-    }
-    //Last line
-    if (isInLine)
+    for (int j = T->FirstY; j <= T->LastY; j++)
     {
-        struct Line newLine;
-        newLine.FirstPoint = FirstPoint;
-        newLine.LastPoint = height - 1;
-        tblock->lines[nbLines] = newLine;
-        nbLines++;
+      if (matrixGetDOUBLE(m, i, j) == 0)
+      {
+        Blank_line=1;
+        break;
+      }
+
     }
-    return nbLines;
+    //We weren't in a Line and the Line isn't Blank
+    if(isInLine==0 && Blank_line!=0)
+    {
+      FirstPoint=i;
+      isInLine=1;
+    }
+
+    if(isInLine!=0 && Blank_line==0)
+    {
+      isInLine=0;
+      struct Line newLine;
+      newLine.FirstPoint=FirstPoint;
+      newLine.LastPoint=i;
+      lines[nbLines]=newLine;
+      nbLines++;
+    }
+  }
+
+  if(isInLine)
+  {
+    struct Line newLine;
+    newLine.FirstPoint=FirstPoint;
+    newLine.LastPoint=T->LastX;
+    lines[nbLines]=newLine;
+    nbLines++;
+  }
+  return nbLines;
+
 }
 
-int Find_Characters(struct Line *line, struct MatrixDOUBLE m)
+int GetCharacters(struct MatrixDOUBLE m,struct TextBlock *T, struct Line *L, struct Character *characters)
 {
-    int upperBound = line->FirstPoint;
-    int lowerBound = line->LastPoint;
-    int nbCharacters = 0;
-    int isInChar = 0;
-    int FirstPoint = 0;
-    int height = m.rows;
-    int width = m.columns;
+  int FirstX=L->FirstPoint;
+  int LastX=L->LastPoint;
+  int FirstY=T->FirstY;
+  int LastY=T->LastY;
+  int nbCharacters=0;
+  int isInChar=0;
+  int FirstPoint=0;
 
-    // total space width between characters for computing averageSpace
-    int totalSpace = 0;
+  int totalspace=0;
 
-    for (int x = 0; x < width; x++)
+  for(int i=FirstY; i<=LastY;i++)
+  {
+    int Blankcolumn=0;
+
+    for(int j=FirstX;j<=LastX;j++)
     {
-        int Blank_Line = 0; //Boolen False if !=0;
-        // Counting black pixels
-        for (int y = upperBound; y <= lowerBound; y++)
-        {
-            if (matrixGetDOUBLE(m, x, y) == 0)
-            {
-                Blank_Line = 1;
-            }
-        }
-        // In the case we have found a new character
-        if (isInChar == 0 && Blank_Line != 0)
-        {
-            FirstPoint = x;
-            isInChar = 1; // <=> True
-
-            if (nbCharacters)
-            {
-                // computes the space width between this new character
-                // and the previous one
-                totalSpace += FirstPoint - line->characters[nbCharacters - 1].LastPoint;
-            }
-        }
-
-        // In the case we are at the end of a character
-        if (isInChar && Blank_Line == 0)
-        {
-            struct Character character;
-            character.FirstPoint = FirstPoint;
-            character.LastPoint = x;
-            line->characters[nbCharacters] = character;
-            nbCharacters++;
-            isInChar = 0; // <=> False
-
-            struct MatrixDOUBLE newMatrix = createMatrixDOUBLE(line->LastPoint - line->FirstPoint, character.FirstPoint - character.LastPoint);
-            for (int i = line->FirstPoint; i < line->LastPoint; i++)
-            {
-                for (int j = character.FirstPoint; j < character.LastPoint; j++)
-                {
-                    double K = matrixGetDOUBLE(m, character.FirstPoint, line->FirstPoint);
-                    matrixSetDOUBLE(newMatrix, i, j, K);
-                }
-            }
-            character.matrix = &newMatrix;
-        }
+      if (matrixGetDOUBLE(m, j, i) == 0)
+      {
+        
+        Blankcolumn=1;
+        break;
+      }
     }
-    if (isInChar)
+
+    if (isInChar == 0 && Blankcolumn != 0)
     {
-        struct Character character;
-        character.FirstPoint = FirstPoint;
-        character.LastPoint = width;
-        line->characters[nbCharacters] = character;
-        nbCharacters++;
-        struct MatrixDOUBLE newMatrix = createMatrixDOUBLE(line->LastPoint - line->FirstPoint, character.FirstPoint - character.LastPoint);
-        for (int i = line->FirstPoint; i < line->LastPoint; i++)
-        {
-            for (int j = character.FirstPoint; j < character.LastPoint; j++)
-            {
-                double K = matrixGetDOUBLE(m, character.FirstPoint, line->FirstPoint);
-                matrixSetDOUBLE(newMatrix, i, j, K);
-            }
-        }
+      FirstPoint=i;
+      isInChar=1;
+      if(nbCharacters!=0)
+      {
+        totalspace+=FirstPoint-characters[nbCharacters-1].LastPoint;
+      }
     }
-    line->nbCharacters = nbCharacters;
 
-    // fills the avergeSpace field once this line is finished
-    if (nbCharacters > 1)
+    if (isInChar!=0 && Blankcolumn == 0)
     {
-        line->average_space = totalSpace / (nbCharacters - 1);
+      isInChar=0;
+      struct Character newcharacter;
+      newcharacter.FirstPoint = FirstPoint;
+      newcharacter.LastPoint=i;
+      characters[nbCharacters]=newcharacter;
+      nbCharacters++;
     }
-    return nbCharacters;
+
+  }
+  L->nbCharacters=nbCharacters;
+  if(nbCharacters>1)
+  {
+    L->average_space=totalspace/nbCharacters;
+  }
+  return nbCharacters;
+}
+
+
+struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
+{
+    int FirstValue=0; // 0 if NoneFound 1 otherwise
+  int FirstValueX=0;
+  int FirstValueY=0;
+  int LastValueX=0;
+  int LastValueY=0;
+  for (int i=0; i<m.rows;i++)
+  {
+    for (int j=0; j<m.columns;j++)
+    {
+      if (matrixGetDOUBLE(m,i,j)==0)
+      {
+        LastValueX=i;
+        if (FirstValue==0)
+        {
+          FirstValueX=i;
+          FirstValueY=j;
+          FirstValue=1;
+        }
+        if(j<FirstValueY)
+        {
+          FirstValueY=j;
+        }
+        if(j>LastValueY)
+        {
+          LastValueY=j;
+        }
+      }
+    }
+  }
+
+  int cwidth=LastValueY-FirstValueY;
+  int cheight=LastValueX-FirstValueX;
+
+  float width=m.columns;
+  float height=m.rows;
+  struct MatrixDOUBLE newcharMatrix=createMatrixDOUBLE(STANDARD_CHARACTER_MATRIX_SIZE,STANDARD_CHARACTER_MATRIX_SIZE);
+
+  for(int x=0;x<STANDARD_CHARACTER_MATRIX_SIZE;x++)
+  {
+    for(int y=0;y<STANDARD_CHARACTER_MATRIX_SIZE;y++)
+    {
+      matrixSetDOUBLE(newcharMatrix,x,y,1);
+    }
+  }
+
+  if(height>width)
+  {
+    float Convert=STANDARD_CHARACTER_MATRIX_SIZE/height;
+    for(int i=0;i<STANDARD_CHARACTER_MATRIX_SIZE;i++)
+    {
+      for(int j=0;j<width*Convert;j++)
+      {
+        if(i/Convert<height && j/Convert<width)
+        {
+          double Value=matrixGetDOUBLE(m,(int)i/Convert,(int)j/Convert);
+          if(Value==0)
+          {
+            int y=(STANDARD_CHARACTER_MATRIX_SIZE/2)-(cwidth*Convert/2)+j;
+            matrixSetDOUBLE(newcharMatrix,i,y,Value);
+          }
+        }
+      }
+    }
+  }
+
+  else
+  {
+    float Convert=STANDARD_CHARACTER_MATRIX_SIZE/width;
+    for(int i=0;i<width*Convert;i++)
+    {
+      for(int j=0;j<STANDARD_CHARACTER_MATRIX_SIZE;j++)
+      {
+        if(i/Convert<height && j/Convert<width)
+        {
+          double Value=matrixGetDOUBLE(m,(int)i/Convert,(int)j/Convert);
+          if(Value==0)
+          {
+            int x=(STANDARD_CHARACTER_MATRIX_SIZE/2)-(cheight*Convert/2)+i;
+            matrixSetDOUBLE(newcharMatrix,x,j,Value);
+          }
+        }
+      }
+    }
+  }
+
+  return newcharMatrix;
 }

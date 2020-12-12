@@ -2,9 +2,10 @@
 #define SEGMENTATION_H
 #include "../matrix/matrix.h"
 
-#define MAX_TBLOCK_NUMBER 15 //for the calloc call
-#define MAX_LINE_NUMBER 70 //for the calloc call
-#define MAX_CHARACTER_NUMBER 100 //for the calloc call
+#define MAX_TBLOCK_NUMBER 15 //for the memory allocation
+#define MAX_LINE_NUMBER 70 //for the memory allocation
+#define MAX_CHARACTER_NUMBER 200 //for the memory allocation
+#define STANDARD_CHARACTER_MATRIX_SIZE 16 //for the memory allocation
 
 /**
  * @brief Define a visual character in a matrix.
@@ -14,7 +15,6 @@ struct Character
 {
     int FirstPoint;
     int LastPoint;
-    struct MatrixDOUBLE *matrix;
     char character;
 };
 
@@ -28,7 +28,7 @@ struct Line
     int LastPoint;
     int nbCharacters;
     int average_space; //average space between the characters
-    struct Character *characters; //array of the characters in this line
+    
 };
 
 /**
@@ -37,8 +37,10 @@ struct Line
  */
 struct TextBlock
 {
-    struct MatrixDOUBLE *matrix; //matrix of the textblock
-    struct Line *lines; //array of the lines of the textblock
+    int FirstX;
+    int LastX;
+    int FirstY;
+    int LastY;
     int nbLines;
 };
 
@@ -49,12 +51,11 @@ struct TextBlock
 struct Image
 {
     struct MatrixDOUBLE matrix; //matrix of the textblock 
-    struct TextBlock *textblocks; // array of the textblocks of the Image found by RLSA/the only tectblock
     int nbTextblocs;
 };
 
 
-int RLSACompleted(struct Image Image, struct MatrixDOUBLE m);
+int RLSACompleted();
 
 
 /**
@@ -63,24 +64,12 @@ int RLSACompleted(struct Image Image, struct MatrixDOUBLE m);
  * @param m The the Matrix of the image.
  * @return TextBlock.
  */
-int GetTextBlock(struct Image Image, struct MatrixDOUBLE m);
+int GetTextBlock(struct MatrixDOUBLE m,struct TextBlock *textblocks);
 
-/**
- * @brief Get the Lines object from the Matrix of the TextBlock.
- * 
- * @param tblock TextBlock with lines needed to be found.
- * @param m The Matrix of the TextBlock.
- * @return Number of lines in the TextBlock.
- */
-int GetLines(struct TextBlock *tblock, struct MatrixDOUBLE m);
+int GetLines(struct MatrixDOUBLE m,struct TextBlock *T, struct Line *lines);
 
-/**
- * @brief Get the Characters object from the Matrix of the TextBlock via the values of the Line.
- * 
- * @param line Line of the current character.
- * @param m The Matrix of the TextBlock.
- * @return The number of characters in the Line.
- */
-int Find_Characters(struct Line *line,struct MatrixDOUBLE m);
+int GetCharacters(struct MatrixDOUBLE m,struct TextBlock *T, struct Line *L, struct Character *characters);
+
+struct MatrixDOUBLE Resize(struct MatrixDOUBLE m);
 
 #endif
