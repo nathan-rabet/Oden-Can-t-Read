@@ -84,4 +84,6 @@ double **calculateNetworksOutput(struct Networks *networks, char input[]);
  */
 struct Networks* generateRandomNetworks(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[]);
 
+
+void FreeNetworks(struct Networks *networks);
 #endif

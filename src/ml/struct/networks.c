@@ -13,15 +13,6 @@ struct Networks *CreateNetworks(struct Network **networks, size_t nb_networks)
     return nets;
 }
 
-void FreeNetworks(struct Networks *networks)
-{
-    for (size_t i = 0; i < networks->nb_networks; i++)
-    {
-        FreeNetwork(networks->networks[i]);
-    }
-    free(networks);
-}
-
 struct Networks *LoadNetworksFromJSON(char jsonFilePath[])
 {
     char *fileData;
@@ -249,4 +240,15 @@ struct Networks* generateRandomNetworks(size_t nb_layers,size_t nb_neurone_per_l
     }
 
     return networks;
+}
+
+void FreeNetworks(struct Networks *networks)
+{
+    for (size_t i = 0; i < networks->nb_networks; i++)
+    {
+        FreeNetwork(networks->networks[i]);
+        free(networks->networks[i]);
+    }
+    free(networks->networks);
+    free(networks);
 }

@@ -27,9 +27,10 @@ void FreeNetwork(struct Network *network)
     for (size_t i = 0; i < network->nb_layers; i++)
     {
         FreeLayer(network->layers[i]);
+        free(network->layers[i]);
     }
     
-    //free(network);
+    free(network->layers);
 }
 
 size_t networkNbInput(struct Network *network)
@@ -90,8 +91,6 @@ double *calculateNetworkOutput(struct Network *network, char *input)
         free(nextInput);
         nextInput = outputNetwork;
     }
-
-    network->layers[network->nb_layers - 1]->output = outputNetwork;
     return outputNetwork;
 }
 
@@ -129,8 +128,7 @@ struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_lay
         {
             // Weights
             size_t nb_weights = nb_neurone_per_layer[i-1];
-            double *weights = NULL;
-            weights = malloc(sizeof(double) * nb_weights);
+            double *weights = malloc(sizeof(double) * nb_weights);
             for (size_t k = 0; k < nb_weights; k++)
             {
                 //weights[k] = Gaussian();

@@ -13,8 +13,6 @@ struct Layer {
     struct Neurone **neurones; /* Point to the first neurone of the current layer */
 
     size_t nb_neurones; /* The number of neurones that the layer contains */
-
-    double *output; /* The output of the layer*/
     
 };
 

@@ -3,8 +3,9 @@
 #include <stdlib.h>
 
 // If no activation function, set activationFunction to 0
-struct Neurone* CreateNeurone(double *weights,double bias, unsigned char activation_Function, size_t nb_input) {
-    struct Neurone* neurone = malloc(sizeof(struct Neurone));
+struct Neurone *CreateNeurone(double *weights, double bias, unsigned char activation_Function, size_t nb_input)
+{
+    struct Neurone *neurone = malloc(sizeof(struct Neurone));
     neurone->weights = weights;
     neurone->nb_inputs = nb_input;
     neurone->bias = bias;
@@ -16,8 +17,9 @@ struct Neurone* CreateNeurone(double *weights,double bias, unsigned char activat
     return neurone;
 }
 
-void FreshNeuroneForTraining(struct Neurone *neurone, size_t nblastLayer ,size_t nbtrainimages)
+void FreshNeuroneForTraining(struct Neurone *neurone, size_t nblastLayer, size_t nbtrainimages)
 {
+    free(neurone->weights);
     if (neurone->delta_bias != NULL)
     {
         free(neurone->delta_bias);
@@ -29,131 +31,137 @@ void FreshNeuroneForTraining(struct Neurone *neurone, size_t nblastLayer ,size_t
 
 void FreeNeurone(struct Neurone *neurone)
 {
-    //free(neurone->weights);
     if ((neurone->delta_bias) != NULL && (neurone->delta_bias) != NULL)
     {
         free(neurone->delta_bias);
         free(neurone->delta_weight);
     }
-    //free(neurone);
 }
 
-double threshold(double x) {
-    if (x <= 0) {
+double threshold(double x)
+{
+    if (x <= 0)
+    {
         return 0;
     }
     return 1;
 }
 
-double sigmoid(double x) {
+double sigmoid(double x)
+{
     return 1 / (1 + exp(-x));
 }
 
-double sigmoid_derivate(double x) {
+double sigmoid_derivate(double x)
+{
     double e = sigmoid(x);
     return e * (1 - e);
 }
 
-double relu(double x) {
-    return fmax(0,x);
+double relu(double x)
+{
+    return fmax(0, x);
 }
 
-double smooth_relu(double x) {
+double smooth_relu(double x)
+{
     return log(1 + exp(x));
 }
 
-double smooth_relu_derivate(double x) {
-    double ex = exp(x);
-    return (ex)/(1+ex);
-}
-
-double calculateNeuroneOutput(struct Neurone* neurone, double input[]) {
-        neurone->outputWithoutActivation = 0;
-
-        for (size_t i = 0; i < neurone->nb_inputs; i++)
-        {
-            double w = neurone->weights[i];
-            double in = input[i];
-            neurone->outputWithoutActivation += w * in;
-        }
-
-        neurone->outputWithoutActivation += neurone->bias;
-
-        return activationFunction(neurone);
-}
-
-double activationFunction(struct Neurone* neurone)
+double smooth_relu_derivate(double x)
 {
-        // Activation functions
-        switch (neurone->activationFunction)
-        {
-        // Identity
-        case 0:
-            return neurone->outputWithoutActivation;
-            break;
-
-        // Threshold
-        case 1:
-            return threshold(neurone->outputWithoutActivation);
-            break;
-
-        // Sigmoïd
-        case 2:
-            return sigmoid(neurone->outputWithoutActivation);
-            break;
-
-        // ReLU
-        case 3:
-            return relu(neurone->outputWithoutActivation);
-            break;
-
-        // Smooth ReLU
-        case 4:
-            return smooth_relu(neurone->outputWithoutActivation);
-            break;
-
-        // Tanh
-        case 5:
-            return tanh(neurone->outputWithoutActivation);
-            break;
-        }
-        return neurone->outputWithoutActivation;
+    double ex = exp(x);
+    return (ex) / (1 + ex);
 }
 
-double actvation_fonction_derivate(struct Neurone* neurone)
+double calculateNeuroneOutput(struct Neurone *neurone, double input[])
+{
+    neurone->outputWithoutActivation = 0;
+
+    for (size_t i = 0; i < neurone->nb_inputs; i++)
+    {
+        double w = neurone->weights[i];
+        double in = input[i];
+        neurone->outputWithoutActivation += w * in;
+    }
+
+    neurone->outputWithoutActivation += neurone->bias;
+
+    return activationFunction(neurone);
+}
+
+double activationFunction(struct Neurone *neurone)
 {
     // Activation functions
-        switch (neurone->activationFunction)
-        {
-        // Identity
-        case 0:
-            return 1;
-            break;
-
-        // Threshold
-        case 1:
-            return 0;
-            break;
-
-        // Sigmoïd
-        case 2:
-            return sigmoid_derivate(neurone->outputWithoutActivation);
-            break;
-
-        // ReLU
-        case 3:
-            return threshold(neurone->outputWithoutActivation);
-            break;
-
-        // Smooth ReLU
-        case 4:
-            return smooth_relu_derivate(neurone->outputWithoutActivation);
-            break;
-
-        // Tanh
-        case 5:
-            return 1 - pow(tanh(neurone->outputWithoutActivation),2);
-            break;
-        }
+    switch (neurone->activationFunction)
+    {
+    // Identity
+    case 0:
         return neurone->outputWithoutActivation;
+        break;
+
+    // Threshold
+    case 1:
+        return threshold(neurone->outputWithoutActivation);
+        break;
+
+    // Sigmoïd
+    case 2:
+        return sigmoid(neurone->outputWithoutActivation);
+        break;
+
+    // ReLU
+    case 3:
+        return relu(neurone->outputWithoutActivation);
+        break;
+
+    // Smooth ReLU
+    case 4:
+        return smooth_relu(neurone->outputWithoutActivation);
+        break;
+
+    // Tanh
+    case 5:
+        return tanh(neurone->outputWithoutActivation);
+        break;
+    }
+    return neurone->outputWithoutActivation;
+}
+
+double actvation_fonction_derivate(struct Neurone *neurone)
+{
+    // Activation functions
+    switch (neurone->activationFunction)
+    {
+    // Identity
+    case 0:
+        return 1;
+        break;
+
+    // Threshold
+    case 1:
+        return 0;
+        break;
+
+    // Sigmoïd
+    case 2:
+        return sigmoid_derivate(neurone->outputWithoutActivation);
+        break;
+
+    // ReLU
+    case 3:
+        return threshold(neurone->outputWithoutActivation);
+        break;
+
+    // Smooth ReLU
+    case 4:
+        return smooth_relu_derivate(neurone->outputWithoutActivation);
+        break;
+
+    // Tanh
+    case 5:
+        return 1 - pow(tanh(neurone->outputWithoutActivation), 2);
+        break;
+    }
+    return neurone->outputWithoutActivation;
 }

@@ -8,7 +8,7 @@ double cost(struct Network *network, size_t expected_outputs_index)
     double sum = 0;
     for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        double o = network->layers[network->nb_layers - 1]->output[i];
+        double o = activationFunction(network->layers[network->nb_layers - 1]->neurones[i]);
         sum += pow(o - (i == expected_outputs_index), 2);
     }
 
@@ -23,7 +23,7 @@ double cost_derivate(struct Network *network, double *expected_outputs)
     double sum = 0;
     for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        double o_i = network->layers[network->nb_layers - 1]->output[i];
+        double o_i = activationFunction(network->layers[network->nb_layers - 1]->neurones[i]);
         sum += o_i - expected_outputs[i];
     }
     return sum;
@@ -107,7 +107,8 @@ void minibatch(struct Network *network, char **inputs, double **expected_output)
         char *input = inputs[i];
 
         // Feedforward (run the network with input to set the z and activation values)
-        calculateNetworkOutput(network, input);
+        double *output = calculateNetworkOutput(network, input);
+        free(output);
 
         // Backpropagate the error
         backpropagation(network, expected_output[i]);
