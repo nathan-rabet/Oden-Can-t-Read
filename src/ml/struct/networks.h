@@ -65,7 +65,7 @@ void SaveNetworksToJSON(struct Networks *networks, char jsonFilePath[]);
  * will perform calculus on.
  * @return The list of outputs.
  */
-double ** calculateNetworksOutput(struct Networks *networks, double input[]);
+double **calculateNetworksOutput(struct Networks *networks, char input[]);
 
 /**
  * @brief Generate networks with a random configuration.

@@ -31,9 +31,9 @@ struct MatrixDOUBLE binarization(SDL_Surface *image, int scale)
   return matrix;
 }
 
-double *binarizationpointer(SDL_Surface *image, int scale)
+char *binarizationpointer(SDL_Surface *image, int scale)
 {
-  double *imagebin = malloc(sizeof(double) * ((image->h)/scale) * ((image->w)/scale));
+  char *imagebin = malloc(sizeof(char) * ((image->h)/scale) * ((image->w)/scale));
   Uint32 pixel;
   SDL_Color color;
   for (int i = 0; i < (image->h); i += scale)

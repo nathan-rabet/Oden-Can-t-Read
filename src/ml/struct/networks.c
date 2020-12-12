@@ -227,7 +227,7 @@ void SaveNetworksToJSON(struct Networks *networks, char jsonFilePath[])
     fclose(f);
 }
 
-double **calculateNetworksOutput(struct Networks *networks, double input[])
+double **calculateNetworksOutput(struct Networks *networks, char input[])
 {
     double **output = malloc(sizeof(struct Network *) * networks->nb_networks);
 

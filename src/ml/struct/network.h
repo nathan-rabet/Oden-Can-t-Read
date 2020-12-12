@@ -85,7 +85,7 @@ size_t networkNbWeights(struct Network *network);
  * will perform calculus on.
  * @return The list of outputs.
  */
-double * calculateNetworkOutput(struct Network *network, double* intput);
+double *calculateNetworkOutput(struct Network *network, char *input);
 
 void PrintNetwork(struct Network* network);
 

@@ -69,7 +69,7 @@ size_t networkNbWeights(struct Network *network)
     return nb_weights;
 }
 
-double *calculateNetworkOutput(struct Network *network, double *input)
+double *calculateNetworkOutput(struct Network *network, char *input)
 {
     double *nextInput;
     double *outputNetwork;
@@ -78,8 +78,8 @@ double *calculateNetworkOutput(struct Network *network, double *input)
     outputNetwork = malloc(sizeof(double) * (network->layers[0]->nb_neurones));
     for (size_t i = 0; i < network->layers[0]->nb_neurones; i++)
     {
-        double *entry = &input[i];
-        outputNetwork[i] = calculateNeuroneOutput((network->layers[0]->neurones[i]), entry);
+        double entry = (double)input[i];
+        outputNetwork[i] = calculateNeuroneOutput((network->layers[0]->neurones[i]), &entry);
     }
     nextInput = outputNetwork;
 
