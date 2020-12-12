@@ -47,13 +47,8 @@ char *binarizationpointer(SDL_Surface *image, int scale)
         {      
           pixel = getPixel(image, j+k, i+w);
 
-<<<<<<< HEAD
-          SDL_GetRGB(pixel,(image)->format,&color.r, &color.g, &color.b);
-          *(imagebin+ i*image->w +j) = (double)((color.r + color.g + color.b) / 3 < 128 ? 0 : 1);
-=======
           SDL_GetRGB(pixel, (image)->format, &color.r, &color.g, &color.b);
           moy += (int)(color.r + color.g + color.b);
->>>>>>> train
         }
       }
       if ((moy / (3 * scale * scale)) < 128)

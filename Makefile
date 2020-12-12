@@ -39,10 +39,7 @@ binarization : ${SRC} ${SRC}
 rotation : ${SRC} ${SRC}
 	${CC} mainROTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainROTATION
 
-<<<<<<< HEAD
 segmentation : ${SRC} ${SRC}
 	${CC} mainSEGMENTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainSEGMENTATION
-=======
 test : ${SRC} ${SRC}
 	${CC} maintest.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintest
->>>>>>> train

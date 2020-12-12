@@ -1,10 +1,12 @@
 #ifndef SEGMENTATION_H
 #define SEGMENTATION_H
 #include "../matrix/matrix.h"
+#include "../rotate/rotate.h"
+#include "../image/binarization.h"
 
-#define MAX_TBLOCK_NUMBER 15 //for the memory allocation
-#define MAX_LINE_NUMBER 70 //for the memory allocation
-#define MAX_CHARACTER_NUMBER 200 //for the memory allocation
+#define MAX_TBLOCK_NUMBER 15              //for the memory allocation
+#define MAX_LINE_NUMBER 70                //for the memory allocation
+#define MAX_CHARACTER_NUMBER 200          //for the memory allocation
 #define STANDARD_CHARACTER_MATRIX_SIZE 16 //for the memory allocation
 
 /**
@@ -28,7 +30,6 @@ struct Line
     int LastPoint;
     int nbCharacters;
     int average_space; //average space between the characters
-    
 };
 
 /**
@@ -50,13 +51,21 @@ struct TextBlock
  */
 struct Image
 {
-    struct MatrixDOUBLE matrix; //matrix of the textblock 
+    struct MatrixDOUBLE matrix; //matrix of the textblock
     int nbTextblocs;
 };
 
+/**
+ * @brief Matrix of characters
+ * 
+ */
+struct Characters
+{
+    char **Character_Binarized_Matrix;
+    char *AllCharacters;
+};
 
 int RLSACompleted();
-
 
 /**
  * @brief Gets the Text Block object from the Matrix of the image.
@@ -64,12 +73,14 @@ int RLSACompleted();
  * @param m The the Matrix of the image.
  * @return TextBlock.
  */
-int GetTextBlock(struct MatrixDOUBLE m,struct TextBlock *textblocks);
+int GetTextBlock(struct MatrixDOUBLE m, struct TextBlock *textblocks);
 
-int GetLines(struct MatrixDOUBLE m,struct TextBlock *T, struct Line *lines);
+int GetLines(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *lines);
 
-int GetCharacters(struct MatrixDOUBLE m,struct TextBlock *T, struct Line *L, struct Character *characters);
+int GetCharacters(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *L, struct Character *characters);
 
 struct MatrixDOUBLE Resize(struct MatrixDOUBLE m);
+
+struct Characters *Segmentation(char *imagepath);
 
 #endif
