@@ -1,12 +1,33 @@
+#include <stdlib.h>
+#include <math.h>
+
+#include "../ml/struct/network.h"
 #include "analysis.h"
 
-double derive(double (*f)(double), double a)
+double cost(struct Network *network, size_t expected_outputs_index)
 {
-    const double dh = 1.0e-6;
-    return (f(a + dh) - f(a)) / dh;
+    // cost = ½∑(a-y)²
+
+    double sum = 0;
+    for (size_t i = 0; i < networkNbOutput(network); i++)
+    {
+        double o = network->layers[network->nb_layers - 1]->output[i];
+        sum += pow(o - (i == expected_outputs_index), 2);
+    }
+
+    sum /= 2;
+    return sum;
 }
 
-double * gradient(double vect[]) {
-    //TODO : gradient function
-    return vect;
+double cost_derivate(struct Network *network, double *expected_outputs)
+{
+    // cost' = ∑a-y
+
+    double sum = 0;
+    for (size_t i = 0; i < networkNbOutput(network); i++)
+    {
+        double o_i = network->layers[network->nb_layers - 1]->output[i];
+        sum += o_i - expected_outputs[i];
+    }
+    return sum;
 }

@@ -8,17 +8,11 @@
 
 
 #include "src/ml/struct/networks.h"
-#include "src/ml/train/backpropagation.h"
-
-void mustcall()
-{
-   srand(time(NULL)); // Initialization, should only be called once.
-}
-
+#include "src/ml/train/multithreading/multithreading.h"
 
 int main()
 {   
-   mustcall();
+   srand(time(NULL)); // Initialization, should only be called once.
 
    size_t npl[] = {NB_INPUTS, 20, 20, 1};
    char afpl[] = {0, 2, 2, 2};
@@ -27,7 +21,7 @@ int main()
 
    char cwd[PATH_MAX];
    char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/by_class");
-   train(net,datasetpath);
+   trainNetworksMULTITHREAD(net,datasetpath);
 
    printf("Done!\n");
    FreeNetworks(net);
