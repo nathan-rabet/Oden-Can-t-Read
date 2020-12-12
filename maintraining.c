@@ -6,6 +6,7 @@
 #include <limits.h>
 #include <string.h>
 
+
 #include "src/ml/struct/networks.h"
 #include "src/ml/train/backpropagation.h"
 
@@ -14,25 +15,22 @@ void mustcall()
    srand(time(NULL)); // Initialization, should only be called once.
 }
 
+
 int main()
-{
-   
+{   
    mustcall();
+
+   size_t npl[] = {NB_INPUTS, 20, 20, 1};
+   char afpl[] = {0, 2, 2, 2};
+   struct Networks *net = generateRandomNetworks(4, npl, afpl);
+   //PrintNetwork(net);
+
    char cwd[PATH_MAX];
    char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/by_class");
-   struct Networks *networks = LoadNetworksFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/networks.json");
+   train(net,datasetpath);
 
-   
-   for (size_t net = 0; net < networks->nb_networks; net++)
-   {
-      CalculateScore(networks->networks[net], datasetpath);
-   }
-   
-
-   FreeNetworks(networks);
-   
-
-   
+   printf("Done!\n");
+   FreeNetworks(net);
 
    return 0;
 }

@@ -252,3 +252,29 @@ void FreeNetworks(struct Networks *networks)
     free(networks->networks);
     free(networks);
 }
+
+char FindCharacter(struct Networks *networks, char* letter_matrix)
+{
+    size_t index_char = 0;
+    double max_sort = 0;
+    double **outputs = calculateNetworksOutput(networks, letter_matrix);
+    for (size_t i = 0; i < networks->nb_networks; i++)
+    {
+        if (max_sort < outputs[i][0])
+        {
+            index_char = i;
+            max_sort = outputs[i][0];
+        }
+    }
+    
+    return CHARS[index_char];
+}
+
+void FindCharacters(struct Networks *networks, struct Characters *character)
+{
+    for (size_t i = 0; i < character->Nb_Characters; i++)
+    {
+        if (character->AllCharacters[i] != ' ')
+            character->AllCharacters[i] = FindCharacter(networks, character->Character_Binarized_Matrix[i]);
+    }
+}

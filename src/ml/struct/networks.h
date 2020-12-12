@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "network.h"
+#include "../../segmentation/segmentation.h"
 
 #define CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 #define CHARSLEN 62
@@ -84,6 +85,9 @@ double **calculateNetworksOutput(struct Networks *networks, char input[]);
  */
 struct Networks* generateRandomNetworks(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[]);
 
-
 void FreeNetworks(struct Networks *networks);
+
+char FindCharacter(struct Networks *networks, char* letter_matrix);
+
+void FindCharacters(struct Networks *networks, struct Characters *character);
 #endif

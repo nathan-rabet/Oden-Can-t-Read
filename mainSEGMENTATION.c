@@ -4,5 +4,5 @@
 
 int main()
 {
-   Segmentation("coucou");
+   Segmentation("/home/maxou/Documents/gitrepos/noe.topeza/data/images/rota3.png");
 }
