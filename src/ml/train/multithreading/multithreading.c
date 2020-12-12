@@ -30,13 +30,11 @@ int trainNetworkTHREAD(void *data)
     // Create NB_MINIBATCH minibatches
     for (size_t b = 0; b < NB_MINIBATCH; b++)
     {
-        char *datasetpath = NULL;
-        double **inputs = NULL;
-        double **expected_output = NULL;
-        configure_batch_io(network, datasetpath, inputs, expected_output);
+        char **inputs = malloc(MINIBATCH_SIZE * sizeof(char *));
+        double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
+        configure_batch_io(network, dataset_path, inputs, expected_output);
 
-        printf("\rMINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
-        fflush(stdout);
+        printf("\rMINIBATCH:[%lu/%u] pour le network '%c'\n\a", b, NB_MINIBATCH,network->character);
 
         for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
         {

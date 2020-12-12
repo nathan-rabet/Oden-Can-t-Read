@@ -29,7 +29,7 @@
  * @param minibatchtrain The number of train of batch.
  * @return Return a array of the inputs.
  */
-void configure_batch_io(struct Network *network, char *datasetpath, double **inputs, double **expected_output);
+void configure_batch_io(struct Network *network, char *datasetpath, char **inputs, double **expected_output);
 
 void trainNetworks(struct Networks *networks, char *datasetpath);
 

@@ -1,19 +1,16 @@
 #include "backpropagation.h"
 #include "../../math/analysis.h"
 
-void configure_batch_io(struct Network *network, char *datasetpath, double **inputs, double **expected_output)
+void configure_batch_io(struct Network *network, char *datasetpath, char **inputs, double **expected_output)
 {
-    expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
-    inputs = malloc(MINIBATCH_SIZE * sizeof(double *));
-
     for (size_t i = 0; i < MINIBATCH_SIZE; i++)
     {
         // Define one minibatch size to MINIBATCH_SIZE
         expected_output[i] = calloc(networkNbOutput(network), sizeof(double)); // expected_output[i] -> Target vector : (1 0 0 0 1 0 0 1 0 0 0)
         /* 
-                /!\ 
-                Implementation for charcters only
-            */
+                    /!\ 
+                    Implementation for charcters only
+                */
         char letter = CHARS[rand() % CHARSLEN];
         if (rand() % 100 < 45)
         {
@@ -49,10 +46,9 @@ void trainNetwork(struct Network *network, char *datasetpath)
     // Create NB_MINIBATCH minibatches
     for (size_t b = 0; b < NB_MINIBATCH; b++)
     {
-        struct Network *network = NULL;
-        char *datasetpath = NULL;
-        double **inputs = NULL;
-        double **expected_output = NULL;
+
+        char **inputs = malloc(MINIBATCH_SIZE * sizeof(char *));
+        double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
         configure_batch_io(network, datasetpath, inputs, expected_output);
 
         printf("\rMINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
@@ -268,7 +264,7 @@ char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
     free(imagepath);
     free(imagename);
 
-    double *imagebin = binarizationpointer(image, 128 / sqrt(NB_INPUTS));
+    char *imagebin = binarizationpointer(image, 128 / sqrt(NB_INPUTS));
     SDL_FreeSurface(image);
     return imagebin;
 }
