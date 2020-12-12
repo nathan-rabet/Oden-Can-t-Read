@@ -19,6 +19,7 @@ SRC += src/rotate/rotate.c
 SRC += src/math/analysis.c
 SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
+SRC += src/segmentation/segmentation.c
 SRC += src/ml/struct/networks.c
 SRC += src/ml/train/multithreading/multithreading.c
 
@@ -39,5 +40,7 @@ binarization : ${SRC} ${SRC}
 rotation : ${SRC} ${SRC}
 	${CC} mainROTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainROTATION
 
+segmentation : ${SRC} ${SRC}
+	${CC} mainSEGMENTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainSEGMENTATION
 test : ${SRC} ${SRC}
 	${CC} maintest.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintest

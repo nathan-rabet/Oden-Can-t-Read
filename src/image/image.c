@@ -37,14 +37,14 @@ Uint32 getPixel(SDL_Surface *image, int x, int y)
     return *p/24;
 }
 
-int show_matrix_to_img(struct MatrixDOUBLE matrix)
+int show_matrix_to_img(char *matrix, size_t m_rows, size_t m_columns)
 {
     
     /* Find window size*/
     int coef = 1;
-    if (matrix.rows < 780)
+    if (m_rows < 780)
     {
-        coef = floor(780/matrix.rows);
+        coef = floor(780/m_rows);
     }
 
     SDL_Window* window = NULL;
@@ -52,8 +52,8 @@ int show_matrix_to_img(struct MatrixDOUBLE matrix)
     (
         "Binarized Image", SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        matrix.columns * coef,
-        matrix.rows * coef,
+        m_columns * coef,
+        m_rows * coef,
         SDL_WINDOW_SHOWN
     );
 
@@ -68,12 +68,12 @@ int show_matrix_to_img(struct MatrixDOUBLE matrix)
     SDL_RenderClear( renderer );
 
 
-    for(int i = 0; i < matrix.rows;i++) {
-        for(int j = 0; j < matrix.columns;j++) {
+    for(size_t i = 0; i < m_rows;i++) {
+        for(size_t j = 0; j < m_columns;j++) {
             Uint32 grey = 0;
             SDL_Rect r = {j * coef, i * coef, coef, coef};
 
-            grey = matrixGetDOUBLE(matrix, i, j) * 255;
+            grey = matrix[i * m_columns + j] * 255;
             SDL_SetRenderDrawColor( renderer, grey, grey, grey, 0 );
 
             SDL_RenderFillRect( renderer, &r );

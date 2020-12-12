@@ -12,6 +12,8 @@
  */
 int diagMatrixSizeINT(struct MatrixINT matrix);
 
+int diagMatrixSizeDOUBLE(struct MatrixDOUBLE matrix);
+
 /**
  * @brief Estimates the length of the diagonal 
  * of the matrix via Pythagore Theorem and returns it.
@@ -31,6 +33,8 @@ int diagMatrixSizeUCHAR(struct MatrixUCHAR matrix);
  */
 struct MatrixINT rotateINT(struct MatrixINT m, int angle);
 
+struct MatrixDOUBLE rotateDOUBLE(struct MatrixDOUBLE m, int angle);
+
 /**
  * @brief Rotates the Matrix by the given angle and returns a new Matrix of size diagMatrix(m).
  * 
@@ -47,6 +51,8 @@ struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
  * @return struct MatrixUCHAR.
  */
 struct MatrixUCHAR TrimUCHAR(struct MatrixUCHAR m);
+
+struct MatrixDOUBLE TrimDOUBLE(struct MatrixDOUBLE m);
 
 #endif
 
