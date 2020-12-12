@@ -63,6 +63,7 @@ struct Characters
 {
     char **Character_Binarized_Matrix;
     char *AllCharacters;
+    size_t Nb_Characters;
 };
 
 int RLSACompleted();

@@ -371,8 +371,11 @@ struct Characters *Segmentation(char *imagepath)
         Character_Binarized_Matrix[i] = charactermat;
     }
 
+
     struct Characters * chars = malloc(sizeof(struct Characters));
     chars->AllCharacters = AllCharacters;
     chars->Character_Binarized_Matrix = Character_Binarized_Matrix;
+    chars->Nb_Characters = (size_t)TotalNbCharacter;
+    
     return chars;
 }
