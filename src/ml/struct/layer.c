@@ -17,21 +17,20 @@ void FreeLayer(struct Layer *layer)
     for (size_t i = 0; i < layer->nb_neurones; i++)
     {
         FreeNeurone(layer->neurones[i]);
+        free(layer->neurones[i]);
     }
-    //free(layer);
+    free(layer->neurones);
 }
 
 double *CalculateLayerOutput(struct Layer *layer, double input[])
 {
     double *outputLayer = NULL;
     outputLayer = malloc(sizeof(double) * layer->nb_neurones);
-    layer->output = malloc(sizeof(double) * layer->nb_neurones);
 
     size_t n = 0;
     while (n < layer->nb_neurones)
     {
         outputLayer[n] = calculateNeuroneOutput(layer->neurones[n], input);
-        layer->output[n] = layer->neurones[n]->outputWithoutActivation;
         n++;
     }
 
@@ -64,14 +63,14 @@ double * softmax(struct Layer layer) {
     double sum = 0;
     for (size_t k = 0; k < layer.nb_neurones; k++)
     {
-        sum += exp(layer.output[k]);
+        sum += exp(layer.neurones[k]->outputWithoutActivation);
     }
     
 
 
     for (size_t i = 0; i < layer.nb_neurones; i++)
     {
-        softed[i] = exp(layer.output[i]) / sum;
+        softed[i] = exp(layer.neurones[i]->outputWithoutActivation) / sum;
     }
     
     return softed;

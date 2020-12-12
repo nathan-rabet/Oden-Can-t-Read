@@ -41,7 +41,7 @@ void train(struct Networks *networks, char *datasetpath);
  * @param nbimages The number of images of batch.
  * @return Return a array of the inputs.
  */
-void minibatch(struct Network *network, double **inputs, double **expected_output);
+void minibatch(struct Network *network, char **inputs, double **expected_output);
 
 /**
  * @brief Sets the delta_bias and delta_weights of eavery neurones
@@ -63,7 +63,7 @@ double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
 void CalculateScore(struct Network *network, char *databasepath);
 
-double* loadDataBase(char* databasepath, char letter, size_t imagenumber);
+char *loadDataBase(char *databasepath, char letter, size_t imagenumber);
 
 void PrintInput(double *input, size_t height, size_t with, char letter);
 

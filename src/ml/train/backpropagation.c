@@ -8,7 +8,7 @@ double cost(struct Network *network, size_t expected_outputs_index)
     double sum = 0;
     for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        double o = network->layers[network->nb_layers - 1]->output[i];
+        double o = activationFunction(network->layers[network->nb_layers - 1]->neurones[i]);
         sum += pow(o - (i == expected_outputs_index), 2);
     }
 
@@ -23,7 +23,7 @@ double cost_derivate(struct Network *network, double *expected_outputs)
     double sum = 0;
     for (size_t i = 0; i < networkNbOutput(network); i++)
     {
-        double o_i = network->layers[network->nb_layers - 1]->output[i];
+        double o_i = activationFunction(network->layers[network->nb_layers - 1]->neurones[i]);
         sum += o_i - expected_outputs[i];
     }
     return sum;
@@ -54,7 +54,7 @@ void train(struct Networks *networks, char *datasetpath)
         for (size_t b = 0; b < NB_MINIBATCH; b++)
         {
             double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
-            double **inputs = malloc(MINIBATCH_SIZE * sizeof(double *));
+            char **inputs = malloc(MINIBATCH_SIZE * sizeof(char *));
 
             for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             {
@@ -99,15 +99,16 @@ void train(struct Networks *networks, char *datasetpath)
     }
 }
 
-void minibatch(struct Network *network, double **inputs, double **expected_output)
+void minibatch(struct Network *network, char **inputs, double **expected_output)
 {
     for (size_t i = 0; i < MINIBATCH_SIZE; i++)
     {
         // Define minibatch
-        double *input = inputs[i];
+        char *input = inputs[i];
 
         // Feedforward (run the network with input to set the z and activation values)
-        calculateNetworkOutput(network, input);
+        double *output = calculateNetworkOutput(network, input);
+        free(output);
 
         // Backpropagate the error
         backpropagation(network, expected_output[i]);
@@ -219,7 +220,7 @@ void CalculateScore(struct Network *network, char *databasepath)
             letter = network->character;
 
         // Dataset loading
-        double *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
+        char *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
 
         // Feedforward
         double *outputs = calculateNetworkOutput(network, inputs);
@@ -263,7 +264,7 @@ void CalculateScore(struct Network *network, char *databasepath)
     printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n", color, percentage_of_success, RST, nb_success, number_of_test);
 }
 
-double *loadDataBase(char *databasepath, char letter, size_t imagenumber)
+char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
 {
     //Convert a imagenumber to a "12345" string
     char *imagename = malloc(6 * sizeof(char));
@@ -283,7 +284,7 @@ double *loadDataBase(char *databasepath, char letter, size_t imagenumber)
     free(imagepath);
     free(imagename);
 
-    double *imagebin = binarizationpointer(image, 128/sqrt(NB_INPUTS));
+    char *imagebin = binarizationpointer(image, 128/sqrt(NB_INPUTS));
     SDL_FreeSurface(image);
     return imagebin;
 }

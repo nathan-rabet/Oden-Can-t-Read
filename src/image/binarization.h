@@ -18,4 +18,4 @@
 struct MatrixDOUBLE binarization(SDL_Surface* image, int scale);
 
 
-double* binarizationpointer(SDL_Surface* image, int scale);
+char *binarizationpointer(SDL_Surface *image, int scale);
