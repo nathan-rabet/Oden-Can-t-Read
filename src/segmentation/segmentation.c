@@ -343,6 +343,7 @@ struct Characters *Segmentation(char *imagepath)
         //After Completing the TextBlock, we add a \n char
         AllCharacters[TotalNbCharacter] = '\n';
         TotalNbCharacter++;
+        AllCharacters[TotalNbCharacter] = '\0';
         //free used data
         free(lines);
     }
