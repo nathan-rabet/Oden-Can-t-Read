@@ -19,6 +19,11 @@
 #define NB_TRAINING_PER_MINIBATCH 10000
 #define NB_MINIBATCH 15
 
+struct _BackpropagTHREAD {
+    struct Network *net;
+    size_t minibatch_list_index;
+};
+
 /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
  * 
@@ -31,7 +36,7 @@
  */
 void configure_batch_io(struct Network *network, char *datasetpath, char **inputs, double **expected_output);
 
-void trainNetworks(struct Networks *networks, char *datasetpath);
+int trainNetworks(struct Networks *networks, char *datasetpath);
 
 void trainNetwork(struct Network *network, char *datasetpath);
 
@@ -64,7 +69,7 @@ void backpropagation(struct Network *network, double *expected_output);
  */
 double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
-void CalculateScore(struct Network *network, char *databasepath);
+double CalculateScore(struct Network *network, char *databasepath);
 
 char *loadDataBase(char *databasepath, char letter, size_t imagenumber);
 

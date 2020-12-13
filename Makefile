@@ -21,7 +21,6 @@ SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
 SRC += src/segmentation/segmentation.c
 SRC += src/ml/struct/networks.c
-SRC += src/ml/train/multithreading/multithreading.c
 
 
 OUT = ocr
@@ -42,5 +41,9 @@ rotation : ${SRC} ${SRC}
 
 segmentation : ${SRC} ${SRC}
 	${CC} mainSEGMENTATION.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainSEGMENTATION
+
 test : ${SRC} ${SRC}
 	${CC} maintest.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintest
+
+train : ${SRC} ${SRC}
+	${CC} mainTRAIN.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainTRAIN

@@ -1,5 +1,15 @@
+#include <threads.h>
+#include <stdio.h>
+
 #include "backpropagation.h"
 #include "../../math/analysis.h"
+
+char *dataset_path;
+size_t *batches_already_done;
+size_t *batches_how_many;
+
+mtx_t mutex;
+int isStopped;
 
 void configure_batch_io(struct Network *network, char *datasetpath, char **inputs, double **expected_output)
 {
@@ -25,9 +35,114 @@ void configure_batch_io(struct Network *network, char *datasetpath, char **input
     }
 }
 
-void trainNetwork(struct Network *network, char *datasetpath)
+void CalculateScores(struct Networks *networks, char *databasepath)
 {
-    printf("Training network '%c'\n", network->character);
+    double average_percentage = 0;
+    for (size_t i = 0; i < networks->nb_networks; i++)
+    {
+        average_percentage += CalculateScore(networks->networks[i], databasepath);
+    }
+
+    average_percentage /= networks->nb_networks;
+
+    printf("\n\nGlobal accuracy : %s%f%s\n", BLU, average_percentage, RST);
+}
+
+double CalculateScore(struct Network *network, char *databasepath)
+{
+    printf("SCORE : network '%c'\n", network->character);
+    int number_of_test = 1000;
+    int nb_success = 0;
+
+    double cost_average = 0;
+    for (int i = 0; i < number_of_test; i++)
+    {
+        char letter = CHARS[rand() % CHARSLEN];
+        if (i < number_of_test / 2)
+            letter = network->character;
+
+        // Dataset loading
+        char *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
+
+        // Feedforward
+        double *outputs = calculateNetworkOutput(network, inputs);
+
+        if (letter == network->character)
+        {
+            if (*outputs > 0.8)
+                nb_success += 1;
+        }
+        else
+        {
+            if (*outputs < 0.5)
+                nb_success += 1;
+        }
+
+        cost_average += cost(network, letter == network->character ? 0 : 45615);
+
+        free(outputs);
+        free(inputs);
+    }
+
+    cost_average /= number_of_test;
+    float percentage_of_success = ((100 * nb_success) / number_of_test);
+    char *color;
+
+    if (percentage_of_success > 90)
+        color = GRN;
+
+    else if (percentage_of_success > 50)
+        color = YEL;
+    else
+        color = RED;
+
+    printf("\nCOST : %f\n", cost_average);
+    printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n", color, percentage_of_success, RST, nb_success, number_of_test);
+
+    return percentage_of_success;
+}
+
+void MinibatchesStates(size_t batches_already_done[], size_t batches_how_many[])
+{
+    double average_percentage = 0;
+
+    for (size_t i = 0; i < CHARSLEN; i++)
+    {
+        printf("MINIBACH for network '%c' : %ld/%d\n", CHARS[i], batches_already_done[i], NB_MINIBATCH);
+        printf("\t↳[");
+
+        double percent = (batches_how_many[i] / (double)NB_TRAINING_PER_MINIBATCH) * 100;
+        average_percentage += percent;
+
+        for (size_t j = 0; j < percent; j++)
+        {
+            printf("%s█%s", GRN, RST);
+        }
+        for (size_t j = percent; j < 100; j++)
+        {
+            printf(" ");
+        }
+        printf("] %f%%\n", percent);
+    }
+    average_percentage /= (double)NB_TRAINING_PER_MINIBATCH;
+    printf("\nOverall progress\n");
+    printf("[");
+    for (size_t j = 0; j < average_percentage; j++)
+    {
+        printf("%s█%s", BLU, RST);
+    }
+    for (size_t j = average_percentage; j < 100; j++)
+    {
+        printf(" ");
+    }
+    printf("] %f%%\n", average_percentage);
+}
+
+int trainNetworkTHREAD(void *data)
+{
+    struct _BackpropagTHREAD *bpt = (struct _BackpropagTHREAD *)data;
+    struct Network *network = bpt->net;
+
     //Initializing neurones training parameters
     for (size_t l = 1; l < network->nb_layers; l++)
     {
@@ -46,16 +161,18 @@ void trainNetwork(struct Network *network, char *datasetpath)
     // Create NB_MINIBATCH minibatches
     for (size_t b = 0; b < NB_MINIBATCH; b++)
     {
-
         char **inputs = malloc(MINIBATCH_SIZE * sizeof(char *));
         double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
-        configure_batch_io(network, datasetpath, inputs, expected_output);
-
-        printf("\rMINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
-        fflush(stdout);
-
+        configure_batch_io(network, dataset_path, inputs, expected_output);
         for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
         {
+            while (isStopped == 1)
+            {
+                mtx_lock(&mutex);
+            }
+            mtx_unlock(&mutex);
+
+            batches_how_many[bpt->minibatch_list_index] = i;
             minibatch(network, inputs, expected_output);
         }
 
@@ -65,19 +182,72 @@ void trainNetwork(struct Network *network, char *datasetpath)
         for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             free(expected_output[i]);
         // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam
+        batches_already_done[bpt->minibatch_list_index] += 1;
     }
-    printf("\n");
-    CalculateScore(network, datasetpath);
+    return thrd_success;
 }
 
-void trainNetworks(struct Networks *networks, char *datasetpath)
+int trainNetworks(struct Networks *networks, char *datasetpath)
 {
-    for (size_t net = 0; net < networks->nb_networks; net++)
+    mtx_init(&mutex, mtx_plain);
+    dataset_path = datasetpath;
+    thrd_t threads[CHARSLEN];
+
+    batches_already_done = calloc(CHARSLEN, sizeof(size_t));
+    batches_how_many = calloc(CHARSLEN, sizeof(size_t));
+
+    // Creation of 'available_cores' threads.
+    printf("Training networks [a-zA-Z0-9]\n");
+    struct _BackpropagTHREAD *backpropTHREAD = malloc(sizeof(struct _BackpropagTHREAD) * CHARSLEN);
+    for (int i = 0; i < CHARSLEN; i++)
     {
-        trainNetwork(networks->networks[net], datasetpath);
-        printf("\nSaving networks\n");
-        SaveNetworksToJSON(networks, "networks.json");
+        printf("Training started for network '%c'\n", networks->networks[i]->character);
+
+        backpropTHREAD[i].net = networks->networks[i];
+        backpropTHREAD[i].minibatch_list_index = i;
+
+        if (thrd_create(&threads[i], trainNetworkTHREAD, &backpropTHREAD[i]) != thrd_success)
+        {
+            fprintf(stderr, "Threads creation failed for network n°%d\n", i);
+            return 1;
+        }
     }
+
+    int canExit = 0;
+    while (!canExit)
+    {
+        canExit = 1;
+        for (int i = 0; i < CHARSLEN; i++)
+        {
+            if (batches_already_done[i] < NB_MINIBATCH)
+            {
+                canExit = 0;
+                break;
+            }
+        }
+
+        char ch;
+        scanf("%c", &ch);
+
+        system("clear");
+
+        if (ch == 't')
+        {
+            isStopped = 1;
+            CalculateScores(networks, dataset_path);
+            isStopped = 0;
+            mtx_unlock(&mutex);
+        }
+        else
+        {
+            MinibatchesStates(batches_already_done, batches_how_many);
+        }
+    }
+
+    CalculateScores(networks, dataset_path);
+
+    free(batches_already_done);
+    return 0;
 }
 
 void minibatch(struct Network *network, char **inputs, double **expected_output)
@@ -185,63 +355,6 @@ void backpropagation(struct Network *network, double *expected_output)
             network->layers[l]->neurones[i]->delta_error = sum * actvation_fonction_derivate(network->layers[l]->neurones[i]);
         }
     }
-}
-
-void CalculateScore(struct Network *network, char *databasepath)
-{
-    printf("SCORE : network '%c'\n", network->character);
-    int number_of_test = 1000;
-    int nb_success = 0;
-
-    double cost_average = 0;
-    for (int i = 0; i < number_of_test; i++)
-    {
-        char letter = CHARS[rand() % CHARSLEN];
-        if (i < number_of_test / 2)
-            letter = network->character;
-
-        // Dataset loading
-        char *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
-
-        // Feedforward
-        double *outputs = calculateNetworkOutput(network, inputs);
-
-        /*PrintOuput(outputs, letter, network->character);
-        if ((i+1) % 12 == 0)
-        {
-            printf("\n");
-        }*/
-        if (letter == network->character)
-        {
-            if (*outputs > 0.8)
-                nb_success += 1;
-        }
-        else
-        {
-            if (*outputs < 0.5)
-                nb_success += 1;
-        }
-
-        cost_average += cost(network, letter == network->character ? 0 : 45615);
-
-        free(outputs);
-        free(inputs);
-    }
-
-    cost_average /= number_of_test;
-    float percentage_of_success = ((100 * nb_success) / number_of_test);
-    char *color;
-
-    if (percentage_of_success > 90)
-        color = GRN;
-
-    else if (percentage_of_success > 50)
-        color = YEL;
-    else
-        color = RED;
-
-    printf("\nCOST : %f\n", cost_average);
-    printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n", color, percentage_of_success, RST, nb_success, number_of_test);
 }
 
 char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
