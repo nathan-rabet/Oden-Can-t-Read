@@ -1,0 +1,1 @@
+int trainNetworksMULTITHREAD(struct Networks *networks, char *datasetpath);

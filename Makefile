@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -ldl
 CFLAGS += $(shell pkg-config --cflags json-c) # json-c flags
 
 
-CLIBS = `sdl2-config --cflags --libs` -lSDL2_image
+CLIBS = `sdl2-config --cflags --libs` -lSDL2_image -lpthread
 CLIBS += $(shell pkg-config --libs json-c) #json-c libs
 
 #SRC = main.c
@@ -21,6 +21,7 @@ SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
 SRC += src/segmentation/segmentation.c
 SRC += src/ml/struct/networks.c
+SRC += src/ml/train/multithreading/multithreading.c
 
 
 OUT = ocr

@@ -7,12 +7,11 @@
 #include <string.h>
 
 #include "src/ml/struct/networks.h"
+#include "src/ml/train/multithreading/multithreading.h"
 #include "src/ml/train/backpropagation.h"
 
-void mustcall()
-{
-   srand(time(NULL)); // Initialization, should only be called once.
-}
+#include "src/segmentation/segmentation.h"
+#include "src/miscellaneous/color.h"
 
 int main()
 {
