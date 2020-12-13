@@ -26,7 +26,7 @@ int main()
    //PrintNetwork(net);
 
    char cwd[PATH_MAX];
-   char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/by_class");
+   char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/DatatSet");
    train(net,datasetpath);
 
    printf("Done!\n");

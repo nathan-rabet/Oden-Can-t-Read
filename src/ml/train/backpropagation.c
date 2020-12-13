@@ -74,7 +74,7 @@ void train(struct Networks *networks, char *datasetpath)
                 if (letter == network->character)
                     expected_output[i][0] = 1;
 
-                inputs[i] = loadDataBase(datasetpath, letter, (rand() % 1000) + 1);
+                inputs[i] = loadDataBase(datasetpath, letter, (rand() % 4));
             }
             printf("\rMINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
             fflush(stdout);
@@ -220,7 +220,7 @@ void CalculateScore(struct Network *network, char *databasepath)
             letter = network->character;
 
         // Dataset loading
-        char *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
+        char *inputs = loadDataBase(databasepath, letter, (rand() % 4));
 
         // Feedforward
         double *outputs = calculateNetworkOutput(network, inputs);
@@ -277,10 +277,11 @@ char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
 
     //Build the image path string
     char *imagepath = malloc((strlen(databasepath) + 150) * sizeof(char));
-    sprintf(imagepath, "%s/%02x/train_%02x/train_%02x_%s.png", databasepath, letter, letter, letter, imagename);
+    sprintf(imagepath, "%s/%02x/%lu.png", databasepath, letter, imagenumber);
 
     //Load image
     SDL_Surface *image = loadImage(imagepath);
+    ShowImg(image);
     free(imagepath);
     free(imagename);
 

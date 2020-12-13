@@ -22,7 +22,7 @@ int main()
    char cwd[PATH_MAX];
    char cwd1[PATH_MAX];
    char cwd2[PATH_MAX];
-   char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/by_class");
+   char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/DatatSet");
    char *networkpath = strcat(getcwd(cwd1, sizeof(cwd1)), "/networks.json");
    char *imagepath = strcat(getcwd(cwd2, sizeof(cwd2)), "/data/images/epita.png");
 
