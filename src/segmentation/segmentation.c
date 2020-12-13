@@ -140,6 +140,14 @@ int GetCharacters(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *L, st
       nbCharacters++;
     }
   }
+  if (isInChar!=0)
+  {
+    struct Character newcharacter;
+    newcharacter.FirstPoint = FirstPoint;
+    newcharacter.LastPoint=LastY;
+    characters[nbCharacters]=newcharacter;
+    nbCharacters++;
+  }
   L->nbCharacters = nbCharacters;
   if (nbCharacters > 1)
   {
@@ -302,10 +310,10 @@ struct Characters *Segmentation(char *imagepath)
               }
               */
 
-                if (k > 0 && j == 0)
+                if (k > 0)
                 {
                     struct Character *D = &(characters[k - 1]);
-                    if ((C->FirstPoint - D->LastPoint) > L->average_space)
+                    if ((C->FirstPoint - D->LastPoint) > L->average_space*SPACE_SENSIBILITY)
                     {
                         AllCharacters[TotalNbCharacter] = ' ';
                         TotalNbCharacter++;
@@ -334,8 +342,8 @@ struct Characters *Segmentation(char *imagepath)
                 AllCharacters[TotalNbCharacter] = '\0';
                 TotalNbCharacter++;
             }
-            //After Completing the Line, we add a space char
-            AllCharacters[TotalNbCharacter] = ' ';
+            //After Completing the Line, we add a line return char
+            AllCharacters[TotalNbCharacter] = '\n';
             TotalNbCharacter++;
             //free used data
             free(characters);
