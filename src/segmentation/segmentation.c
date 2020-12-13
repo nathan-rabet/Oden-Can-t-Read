@@ -302,10 +302,10 @@ struct Characters *Segmentation(char *imagepath)
               }
               */
 
-                if (k > 0 && j == 0)
+                if (k > 0)
                 {
                     struct Character *D = &(characters[k - 1]);
-                    if ((C->FirstPoint - D->LastPoint) > L->average_space)
+                    if ((C->FirstPoint - D->LastPoint) > L->average_space*SPACE_SENSIBILITY)
                     {
                         AllCharacters[TotalNbCharacter] = ' ';
                         TotalNbCharacter++;
@@ -334,8 +334,8 @@ struct Characters *Segmentation(char *imagepath)
                 AllCharacters[TotalNbCharacter] = '\0';
                 TotalNbCharacter++;
             }
-            //After Completing the Line, we add a space char
-            AllCharacters[TotalNbCharacter] = ' ';
+            //After Completing the Line, we add a line return char
+            AllCharacters[TotalNbCharacter] = '\n';
             TotalNbCharacter++;
             //free used data
             free(characters);

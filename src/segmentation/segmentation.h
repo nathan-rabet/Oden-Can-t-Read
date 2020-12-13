@@ -8,6 +8,7 @@
 #define MAX_LINE_NUMBER 70                //for the memory allocation
 #define MAX_CHARACTER_NUMBER 200          //for the memory allocation
 #define STANDARD_CHARACTER_MATRIX_SIZE 64 //for the memory allocation
+#define SPACE_SENSIBILITY 1.2             //for searching spaces
 
 /**
  * @brief Define a visual character in a matrix.
