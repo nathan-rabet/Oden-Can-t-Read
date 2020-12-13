@@ -9,6 +9,7 @@
 
 #include "src/ml/struct/networks.h"
 #include "src/ml/train/backpropagation.h"
+#include "src/ml/train/multithreading/multithreading.h"
 
 void mustcall()
 {
@@ -27,7 +28,7 @@ int main()
 
    char cwd[PATH_MAX];
    char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/DatatSet");
-   train(net,datasetpath);
+   trainNetworks(net,datasetpath);
 
    printf("Done!\n");
    FreeNetworks(net);

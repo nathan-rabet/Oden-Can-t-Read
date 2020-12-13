@@ -51,7 +51,7 @@ void trainNetwork(struct Network *network, char *datasetpath)
         double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
         configure_batch_io(network, datasetpath, inputs, expected_output);
 
-        printf("\rMINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
+        printf("MINIBATCH:[%lu/%u]", b, NB_MINIBATCH);
         fflush(stdout);
 
         for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
@@ -65,9 +65,9 @@ void trainNetwork(struct Network *network, char *datasetpath)
         for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             free(expected_output[i]);
         // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam
+        printf("\n");
+        CalculateScore(network, datasetpath);
     }
-    printf("\n");
-    CalculateScore(network, datasetpath);
 }
 
 void trainNetworks(struct Networks *networks, char *datasetpath)
@@ -261,11 +261,10 @@ char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
 
     //Load image
     SDL_Surface *image = loadImage(imagepath);
-    ShowImg(image);
     free(imagepath);
     free(imagename);
 
-    char *imagebin = binarizationpointer(image, 128 / sqrt(NB_INPUTS));
+    char *imagebin = binarizationpointer(image, 1);
     SDL_FreeSurface(image);
     return imagebin;
 }

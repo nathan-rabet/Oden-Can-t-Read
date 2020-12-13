@@ -378,5 +378,13 @@ struct Characters *Segmentation(char *imagepath)
     chars->Character_Binarized_Matrix = Character_Binarized_Matrix;
     chars->Nb_Characters = (size_t)TotalNbCharacter;
     
+    /*
+    for (size_t i = 0; i < (size_t)TotalNbCharacter; i++)
+    {
+      show_matrix_to_img(Character_Binarized_Matrix[i], STANDARD_CHARACTER_MATRIX_SIZE, STANDARD_CHARACTER_MATRIX_SIZE);
+    }
+    */
+    
+
     return chars;
 }
