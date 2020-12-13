@@ -140,6 +140,14 @@ int GetCharacters(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *L, st
       nbCharacters++;
     }
   }
+  if (isInChar!=0)
+  {
+    struct Character newcharacter;
+    newcharacter.FirstPoint = FirstPoint;
+    newcharacter.LastPoint=LastY;
+    characters[nbCharacters]=newcharacter;
+    nbCharacters++;
+  }
   L->nbCharacters = nbCharacters;
   if (nbCharacters > 1)
   {
