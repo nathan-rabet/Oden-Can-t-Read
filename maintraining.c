@@ -9,7 +9,6 @@
 
 #include "src/ml/struct/networks.h"
 #include "src/ml/train/backpropagation.h"
-#include "src/ml/train/multithreading/multithreading.h"
 
 void mustcall()
 {
@@ -21,17 +20,15 @@ int main()
 {   
    mustcall();
 
-   size_t npl[] = {NB_INPUTS, 20, 20, 1};
-   char afpl[] = {0, 2, 2, 2};
-   struct Networks *net = generateRandomNetworks(4, npl, afpl);
+   struct Networks *networks = LoadNetworksFromJSON("newnet.json");
    //PrintNetwork(net);
 
    char cwd[PATH_MAX];
    char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/DatatSet");
-   trainNetworks(net,datasetpath);
-
+   trainNetworks(networks,datasetpath);
+   SaveNetworksToJSON(networks, "newnet2.json");
    printf("Done!\n");
-   FreeNetworks(net);
+   FreeNetworks(networks);
 
    return 0;
 }

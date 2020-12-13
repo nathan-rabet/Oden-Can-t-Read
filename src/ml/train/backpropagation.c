@@ -22,7 +22,7 @@ void configure_batch_io(struct Network *network, char *datasetpath, char **input
                     Implementation for charcters only
                 */
         char letter = CHARS[rand() % CHARSLEN];
-        if (rand() % 100 < 45)
+        if (rand() % 100 < 10)
         {
             letter = network->character;
         }

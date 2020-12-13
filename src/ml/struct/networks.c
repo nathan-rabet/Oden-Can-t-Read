@@ -269,7 +269,7 @@ char FindCharacter(struct Networks *networks, char* letter_matrix)
             max_sort = outputs[i][0];
         }
     }
-    
+    printf("\n=================\n");
     return CHARS[index_char];
 }
 

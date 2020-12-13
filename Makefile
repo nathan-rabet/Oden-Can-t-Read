@@ -47,5 +47,3 @@ test : ${SRC} ${SRC}
 
 training : ${SRC} ${SRC}
 	${CC} maintraining.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintrain
-train : ${SRC} ${SRC}
-	${CC} mainTRAIN.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainTRAIN

@@ -23,13 +23,12 @@ int main()
    char cwd1[PATH_MAX];
    char cwd2[PATH_MAX];
    char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/DatatSet");
-   char *networkpath = strcat(getcwd(cwd1, sizeof(cwd1)), "/networks.json");
-   char *imagepath = strcat(getcwd(cwd2, sizeof(cwd2)), "/data/images/rota3.png");
+   char *networkpath = strcat(getcwd(cwd1, sizeof(cwd1)), "/newnet2.json");
+   char *imagepath = strcat(getcwd(cwd2, sizeof(cwd2)), "/data/images/0.png");
 
    struct Networks *networks = LoadNetworksFromJSON(networkpath);
    
    struct Characters *Letters_Matrix = Segmentation(imagepath);
-
    FindCharacters(networks, Letters_Matrix);
 
    printf("%s\n", Letters_Matrix->AllCharacters);
