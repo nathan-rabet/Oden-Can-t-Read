@@ -7,7 +7,6 @@
 #include <string.h>
 
 #include "src/ml/struct/networks.h"
-#include "src/ml/train/multithreading/multithreading.h"
 #include "src/ml/train/backpropagation.h"
 
 #include "src/segmentation/segmentation.h"
@@ -29,8 +28,6 @@ int main()
    
 
    FreeNetworks(networks);
-
    
-
    return 0;
 }
