@@ -7,7 +7,7 @@
 #define MAX_TBLOCK_NUMBER 15              //for the memory allocation
 #define MAX_LINE_NUMBER 70                //for the memory allocation
 #define MAX_CHARACTER_NUMBER 200          //for the memory allocation
-#define STANDARD_CHARACTER_MATRIX_SIZE 32 //for the memory allocation
+#define STANDARD_CHARACTER_MATRIX_SIZE 64 //for the memory allocation
 #define SPACE_SENSIBILITY 1.3             //for searching spaces
 
 /**
