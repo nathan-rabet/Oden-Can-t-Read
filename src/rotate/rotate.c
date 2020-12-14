@@ -95,7 +95,6 @@ struct MatrixDOUBLE rotateDOUBLE(struct MatrixDOUBLE m, int angle)
       }
     }
   }
-  free(m.cells);
   return newMatrix;
 }
 
@@ -134,7 +133,6 @@ struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle)
       }
     }
   }
-  free(m.cells);
   return newMatrix;
 }
 
@@ -226,4 +224,76 @@ struct MatrixDOUBLE TrimDOUBLE(struct MatrixDOUBLE m)
   }
   free(m.cells);
   return newMatrix;
+}
+
+int angle FindRotationDOUBLE(struct MatrixDOUBLE m)
+{
+  int cornerx=m.rows/1000;
+  int cornery=m.columns/1000;
+  int Presence=0;
+  int angle=0;
+  struct MatrixDOUBLE new=TrimDOUBLE(m);
+  for(int i=0;i<cornerx||i<10;i++)
+  {
+    for(int j=0;j<cornery||j<10;j++)
+    {
+      if(matrixGetDOUBLE(new,i,j)==0)
+      {
+        Presence+=1;
+      }
+    }
+  }
+  free(new.cells);
+  if(Presence>0)
+  {
+    return m;
+  }
+  Presence=0;
+  angle+=1;
+  while(Presence==0||angle<360)
+  {
+    Presence==0;
+    struct MatrixDOUBLE Rotated=rotateDOUBLE(m,angle);
+    int FirstValue=0; // 0 if NoneFound 1 otherwise
+    int FirstValueX=0;
+    int FirstValueY=0;
+    int LastValueX=0;
+    int LastValueY=0;
+    for (int i=0; i<m.rows;i++)
+    {
+      for (int j=0; j<m.columns;j++)
+      {
+        if (matrixGetDOUBLE(m,i,j)==0)
+        {
+          LastValueX=i;
+          if (FirstValue==0)
+          {
+            FirstValueX=i;
+            FirstValueY=j;
+            FirstValue=1;
+          }
+          if(j<FirstValueY)
+          {
+            FirstValueY=j;
+          }
+          if(j>LastValueY)
+          {
+            LastValueY=j;
+          }
+        }
+      }
+    }
+    for(int k=FirstValueX;k<FirstValueX+cornerx||k<FirstValueX+10;k++)
+    {
+      for(int l=FirstValueY;l<FirstValueY+cornery||l<FirstValueY+10;l++)
+      {
+        if(matrixGetDOUBLE(new,k,l)==0)
+        {
+          Presence+=1;
+        }
+      }
+    }
+    angle+=1;
+  }
+  return angle%360;
 }

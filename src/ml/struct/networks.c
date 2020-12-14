@@ -262,7 +262,7 @@ char FindCharacter(struct Networks *networks, char* letter_matrix)
     for (size_t i = 0; i < networks->nb_networks; i++)
     {
         double *outputs = calculateNetworkOutput(networks->networks[i], letter_matrix);
-        printf("Net %c: %f|\n", networks->networks[i]->character, outputs[0]);
+        //printf("Net %c: %f|\n", networks->networks[i]->character, outputs[0]);
         if (max_sort < outputs[0])
         {
             index_char = i;
@@ -270,7 +270,7 @@ char FindCharacter(struct Networks *networks, char* letter_matrix)
         }
         free(outputs);
     }
-    printf("\n=================\n");
+    //printf("\n=================\n");
     return networks->networks[index_char]->character;
 }
 
@@ -281,7 +281,7 @@ void FindCharacters(struct Networks *networks, struct Characters *character)
         if (character->AllCharacters[i] == '*')
         {
             character->AllCharacters[i] = FindCharacter(networks, character->Character_Binarized_Matrix[i]);
-            printf("\n%c\n", character->AllCharacters[i]);
+            //printf("\n%c\n", character->AllCharacters[i]);
         }
     }
 }
