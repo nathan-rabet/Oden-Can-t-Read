@@ -14,20 +14,14 @@
 
 int main()
 {
-   
-   mustcall();
-   char cwd[PATH_MAX];
-   char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset/by_class");
-   struct Networks *networks = LoadNetworksFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/networks.json");
 
-   
-   for (size_t net = 0; net < networks->nb_networks; net++)
-   {
-      CalculateScore(networks->networks[net], datasetpath);
-   }
-   
+    size_t npl[] = {NB_INPUTS, 3, 4, 1};
+    char afpl[] = {0, 2, 2, 2};
+    struct Networks *net = generateRandomNetworks(4, npl, afpl);
 
-   FreeNetworks(networks);
-   
-   return 0;
+    char cwd[PATH_MAX];
+    char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/by_class");
+     
+    trainNetworks(net, datasetpath);
+    return 0;
 }

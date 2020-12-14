@@ -82,6 +82,8 @@ double CalculateScore(struct Network *network, char *databasepath)
 
         free(outputs);
         free(inputs);
+
+        return cost_average;
     }
 
     cost_average /= number_of_test;
@@ -168,9 +170,8 @@ int trainNetworkTHREAD(void *data)
         {
             while (isStopped == 1)
             {
-                mtx_lock(&mutex);
+                thrd_sleep( &(struct timespec){.tv_nsec=100000000}, NULL );
             }
-            mtx_unlock(&mutex);
 
             batches_how_many[bpt->minibatch_list_index] = i;
             minibatch(network, inputs, expected_output);
@@ -236,7 +237,16 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
             isStopped = 1;
             CalculateScores(networks, dataset_path);
             isStopped = 0;
-            mtx_unlock(&mutex);
+        }
+
+        else if (ch == 's')
+        {
+            isStopped = 1;
+            char *c = NULL;
+            sprintf(c,"data/networks/~training/network_%d.json",(int) time(NULL));
+            SaveNetworksToJSON(networks,c);
+            printf("Networks saved at '%s'",c);
+            isStopped = 0;
         }
         else
         {
