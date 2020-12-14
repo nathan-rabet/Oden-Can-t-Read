@@ -193,11 +193,11 @@ struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
 
   float width = m.columns;
   float height = m.rows;
-  struct MatrixDOUBLE newcharMatrix = createMatrixDOUBLE(STANDARD_CHARACTER_MATRIX_SIZE, STANDARD_CHARACTER_MATRIX_SIZE);
+  struct MatrixDOUBLE newcharMatrix = createMatrixDOUBLE((int)STANDARD_CHARACTER_MATRIX_SIZE*0.625,(int) STANDARD_CHARACTER_MATRIX_SIZE*0.625);
 
-  for (int x = 0; x < STANDARD_CHARACTER_MATRIX_SIZE; x++)
+  for (int x = 0; x < (int) STANDARD_CHARACTER_MATRIX_SIZE*0.625; x++)
   {
-    for (int y = 0; y < STANDARD_CHARACTER_MATRIX_SIZE; y++)
+    for (int y = 0; y < (int) STANDARD_CHARACTER_MATRIX_SIZE*0.625; y++)
     {
       matrixSetDOUBLE(newcharMatrix, x, y, 1);
     }
@@ -205,8 +205,8 @@ struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
 
   if (height > width)
   {
-    float Convert = STANDARD_CHARACTER_MATRIX_SIZE / height;
-    for (int i = 0; i < STANDARD_CHARACTER_MATRIX_SIZE; i++)
+    float Convert = (int) STANDARD_CHARACTER_MATRIX_SIZE*0.625 / height;
+    for (int i = 0; i < (int)STANDARD_CHARACTER_MATRIX_SIZE*0.625; i++)
     {
       for (int j = 0; j < width * Convert; j++)
       {
@@ -215,7 +215,7 @@ struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
           double Value = matrixGetDOUBLE(m, (int)i / Convert, (int)j / Convert);
           if (Value == 0)
           {
-            int y = (STANDARD_CHARACTER_MATRIX_SIZE / 2) - (cwidth * Convert / 2) + j;
+            int y = ((int)STANDARD_CHARACTER_MATRIX_SIZE*0.625 / 2) - (cwidth * Convert / 2) + j;
             matrixSetDOUBLE(newcharMatrix, i, y, Value);
           }
         }
@@ -225,10 +225,10 @@ struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
 
   else
   {
-    float Convert = STANDARD_CHARACTER_MATRIX_SIZE / width;
+    float Convert =(int)STANDARD_CHARACTER_MATRIX_SIZE*0.625 / width;
     for (int i = 0; i < width * Convert; i++)
     {
-      for (int j = 0; j < STANDARD_CHARACTER_MATRIX_SIZE; j++)
+      for (int j = 0; j <(int)STANDARD_CHARACTER_MATRIX_SIZE*0.625; j++)
       {
         if (i / Convert < height && j / Convert < width)
         {
@@ -335,8 +335,28 @@ struct Characters *Segmentation(char *imagepath)
 
         //Trim charMatrix?
         //Resize Matrix
-        struct MatrixDOUBLE newcharMatrix = Resize(charMatrix);
-        free(charMatrix.cells);
+        struct MatrixDOUBLE newchar=Resize(charMatrix);
+        struct MatrixDOUBLE newcharMatrix=createMatrixDOUBLE(STANDARD_CHARACTER_MATRIX_SIZE,STANDARD_CHARACTER_MATRIX_SIZE);
+        for(int i=0;i<STANDARD_CHARACTER_MATRIX_SIZE;i++)
+        {
+          for(int j=0;j<STANDARD_CHARACTER_MATRIX_SIZE;j++)
+          {
+            int sizeMin=STANDARD_CHARACTER_MATRIX_SIZE*0.1875;
+            int sizeMax=STANDARD_CHARACTER_MATRIX_SIZE*0.8125;
+            if(i<=sizeMin||j<=sizeMin||i>=sizeMax||j>=sizeMax)
+            {
+              matrixSetDOUBLE(newcharMatrix, i, j, 1);
+            }
+            else
+            {
+              double Value=matrixGetDOUBLE(newchar,i-sizeMin,j-sizeMin);
+              matrixSetDOUBLE(newcharMatrix,i,j,Value);
+            }
+          }
+        }
+             
+             free(charMatrix.cells);
+             free(newchar.cells);
         //Add to MatrixArray
         Matrixarray[TotalNbCharacter] = newcharMatrix; //Resized
         AllCharacters[TotalNbCharacter] = '*';
