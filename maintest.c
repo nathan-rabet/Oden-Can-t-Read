@@ -14,7 +14,6 @@
 
 int main()
 {
-
     size_t npl[] = {NB_INPUTS, 3, 4, 1};
     char afpl[] = {0, 2, 2, 2};
     struct Networks *net = generateRandomNetworks(4, npl, afpl);

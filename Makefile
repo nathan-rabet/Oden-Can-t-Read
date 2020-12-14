@@ -45,5 +45,5 @@ segmentation : ${SRC} ${SRC}
 test : ${SRC} ${SRC}
 	${CC} maintest.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintest
 
-training : ${SRC} ${SRC}
-	${CC} maintraining.c ${SRC} ${CLIBS} ${CFLAGS} -g -o maintrain
+train : ${SRC} ${SRC}
+	${CC} mainTRAIN.c ${SRC} ${CLIBS} ${CFLAGS} -g -o mainTRAIN

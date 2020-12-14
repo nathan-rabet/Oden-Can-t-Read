@@ -1,8 +1,13 @@
 #include <threads.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "backpropagation.h"
 #include "../../math/analysis.h"
+
+char ** imageForLearningRate;
 
 char *dataset_path;
 size_t *batches_already_done;
@@ -31,14 +36,12 @@ void configure_batch_io(struct Network *network, char *datasetpath, char **input
         if (letter == network->character)
             expected_output[i][0] = 1;
 
-        inputs[i] = loadDataBase(datasetpath, letter, (rand() % 4));
+        inputs[i] = loadDataBase(datasetpath, letter, (rand() % 1000));
     }
 }
 
 void CalculateScores(struct Networks *networks, char *databasepath)
 {
-
-    SaveNetworksToJSON(networks, "net.json");
     double average_percentage = 0;
     for (size_t i = 0; i < networks->nb_networks; i++)
     {
@@ -64,7 +67,7 @@ double CalculateScore(struct Network *network, char *databasepath)
             letter = network->character;
 
         // Dataset loading
-        char *inputs = loadDataBase(databasepath, letter, (rand() % 4));
+        char *inputs = loadDataBase(databasepath, letter, (rand() % 1000));
 
         // Feedforward
         double *outputs = calculateNetworkOutput(network, inputs);
@@ -84,8 +87,6 @@ double CalculateScore(struct Network *network, char *databasepath)
 
         free(outputs);
         free(inputs);
-
-        return cost_average;
     }
 
     cost_average /= number_of_test;
@@ -100,8 +101,8 @@ double CalculateScore(struct Network *network, char *databasepath)
     else
         color = RED;
 
-    printf("\nCOST : %f\n", cost_average);
-    printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n", color, percentage_of_success, RST, nb_success, number_of_test);
+    printf("COST : %f\n", cost_average);
+    printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n\n", color, percentage_of_success, RST, nb_success, number_of_test);
 
     return percentage_of_success;
 }
@@ -116,7 +117,10 @@ void MinibatchesStates(size_t batches_already_done[], size_t batches_how_many[])
         printf("\t↳[");
 
         double percent = (batches_how_many[i] / (double)NB_TRAINING_PER_MINIBATCH) * 100;
-        average_percentage += percent;
+
+        average_percentage += NB_TRAINING_PER_MINIBATCH * (batches_already_done[i]);
+        if (batches_already_done[i] < NB_MINIBATCH)
+            average_percentage += batches_how_many[i];
 
         for (size_t j = 0; j < percent; j++)
         {
@@ -128,7 +132,15 @@ void MinibatchesStates(size_t batches_already_done[], size_t batches_how_many[])
         }
         printf("] %f%%\n", percent);
     }
-    average_percentage /= (double)NB_TRAINING_PER_MINIBATCH;
+    average_percentage /= (double)(NB_MINIBATCH * CHARSLEN * NB_TRAINING_PER_MINIBATCH);
+    average_percentage *= 100;
+
+    // lmao
+    if (average_percentage > 100)
+    {
+        average_percentage = 100;
+    }
+
     printf("\nOverall progress\n");
     printf("[");
     for (size_t j = 0; j < average_percentage; j++)
@@ -172,7 +184,7 @@ int trainNetworkTHREAD(void *data)
         {
             while (isStopped == 1)
             {
-                thrd_sleep( &(struct timespec){.tv_nsec=100000000}, NULL );
+                thrd_sleep(&(struct timespec){.tv_nsec = 100000000}, NULL);
             }
 
             batches_how_many[bpt->minibatch_list_index] = i;
@@ -196,6 +208,8 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
     dataset_path = datasetpath;
     thrd_t threads[CHARSLEN];
 
+    imageForLearningRate = malloc(sizeof(char) * CHARSLEN);
+
     batches_already_done = calloc(CHARSLEN, sizeof(size_t));
     batches_how_many = calloc(CHARSLEN, sizeof(size_t));
 
@@ -206,6 +220,7 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
     {
         printf("Training started for network '%c'\n", networks->networks[i]->character);
 
+        imageForLearningRate[i] = loadDataBase(dataset_path,networks->networks[i]->character,rand() % 1000);
         backpropTHREAD[i].net = networks->networks[i];
         backpropTHREAD[i].minibatch_list_index = i;
 
@@ -244,16 +259,28 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
         else if (ch == 's')
         {
             isStopped = 1;
-            char *c = NULL;
-            sprintf(c,"data/networks/~training/network_%d.json",(int) time(NULL));
-            SaveNetworksToJSON(networks,c);
-            printf("Networks saved at '%s'",c);
+            char *c = malloc(sizeof(char) * 100);
+
+            struct stat st = {0};
+
+            if (stat("data/networks/~training/", &st) == -1)
+            {
+                mkdir("data/networks/~training/", 0700);
+            }
+
+            sprintf(c, "data/networks/~training/network_%d.json", (int)time(NULL));
+            SaveNetworksToJSON(networks, c);
+            printf("Networks saved at '%s'\n", c);
+            free(c);
             isStopped = 0;
         }
+
         else
         {
             MinibatchesStates(batches_already_done, batches_how_many);
         }
+
+        thrd_sleep(&(struct timespec){.tv_sec = 5}, NULL);
     }
 
     CalculateScores(networks, dataset_path);
@@ -297,6 +324,16 @@ void minibatch(struct Network *network, char **inputs, double **expected_output)
         }
     }
 
+    
+        char * input0 = imageForLearningRate[0];
+
+        // Feedforward
+        double *output0 = calculateNetworkOutput(network, input0);
+        free(output0);
+
+        cost(network, 0);
+        double LEARNINGRATE = cost(network, 0);
+
     // Update ∂bias and ∂weight
     for (size_t l = 1; l < network->nb_layers; l++)
     {
@@ -314,7 +351,7 @@ void minibatch(struct Network *network, char **inputs, double **expected_output)
                     sumweights += neurone->delta_weight[k * MINIBATCH_SIZE + i];
                 }
 
-                neurone->weights[k] -= (LEARNINGRATE) * (sumweights / MINIBATCH_SIZE);
+                neurone->weights[k] -= LEARNINGRATE * (sumweights / MINIBATCH_SIZE);
             }
 
             double sum_delta_bias = 0;
@@ -322,7 +359,7 @@ void minibatch(struct Network *network, char **inputs, double **expected_output)
             {
                 sum_delta_bias += neurone->delta_bias[i];
             }
-            neurone->bias -= (LEARNINGRATE) * (sum_delta_bias / MINIBATCH_SIZE);
+            neurone->bias -= LEARNINGRATE * (sum_delta_bias / MINIBATCH_SIZE);
         }
     }
 }
@@ -372,24 +409,24 @@ void backpropagation(struct Network *network, double *expected_output)
 char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
 {
     //Convert a imagenumber to a "12345" string
-    char *imagename = malloc(6 * sizeof(char));
-    imagename[5] = 0;
-    for (size_t i = 5; i > 0; i--)
+    char *foldername = malloc(4 * sizeof(char));
+    foldername[3] = 0;
+    for (size_t i = 3; i > 0; i--)
     {
-        imagename[i - 1] = '0' + imagenumber % 10;
-        imagenumber /= 10;
+        foldername[i - 1] = '0' + letter % 10;
+        letter /= 10;
     }
 
     //Build the image path string
     char *imagepath = malloc((strlen(databasepath) + 150) * sizeof(char));
-    sprintf(imagepath, "%s/%02x/%lu.png", databasepath, letter, imagenumber);
+    sprintf(imagepath, "%s/%s/%lu.bmp", databasepath, foldername, imagenumber);
 
     //Load image
     SDL_Surface *image = loadImage(imagepath);
     free(imagepath);
-    free(imagename);
+    free(foldername);
 
-    char *imagebin = binarizationpointer(image, 1);
+    char *imagebin = binarizationpointer(image, 2);
     SDL_FreeSurface(image);
     return imagebin;
 }

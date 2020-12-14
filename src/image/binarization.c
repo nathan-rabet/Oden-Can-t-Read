@@ -52,9 +52,9 @@ char *binarizationpointer(SDL_Surface *image, int scale)
         }
       }
       if ((moy / (3 * scale * scale)) < 128)
-        *(imagebin + (i/scale) * ((image->w)/scale) + (j/scale)) = 0;
-      else
         *(imagebin + (i/scale) * ((image->w)/scale) + (j/scale)) = 1;
+      else // Inverse because poopy dataset!
+        *(imagebin + (i/scale) * ((image->w)/scale) + (j/scale)) = 0;
         
     }
   }

@@ -13,11 +13,10 @@
 #include "../../math/analysis.h"
 #include "../../miscellaneous/color.h"
 
-#define LEARNINGRATE 0.01
 #define MINIBATCH_SIZE 30
 #define NB_TRAINING_PER_MINIBATCH 10000
-#define NB_MINIBATCH 20
-#define NB_INPUTS 64*64
+#define NB_MINIBATCH 50
+#define NB_INPUTS 25*25
 
 struct _BackpropagTHREAD {
     struct Network *net;
