@@ -135,11 +135,10 @@ void MinibatchesStates(size_t batches_already_done[], size_t batches_how_many[])
     average_percentage /= (double)(NB_MINIBATCH * CHARSLEN * NB_TRAINING_PER_MINIBATCH);
     average_percentage *= 100;
 
-    // lmao
     if (average_percentage > 100)
-    {
         average_percentage = 100;
-    }
+    
+    
 
     printf("\nOverall progress\n");
     printf("[");
@@ -208,7 +207,7 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
     dataset_path = datasetpath;
     thrd_t threads[CHARSLEN];
 
-    imageForLearningRate = malloc(sizeof(char) * CHARSLEN);
+    imageForLearningRate = malloc(sizeof(char*) * CHARSLEN);
 
     batches_already_done = calloc(CHARSLEN, sizeof(size_t));
     batches_how_many = calloc(CHARSLEN, sizeof(size_t));
