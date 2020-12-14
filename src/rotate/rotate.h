@@ -54,5 +54,7 @@ struct MatrixUCHAR TrimUCHAR(struct MatrixUCHAR m);
 
 struct MatrixDOUBLE TrimDOUBLE(struct MatrixDOUBLE m);
 
+struct MatrixDOUBLE FindRotationDOUBLE(struct MatrixDOUBLE m);
+
 #endif
 
