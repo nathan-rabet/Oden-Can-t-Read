@@ -18,6 +18,12 @@
 #define NB_TRAINING_PER_MINIBATCH 10000
 #define NB_MINIBATCH 20
 #define NB_INPUTS 64*64
+
+struct _BackpropagTHREAD {
+    struct Network *net;
+    size_t minibatch_list_index;
+};
+
  /*
  * @brief Train the network to reconize letters. Inputs are 128x128 images
  * 
