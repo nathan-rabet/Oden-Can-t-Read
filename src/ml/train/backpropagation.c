@@ -7,7 +7,8 @@
 #include "backpropagation.h"
 #include "../../math/analysis.h"
 
-char ** imageForLearningRate;
+char **imageForLearningRate;
+struct Networks *networksRef;
 
 char *dataset_path;
 size_t *batches_already_done;
@@ -137,8 +138,6 @@ void MinibatchesStates(size_t batches_already_done[], size_t batches_how_many[])
 
     if (average_percentage > 100)
         average_percentage = 100;
-    
-    
 
     printf("\nOverall progress\n");
     printf("[");
@@ -190,6 +189,22 @@ int trainNetworkTHREAD(void *data)
             minibatch(network, inputs, expected_output);
         }
 
+        // Saving networks automaticaly
+        isStopped = 1;
+        char *c = malloc(sizeof(char) * 100);
+
+        struct stat st = {0};
+
+        if (stat("data/networks/~training/", &st) == -1)
+        {
+            mkdir("data/networks/~training/", 0700);
+        }
+
+        sprintf(c, "data/networks/~training/network_%d.json", (int)time(NULL));
+        SaveNetworksToJSON(networksRef, c);
+        free(c);
+        isStopped = 0;
+
         // Free inputs & and expected ones
         for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             free(inputs[i]);
@@ -205,9 +220,10 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
 {
     mtx_init(&mutex, mtx_plain);
     dataset_path = datasetpath;
+    networksRef = networks;
     thrd_t threads[CHARSLEN];
 
-    imageForLearningRate = malloc(sizeof(char*) * CHARSLEN);
+    imageForLearningRate = malloc(sizeof(char *) * CHARSLEN);
 
     batches_already_done = calloc(CHARSLEN, sizeof(size_t));
     batches_how_many = calloc(CHARSLEN, sizeof(size_t));
@@ -219,7 +235,7 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
     {
         printf("Training started for network '%c'\n", networks->networks[i]->character);
 
-        imageForLearningRate[i] = loadDataBase(dataset_path,networks->networks[i]->character,rand() % 1000);
+        imageForLearningRate[i] = loadDataBase(dataset_path, networks->networks[i]->character, rand() % 1000);
         backpropTHREAD[i].net = networks->networks[i];
         backpropTHREAD[i].minibatch_list_index = i;
 
@@ -323,15 +339,14 @@ void minibatch(struct Network *network, char **inputs, double **expected_output)
         }
     }
 
-    
-        char * input0 = imageForLearningRate[0];
+    char *input0 = imageForLearningRate[0];
 
-        // Feedforward
-        double *output0 = calculateNetworkOutput(network, input0);
-        free(output0);
+    // Feedforward
+    double *output0 = calculateNetworkOutput(network, input0);
+    free(output0);
 
-        cost(network, 0);
-        double LEARNINGRATE = cost(network, 0);
+    cost(network, 0);
+    double LEARNINGRATE = cost(network, 0);
 
     // Update ∂bias and ∂weight
     for (size_t l = 1; l < network->nb_layers; l++)
