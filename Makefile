@@ -2,12 +2,12 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -ldl
 CFLAGS += $(shell pkg-config --cflags json-c) # json-c flags
-CFLAGS += $(shell pkg-config --cflags gtk+-3.0)
+CFLAGS_GTK = $(shell pkg-config --cflags gtk+-3.0)
 
 
 CLIBS = `sdl2-config --cflags --libs` -lSDL2_image -lpthread
 CLIBS += $(shell pkg-config --libs json-c) #json-c libs
-CLIBS += $(shell pkg-config --libs gtk+-3.0 -export-dynamic)
+CLIBS_GTK = $(shell pkg-config --libs gtk+-3.0 -export-dynamic)
 
 #SRC = main.c
 SRC =  src/matrix/matrix.c 
@@ -23,8 +23,8 @@ SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
 SRC += src/segmentation/segmentation.c
 SRC += src/ml/struct/networks.c
-SRC += OCR_project.c
-SRC += OCR_project.glade
+#SRC += OCR_project.c
+#SRC += OCR_project.glade
 
 
 OUT = ocr

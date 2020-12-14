@@ -45,7 +45,7 @@ struct MatrixDOUBLE rotateDOUBLE(struct MatrixDOUBLE m, int angle);
 struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
 
 /**
- * @brief Trims the Matric of its unuseful values.
+ * @brief Trims the Matrix of its unuseful values.
  * 
  * @param m The Matrix needed to be trimmed.
  * @return struct MatrixUCHAR.
@@ -53,8 +53,6 @@ struct MatrixUCHAR rotateUCHAR(struct MatrixUCHAR m, int angle);
 struct MatrixUCHAR TrimUCHAR(struct MatrixUCHAR m);
 
 struct MatrixDOUBLE TrimDOUBLE(struct MatrixDOUBLE m);
-
-struct MatrixDOUBLE FindRotationDOUBLE(struct MatrixDOUBLE m);
 
 #endif
 
