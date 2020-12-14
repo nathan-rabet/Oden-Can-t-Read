@@ -140,12 +140,12 @@ int GetCharacters(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *L, st
       nbCharacters++;
     }
   }
-  if (isInChar!=0)
+  if (isInChar != 0)
   {
     struct Character newcharacter;
     newcharacter.FirstPoint = FirstPoint;
-    newcharacter.LastPoint=LastY;
-    characters[nbCharacters]=newcharacter;
+    newcharacter.LastPoint = LastY;
+    characters[nbCharacters] = newcharacter;
     nbCharacters++;
   }
   L->nbCharacters = nbCharacters;
@@ -248,33 +248,33 @@ struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
 
 struct Characters *Segmentation(char *imagepath)
 {
-    struct Image newImage;
-    //Load image
-    SDL_Surface *image = loadImage(imagepath);
-    struct MatrixDOUBLE imagemat = binarization(image, 1);
-    newImage.matrix = imagemat;
+  struct Image newImage;
+  //Load image
+  SDL_Surface *image = loadImage(imagepath);
+  struct MatrixDOUBLE imagemat = binarization(image, 1);
+  newImage.matrix = imagemat;
 
-    int TotalNbCharacter = 0;
-    struct MatrixDOUBLE *Matrixarray = calloc(MAX_TBLOCK_NUMBER * MAX_LINE_NUMBER * MAX_CHARACTER_NUMBER, sizeof(double) * STANDARD_CHARACTER_MATRIX_SIZE * STANDARD_CHARACTER_MATRIX_SIZE);
-    char *AllCharacters = calloc(MAX_TBLOCK_NUMBER * MAX_LINE_NUMBER * MAX_CHARACTER_NUMBER, sizeof(char));
+  int TotalNbCharacter = 0;
+  struct MatrixDOUBLE *Matrixarray = calloc(MAX_TBLOCK_NUMBER * MAX_LINE_NUMBER * MAX_CHARACTER_NUMBER, sizeof(double) * STANDARD_CHARACTER_MATRIX_SIZE * STANDARD_CHARACTER_MATRIX_SIZE);
+  char *AllCharacters = calloc(MAX_TBLOCK_NUMBER * MAX_LINE_NUMBER * MAX_CHARACTER_NUMBER, sizeof(char));
 
-    struct TextBlock *textblocks = calloc(MAX_TBLOCK_NUMBER, sizeof(struct TextBlock));
-    int nbTextblocs = GetTextBlock(newImage.matrix, textblocks);
-    textblocks = realloc(textblocks, nbTextblocs * sizeof(struct TextBlock));
+  struct TextBlock *textblocks = calloc(MAX_TBLOCK_NUMBER, sizeof(struct TextBlock));
+  int nbTextblocs = GetTextBlock(newImage.matrix, textblocks);
+  textblocks = realloc(textblocks, nbTextblocs * sizeof(struct TextBlock));
 
-    for (int i = 0; i < nbTextblocs; i++)
-    {
-        /*
+  for (int i = 0; i < nbTextblocs; i++)
+  {
+    /*
         printf("There is a total of %d Textblocks: \n\n",nbTextblocs);
         */
 
-        struct TextBlock *T = &(textblocks[i]);
-        struct Line *lines = calloc(MAX_LINE_NUMBER, sizeof(struct Line));
-        int nbLines = GetLines(newImage.matrix, T, lines);
-        T->nbLines = nbLines;
-        lines = realloc(lines, nbLines * sizeof(struct Line));
+    struct TextBlock *T = &(textblocks[i]);
+    struct Line *lines = calloc(MAX_LINE_NUMBER, sizeof(struct Line));
+    int nbLines = GetLines(newImage.matrix, T, lines);
+    T->nbLines = nbLines;
+    lines = realloc(lines, nbLines * sizeof(struct Line));
 
-        /*
+    /*
         printf("There is a total of %d lines: \n",nbLines);
         printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Lines -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
         for(int il=0;il<nbLines;il++)
@@ -284,20 +284,20 @@ struct Characters *Segmentation(char *imagepath)
         printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
         */
 
-        for (int j = 0; j < nbLines; j++)
-        {
-            struct Line *L = &(lines[j]);
-            struct Character *characters = calloc(MAX_CHARACTER_NUMBER, sizeof(struct Character));
-            int nbChara = GetCharacters(newImage.matrix, T, L, characters);
-            characters = realloc(characters, nbChara * sizeof(struct Character));
-            /*
+    for (int j = 0; j < nbLines; j++)
+    {
+      struct Line *L = &(lines[j]);
+      struct Character *characters = calloc(MAX_CHARACTER_NUMBER, sizeof(struct Character));
+      int nbChara = GetCharacters(newImage.matrix, T, L, characters);
+      characters = realloc(characters, nbChara * sizeof(struct Character));
+      /*
            printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
            printf("There is a total of %d characters in Line %d.\n",nbChara,j+1);
            */
-            for (int k = 0; k < nbChara; k++)
-            {
-                struct Character *C = &(characters[k]);
-                /*
+      for (int k = 0; k < nbChara; k++)
+      {
+        struct Character *C = &(characters[k]);
+        /*
               if (k==0)
               {
                   printf("Firstpoint: %d -- ",C->FirstPoint);
@@ -310,89 +310,88 @@ struct Characters *Segmentation(char *imagepath)
               }
               */
 
-                if (k > 0)
-                {
-                    struct Character *D = &(characters[k - 1]);
-                    if ((C->FirstPoint - D->LastPoint) > L->average_space*SPACE_SENSIBILITY)
-                    {
-                        AllCharacters[TotalNbCharacter] = ' ';
-                        TotalNbCharacter++;
-                        /*
+        if (k > 0)
+        {
+          struct Character *D = &(characters[k - 1]);
+          if ((C->FirstPoint - D->LastPoint) > L->average_space * SPACE_SENSIBILITY)
+          {
+            AllCharacters[TotalNbCharacter] = ' ';
+            TotalNbCharacter++;
+            /*
                    printf("There is a space at:\n-Line:%d\n-Character:%d\n----------------\n",j+1,k+1);
                    */
-                    }
-                }
-
-                struct MatrixDOUBLE charMatrix = createMatrixDOUBLE(L->LastPoint - L->FirstPoint + 1, C->LastPoint - C->FirstPoint + 1);
-                for (int i = L->FirstPoint; i <= L->LastPoint; i++)
-                {
-                    for (int j = C->FirstPoint; j <= C->LastPoint; j++)
-                    {
-                        double Value = matrixGetDOUBLE(newImage.matrix, i, j);
-                        matrixSetDOUBLE(charMatrix, i - L->FirstPoint, j - C->FirstPoint, Value);
-                    }
-                }
-
-                //Trim charMatrix?
-                //Resize Matrix
-                struct MatrixDOUBLE newcharMatrix = Resize(charMatrix);
-                free(charMatrix.cells);
-                //Add to MatrixArray
-                Matrixarray[TotalNbCharacter] = newcharMatrix; //Resized
-                AllCharacters[TotalNbCharacter] = '\0';
-                TotalNbCharacter++;
-            }
-            //After Completing the Line, we add a line return char
-            AllCharacters[TotalNbCharacter] = '\n';
-            TotalNbCharacter++;
-            //free used data
-            free(characters);
+          }
         }
-        //After Completing the TextBlock, we add a \n char
-        AllCharacters[TotalNbCharacter] = '\n';
-        TotalNbCharacter++;
-        AllCharacters[TotalNbCharacter] = '\0';
-        //free used data
-        free(lines);
-    }
-    //free used data
-    free(textblocks);
-    free(newImage.matrix.cells);
-    //realloc list of matrix of chara and Allchara
-    Matrixarray = realloc(Matrixarray, TotalNbCharacter * sizeof(double) * STANDARD_CHARACTER_MATRIX_SIZE * STANDARD_CHARACTER_MATRIX_SIZE);
-    AllCharacters = realloc(AllCharacters, TotalNbCharacter * sizeof(char));
 
-    //Convert Mat
-    char **Character_Binarized_Matrix = malloc(sizeof(char *) * TotalNbCharacter);
-    for (size_t i = 0; i < (size_t)TotalNbCharacter; i++)
-    {
-        size_t col = Matrixarray[i].columns;
-        size_t row = Matrixarray[i].rows;
-        char *charactermat = malloc(col * row * sizeof(char));
-        //Convert img
-        for (size_t x = 0; x < col; x++)
+        struct MatrixDOUBLE charMatrix = createMatrixDOUBLE(L->LastPoint - L->FirstPoint + 1, C->LastPoint - C->FirstPoint + 1);
+        for (int i = L->FirstPoint; i <= L->LastPoint; i++)
         {
-            for (size_t y = 0; y < row; y++)
-            {
-                charactermat[x * row + y] = matrixGetDOUBLE(Matrixarray[i], x, y);
-            }
+          for (int j = C->FirstPoint; j <= C->LastPoint; j++)
+          {
+            double Value = matrixGetDOUBLE(newImage.matrix, i, j);
+            matrixSetDOUBLE(charMatrix, i - L->FirstPoint, j - C->FirstPoint, Value);
+          }
         }
-        Character_Binarized_Matrix[i] = charactermat;
+
+        //Trim charMatrix?
+        //Resize Matrix
+        struct MatrixDOUBLE newcharMatrix = Resize(charMatrix);
+        free(charMatrix.cells);
+        //Add to MatrixArray
+        Matrixarray[TotalNbCharacter] = newcharMatrix; //Resized
+        AllCharacters[TotalNbCharacter] = '*';
+        TotalNbCharacter++;
+      }
+      //After Completing the Line, we add a line return char
+      AllCharacters[TotalNbCharacter] = '\n';
+      TotalNbCharacter++;
+      //free used data
+      free(characters);
     }
+    //After Completing the TextBlock, we add a \n char
+    AllCharacters[TotalNbCharacter] = '\n';
+    TotalNbCharacter++;
+    //free used data
+    free(lines);
+  }
+  AllCharacters[TotalNbCharacter] = '\0';
+  //free used data
+  free(textblocks);
+  free(newImage.matrix.cells);
+  //realloc list of matrix of chara and Allchara
+  Matrixarray = realloc(Matrixarray, TotalNbCharacter * sizeof(double) * STANDARD_CHARACTER_MATRIX_SIZE * STANDARD_CHARACTER_MATRIX_SIZE);
+  AllCharacters = realloc(AllCharacters, TotalNbCharacter * sizeof(char));
 
+  //Convert Mat
+  char **Character_Binarized_Matrix = malloc(sizeof(char *) * TotalNbCharacter);
+  for (size_t i = 0; i < (size_t)TotalNbCharacter; i++)
+  {
+    size_t col = Matrixarray[i].columns;
+    size_t row = Matrixarray[i].rows;
+    char *charactermat = malloc(col * row * sizeof(char));
+    //Convert img
+    for (size_t x = 0; x < col; x++)
+    {
+      for (size_t y = 0; y < row; y++)
+      {
+        charactermat[x * row + y] = matrixGetDOUBLE(Matrixarray[i], x, y);
+      }
+    }
+    Character_Binarized_Matrix[i] = charactermat;
+  }
 
-    struct Characters * chars = malloc(sizeof(struct Characters));
-    chars->AllCharacters = AllCharacters;
-    chars->Character_Binarized_Matrix = Character_Binarized_Matrix;
-    chars->Nb_Characters = (size_t)TotalNbCharacter;
-    
-    /*
+  struct Characters *chars = malloc(sizeof(struct Characters));
+  chars->AllCharacters = AllCharacters;
+  chars->Character_Binarized_Matrix = Character_Binarized_Matrix;
+  chars->Nb_Characters = (size_t)TotalNbCharacter;
+
+  /*
     for (size_t i = 0; i < (size_t)TotalNbCharacter; i++)
     {
-      show_matrix_to_img(Character_Binarized_Matrix[i], STANDARD_CHARACTER_MATRIX_SIZE, STANDARD_CHARACTER_MATRIX_SIZE);
+      if (chars->AllCharacters[i] == '*')
+        show_matrix_to_img(Character_Binarized_Matrix[i], STANDARD_CHARACTER_MATRIX_SIZE, STANDARD_CHARACTER_MATRIX_SIZE);
     }
     */
-    
 
-    return chars;
+  return chars;
 }

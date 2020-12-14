@@ -37,6 +37,8 @@ void configure_batch_io(struct Network *network, char *datasetpath, char **input
 
 void CalculateScores(struct Networks *networks, char *databasepath)
 {
+
+    SaveNetworksToJSON(networks, "net.json");
     double average_percentage = 0;
     for (size_t i = 0; i < networks->nb_networks; i++)
     {
@@ -62,7 +64,7 @@ double CalculateScore(struct Network *network, char *databasepath)
             letter = network->character;
 
         // Dataset loading
-        char *inputs = loadDataBase(databasepath, letter, (rand() % 1000) + 1);
+        char *inputs = loadDataBase(databasepath, letter, (rand() % 4));
 
         // Feedforward
         double *outputs = calculateNetworkOutput(network, inputs);

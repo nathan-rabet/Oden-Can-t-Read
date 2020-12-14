@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include "layer.h"
 
-#define NB_INPUTS 32*32
-
 /**
  * @brief ML network for one single character
  * 
