@@ -16,7 +16,7 @@
             <property name="can-focus">True</property>
           </object>
           <packing>
-            <property name="x">270</property>
+            <property name="x">282</property>
             <property name="y">120</property>
           </packing>
         </child>
@@ -66,7 +66,7 @@
           </object>
           <packing>
             <property name="x">37</property>
-            <property name="y">450</property>
+            <property name="y">469</property>
           </packing>
         </child>
         <child>
@@ -89,22 +89,21 @@
             <signal name="changed" handler="on_save_name_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">62</property>
-            <property name="y">490</property>
+            <property name="x">56</property>
+            <property name="y">502</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="binarization">
             <property name="label" translatable="yes">Process image</property>
-            <property name="width-request">99</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <signal name="clicked" handler="on_binarization_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">75</property>
-            <property name="y">241</property>
+            <property name="x">8</property>
+            <property name="y">183</property>
           </packing>
         </child>
         <child>
@@ -117,7 +116,7 @@
           </object>
           <packing>
             <property name="x">90</property>
-            <property name="y">345</property>
+            <property name="y">411</property>
           </packing>
         </child>
         <child>
@@ -129,8 +128,147 @@
             <signal name="clicked" handler="on_Save_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">107</property>
-            <property name="y">530</property>
+            <property name="x">106</property>
+            <property name="y">544</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="reload_img">
+            <property name="label" translatable="yes">Reload image</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_reload_img_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">146</property>
+            <property name="y">183</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="rotation_label">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Rotate :  (by 5°)
+
+   		   (by 90°)</property>
+          </object>
+          <packing>
+            <property name="x">42</property>
+            <property name="y">241</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="rotate_minus_5">
+            <property name="label" translatable="yes">-</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_minus_5_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">156</property>
+            <property name="y">234</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="rotate_plus_5">
+            <property name="label" translatable="yes">+</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_plus_5_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">214</property>
+            <property name="y">234</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="rotate_minus_90">
+            <property name="label" translatable="yes">-</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_minus_90_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">156</property>
+            <property name="y">271</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="rotate_plus_90">
+            <property name="label" translatable="yes">+</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_plus_90_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">214</property>
+            <property name="y">271</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="sharpness">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Sharpness </property>
+          </object>
+          <packing>
+            <property name="x">41</property>
+            <property name="y">320</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="contrast">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Contrast</property>
+          </object>
+          <packing>
+            <property name="x">41</property>
+            <property name="y">360</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="sharpness_plus">
+            <property name="label" translatable="yes">+</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_sharpness_plus_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">186</property>
+            <property name="y">313</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="contrast_minus">
+            <property name="label" translatable="yes">-</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_contrast_minus_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">156</property>
+            <property name="y">354</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="contrast_plus">
+            <property name="label" translatable="yes">+</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_contrast_plus_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">214</property>
+            <property name="y">354</property>
           </packing>
         </child>
       </object>

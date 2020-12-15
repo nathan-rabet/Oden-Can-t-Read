@@ -62,6 +62,7 @@ struct Image
  */
 struct Characters
 {
+    SDL_Surface *Image_Segmentate;
     char **Character_Binarized_Matrix;
     char *AllCharacters;
     size_t Nb_Characters;
@@ -83,6 +84,6 @@ int GetCharacters(struct MatrixDOUBLE m, struct TextBlock *T, struct Line *L, st
 
 struct MatrixDOUBLE Resize(struct MatrixDOUBLE m);
 
-struct Characters *Segmentation(char *imagepath);
+struct Characters *Segmentation(SDL_Surface *image);
 
 #endif

@@ -230,7 +230,7 @@ SDL_Surface* MedianFilter(SDL_Surface *image, int px)
         }
         
     }
-    
+    SDL_FreeSurface(image);
     return outImage;
 }
 
@@ -274,5 +274,18 @@ SDL_Surface* PowerLaw(SDL_Surface *image, double c, double y)
             SDL_FillRect(outImage, &surface_rect, SDL_MapRGB(image->format, newcolor, newcolor, newcolor));
         }
     }
+    SDL_FreeSurface(image);
     return outImage;
+}
+
+void TraceRect(SDL_Surface *image, size_t x1, size_t y1, size_t x2, size_t y2)
+{
+    SDL_Rect surface_rect = {x1 - 2, y1 - 2, 4, y2-y1+4};
+    SDL_Rect surface_rect1 = {x1 - 2, y1 - 2, x2-x1+8, 4};
+    SDL_Rect surface_rect2 = {x1 - 2, y2 + 2, x2-x1+4, 4};
+    SDL_Rect surface_rect3 = {x2 + 2, y1 - 2, 4, y2-y1+4};
+    SDL_FillRect(image, &surface_rect, SDL_MapRGB(image->format, 0, 255, 0));
+    SDL_FillRect(image, &surface_rect1, SDL_MapRGB(image->format, 0, 255, 0));
+    SDL_FillRect(image, &surface_rect2, SDL_MapRGB(image->format, 0, 255, 0));
+    SDL_FillRect(image, &surface_rect3, SDL_MapRGB(image->format, 0, 255, 0));
 }
