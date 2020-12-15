@@ -20,11 +20,11 @@ int main()
 {   
    mustcall();
 
-   size_t nrpl[] = {NB_INPUTS, 15, 15, 1};
-   char afpl[] = {0, 2, 2, 2};
-   struct Networks *networks = generateRandomNetworks(4, nrpl, afpl);
+   //size_t nrpl[] = {NB_INPUTS, 15, 15, 1};
+   //char afpl[] = {0, 2, 2, 2};
+   //struct Networks *networks = generateRandomNetworks(4, nrpl, afpl);
    
-   //struct Networks *networks = LoadNetworksFromJSON("newnet.json");
+   struct Networks *networks = LoadNetworksFromJSON("data/networks/~training/network_1608004356.json");
    //PrintNetwork(net);
 
    char cwd[PATH_MAX];
