@@ -20,8 +20,8 @@ int main()
 {   
    mustcall();
 
-   size_t nrpl[] = {NB_INPUTS, 15, 15, 1};
-   char afpl[] = {0, 2, 2, 2};
+   size_t nrpl[] = {NB_INPUTS, 30, 30};
+   char afpl[] = {0, 5, 5, 2};
    struct Networks *networks = generateRandomNetworks(4, nrpl, afpl);
    
    //struct Networks *networks = LoadNetworksFromJSON("newnet.json");
@@ -29,6 +29,7 @@ int main()
 
    char cwd[PATH_MAX];
    char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset");
+   printf("Loading all dataset...");
    trainNetworks(networks,datasetpath);
    SaveNetworksToJSON(networks, "net.json");
    printf("Done!\n");
