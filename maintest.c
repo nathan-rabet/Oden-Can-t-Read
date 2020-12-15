@@ -18,11 +18,11 @@ int main()
 //  char afpl[] = {0, 2, 2, 2};
 //  struct Networks *net = generateRandomNetworks(4, npl, afpl);
 
-    struct Networks *net = LoadNetworksFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/network_1608004356.json");
+    struct Networks *net = LoadNetworksFromJSON("/home/maxou/Documents/gitrepos/noe.topeza/net.json");
     
 
     char cwd[PATH_MAX];
-    char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/dataset");
+    char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/DatatSet");
      
     CalculateScores(net, datasetpath);
     return 0;

@@ -5,8 +5,6 @@
 #include "network.h"
 #include "../../segmentation/segmentation.h"
 
-#define CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.?!"
-#define CHARSLEN 66
 
 /**
  * @brief ML binary networks
