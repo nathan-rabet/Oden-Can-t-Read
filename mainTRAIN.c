@@ -21,10 +21,13 @@ int main()
    mustcall();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
    //size_t nrpl[] = {NB_INPUTS, 15, 15, 1};
    //char afpl[] = {0, 2, 2, 2};
    //struct Networks *networks = generateRandomNetworks(4, nrpl, afpl);
 =======
+=======
+>>>>>>> f9d00715cfb7b1306e7277791b05f4c01bbd4ea9
    size_t nrpl[] = {NB_INPUTS, 30, 30};
    char afpl[] = {0, 5, 5, 2};
    struct Networks *networks = generateRandomNetworks(4, nrpl, afpl);
