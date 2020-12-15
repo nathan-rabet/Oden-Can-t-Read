@@ -1,4 +1,6 @@
-#include "misc/backpropag.h"
+#include "lib/backpropagMISC.h"
+#include "backpropagation.h"
+#include "lib/datasetFILES.h"
 
 int trainNetworkTHREAD(void *data)
 {
@@ -23,9 +25,9 @@ int trainNetworkTHREAD(void *data)
     // Create NB_MINIBATCH minibatches
     for (size_t b = 0; b < NB_MINIBATCH; b++)
     {
-        char **inputs = malloc(MINIBATCH_SIZE * sizeof(char *));
         double **expected_output = malloc(MINIBATCH_SIZE * sizeof(double *));
-        configure_batch_io(network, dataset_path, inputs, expected_output);
+        char **inputs = malloc(MINIBATCH_SIZE * sizeof(double *));
+        configure_batch_io(network, datset_folders, inputs, expected_output);
         for (size_t i = 0; i < NB_TRAINING_PER_MINIBATCH; i++)
         {
             while (isStopped == 1)
@@ -67,29 +69,27 @@ int trainNetworkTHREAD(void *data)
 int trainNetworks(struct Networks *networks, char *datasetpath)
 {
     mtx_init(&mutex, mtx_plain);
-    dataset_path = datasetpath;
+    datset_folders = malloc(sizeof(struct Folders));
+
+    loadDATASET(datset_folders, datasetpath);
     networksRef = networks;
     thrd_t threads[CHARSLEN];
-
-    imageForLearningRate = malloc(sizeof(char *) * CHARSLEN);
 
     batches_already_done = calloc(CHARSLEN, sizeof(size_t));
     batches_how_many = calloc(CHARSLEN, sizeof(size_t));
 
     // Creation of 'available_cores' threads.
-    printf("Training networks [a-zA-Z0-9]\n");
+    printf("Training networks [a-z0-9]\n");
     struct _BackpropagTHREAD *backpropTHREAD = malloc(sizeof(struct _BackpropagTHREAD) * CHARSLEN);
-    for (int i = 0; i < CHARSLEN; i++)
+    for (size_t i = 0; i < networks->nb_networks; i++)
     {
-        printf("Training started for network '%c'\n", networks->networks[i]->character);
-
-        imageForLearningRate[i] = loadDataBase(dataset_path, networks->networks[i]->character, rand() % 1000);
+        printf("Training started for network '%s'\n", networks->networks[i]->characters);
         backpropTHREAD[i].net = networks->networks[i];
         backpropTHREAD[i].minibatch_list_index = i;
 
         if (thrd_create(&threads[i], trainNetworkTHREAD, &backpropTHREAD[i]) != thrd_success)
         {
-            fprintf(stderr, "Threads creation failed for network n°%d\n", i);
+            fprintf(stderr, "Threads creation failed for network n°%ld\n", i);
             return 1;
         }
     }
@@ -115,7 +115,7 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
         if (ch == 't')
         {
             isStopped = 1;
-            CalculateScores(networks, dataset_path);
+            CalculateScores(networks);
             isStopped = 0;
         }
 
@@ -146,7 +146,7 @@ int trainNetworks(struct Networks *networks, char *datasetpath)
         thrd_sleep(&(struct timespec){.tv_sec = 5}, NULL);
     }
 
-    CalculateScores(networks, dataset_path);
+    CalculateScores(networks);
 
     free(batches_already_done);
     return 0;
@@ -186,15 +186,7 @@ void minibatch(struct Network *network, char **inputs, double **expected_output)
             }
         }
     }
-
-    char *input0 = imageForLearningRate[0];
-
-    // Feedforward
-    double *output0 = calculateNetworkOutput(network, input0);
-    free(output0);
-
-    cost(network, 0);
-    double LEARNINGRATE = cost(network, 0);
+    double LEARNINGRATE = 0.01;
 
     // Update ∂bias and ∂weight
     for (size_t l = 1; l < network->nb_layers; l++)
@@ -260,6 +252,11 @@ void backpropagation(struct Network *network, double *expected_output)
             double sum = 0;
             for (size_t j = 0; j < network->layers[l + 1]->nb_neurones; j++)
             {
+                while (isStopped == 1)
+                {
+                    thrd_sleep(&(struct timespec){.tv_nsec = 100000000}, NULL);
+                }
+
                 // neurones[j] -> change | weights[i] don't change
                 sum += network->layers[l + 1]->neurones[j]->delta_error * network->layers[l + 1]->neurones[j]->weights[i];
             }
@@ -268,7 +265,7 @@ void backpropagation(struct Network *network, double *expected_output)
     }
 }
 
-char *loadDataBase(char *databasepath, char letter, size_t imagenumber)
+char *loadDATASET_Image(char *databasepath, char letter, size_t imagenumber)
 {
     //Convert a imagenumber to a "12345" string
     char *foldername = malloc(4 * sizeof(char));

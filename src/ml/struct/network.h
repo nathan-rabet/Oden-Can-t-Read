@@ -25,7 +25,8 @@ struct Network {
      * @brief The character the network will be able to confirm.
      * 
      */
-    char character;
+    char * characters;
+    size_t nb_characters;
 };
 
 /**
@@ -35,7 +36,7 @@ struct Network {
  * @param nb_layers The number of layers.
  * @return struct Network 
  */
-struct Network* CreateNetwork(struct Layer **layers, size_t nb_layers,char expected_char);
+struct Network* CreateNetwork(struct Layer **layers, size_t nb_layers,char in_char, char out_char);
 
 /**
  * @brief Free a Network object
@@ -106,5 +107,5 @@ void PrintNetwork(struct Network* network);
  * @param expected_character The character the network should recognize.
  * @return struct Network 
  */
-struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[],char expected_character);
+struct Network* generateRandomNetwork(size_t nb_layers,size_t nb_neurone_per_layer[],char activation_functions_per_layer[],char in_char,char out_char);
 #endif

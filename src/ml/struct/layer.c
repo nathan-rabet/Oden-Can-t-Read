@@ -60,17 +60,26 @@ void PrintLayerOutput(struct Layer *layer)
 double * softmax(struct Layer layer) {
 
     double *softed = malloc(sizeof(double) * layer.nb_neurones);
-    double sum = 0;
+    double max = -INFINITY;
+
     for (size_t k = 0; k < layer.nb_neurones; k++)
     {
-        sum += exp(layer.neurones[k]->outputWithoutActivation);
+        double z_k = activationFunction(layer.neurones[k]);
+        if (max < z_k)
+            max = z_k;
     }
-    
 
-
+    double sum = 0;
     for (size_t i = 0; i < layer.nb_neurones; i++)
     {
-        softed[i] = exp(layer.neurones[i]->outputWithoutActivation) / sum;
+        sum += exp(activationFunction(layer.neurones[i]) - max);
+    }
+    
+    double cst = max + log(sum);
+
+    for (size_t j = 0; j < layer.nb_neurones; j++)
+    {
+        softed[j] = 10 * exp(layer.neurones[j]->outputWithoutActivation - cst);
     }
     
     return softed;
