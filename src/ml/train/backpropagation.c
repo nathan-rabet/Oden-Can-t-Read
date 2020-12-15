@@ -55,9 +55,6 @@ int trainNetworkTHREAD(void *data)
         free(c);
         isStopped = 0;
 
-        // Free inputs & and expected ones
-        for (size_t i = 0; i < MINIBATCH_SIZE; i++)
-            free(inputs[i]);
         for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             free(expected_output[i]);
         // dadim dam dam dadim dam dam dadadi dadadadi do dim dam dam

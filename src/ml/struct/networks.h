@@ -5,6 +5,7 @@
 #include "network.h"
 #include "../../segmentation/segmentation.h"
 
+#include "../../miscellaneous/CHARS.h"
 
 /**
  * @brief ML binary networks

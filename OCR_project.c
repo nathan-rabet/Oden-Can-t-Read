@@ -150,6 +150,9 @@ void on_Save_clicked(GtkButton *b)
 	savebuffer = gtk_text_view_get_buffer(text);
 	gtk_text_buffer_get_start_iter(savebuffer, &start);
 	gtk_text_buffer_get_end_iter(savebuffer, &end);
+	int len = gtk_text_buffer_get_char_count(savebuffer) - 1;
+    if (len < 0)
+        return;
 	int len = gtk_text_buffer_get_char_count(savebuffer);
 	char *ai_text = gtk_text_buffer_get_text(savebuffer, &start, &end, FALSE);
 	if (ai_text != NULL)
