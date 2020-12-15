@@ -1,217 +1,274 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.1 -->
 <interface>
-  <requires lib="gtk+" version="2.16"/>
-  <!-- interface-naming-policy project-wide -->
-  <object class="GtkWindow" id="window1">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="window">
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkFixed" id="fixed1">
         <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkTextView" id="text">
+            <property name="width-request">270</property>
+            <property name="height-request">450</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+          </object>
+          <packing>
+            <property name="x">282</property>
+            <property name="y">120</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkLabel" id="name">
-            <property name="width_request">49</property>
-            <property name="height_request">32</property>
+            <property name="width-request">100</property>
+            <property name="height-request">80</property>
             <property name="visible">True</property>
-            <property name="has_tooltip">True</property>
-            <property name="tooltip_text" translatable="yes">By No&#xE9; TOPEZA
-      Maxcence ODEN
-      Nathan RABET
-      Luca SAINGIER</property>
-            <property name="xalign">0.52999997138977051</property>
-            <property name="yalign">0.52999997138977051</property>
+            <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">By   Noé TOPEZA
+	Maxence ODEN
+	Nathan RABET
+	Luca SAINGIER</property>
             <property name="label" translatable="yes">OCR</property>
             <attributes>
-              <attribute name="weight">ultrabold</attribute>
-              <attribute name="scale">2,000000</attribute>
+              <attribute name="weight" value="ultraheavy"/>
+              <attribute name="scale" value="2"/>
             </attributes>
           </object>
           <packing>
-            <property name="x">19</property>
-            <property name="y">16</property>
+            <property name="x">3</property>
+            <property name="y">7</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="img_select">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Select image</property>
+            <attributes>
+              <attribute name="scale" value="1.5"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">75</property>
+            <property name="y">100</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="img_select1">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Select save file name</property>
+            <attributes>
+              <attribute name="scale" value="1.5"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="x">37</property>
+            <property name="y">469</property>
           </packing>
         </child>
         <child>
           <object class="GtkFileChooserButton" id="img_input">
-            <property name="width_request">123</property>
-            <property name="height_request">38</property>
+            <property name="width-request">130</property>
             <property name="visible">True</property>
-            <signal name="file_set" handler="on_img_input_file_set"/>
+            <property name="can-focus">False</property>
+            <property name="title" translatable="yes"/>
+            <signal name="file-set" handler="on_img_input_file_set" swapped="no"/>
           </object>
           <packing>
-            <property name="x">66</property>
-            <property name="y">108</property>
+            <property name="x">74</property>
+            <property name="y">138</property>
           </packing>
         </child>
         <child>
-          <object class="GtkTextView" id="text">
-            <property name="width_request">393</property>
-            <property name="height_request">636</property>
+          <object class="GtkEntry" id="save_name">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can-focus">True</property>
+            <signal name="changed" handler="on_save_name_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">227</property>
-            <property name="y">38</property>
+            <property name="x">56</property>
+            <property name="y">502</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="binarization">
             <property name="label" translatable="yes">Process image</property>
-            <property name="width_request">96</property>
-            <property name="height_request">47</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="yalign">0.55000001192092896</property>
-            <signal name="clicked" handler="on_binarization_clicked"/>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_binarization_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">72</property>
-            <property name="y">222</property>
+            <property name="x">8</property>
+            <property name="y">183</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="Read_text">
             <property name="label" translatable="yes">Read text</property>
-            <property name="width_request">78</property>
-            <property name="height_request">41</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="on_Read_text_clicked"/>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_Read_text_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">86</property>
-            <property name="y">440</property>
+            <property name="x">90</property>
+            <property name="y">411</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="Save">
             <property name="label" translatable="yes">Save</property>
-            <property name="width_request">34</property>
-            <property name="height_request">25</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="on_Save_clicked"/>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_Save_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">103</property>
-            <property name="y">586</property>
+            <property name="x">106</property>
+            <property name="y">544</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="no_img">
-            <property name="width_request">113</property>
-            <property name="height_request">20</property>
+          <object class="GtkButton" id="reload_img">
+            <property name="label" translatable="yes">Reload image</property>
             <property name="visible">True</property>
-            <property name="extension_events">cursor</property>
-            <property name="has_tooltip">True</property>
-            <property name="tooltip_text" translatable="yes">Please select the image you want to scan using the button above</property>
-            <property name="label" translatable="yes">No image selected</property>
-            <attributes>
-              <attribute name="foreground">#ee3811c711c7</attribute>
-            </attributes>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_reload_img_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">62</property>
-            <property name="y">195</property>
+            <property name="x">146</property>
+            <property name="y">183</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="no_txt">
-            <property name="width_request">100</property>
-            <property name="height_request">25</property>
+          <object class="GtkLabel" id="rotation_label">
             <property name="visible">True</property>
-            <property name="extension_events">cursor</property>
-            <property name="has_tooltip">True</property>
-            <property name="tooltip_text" translatable="yes">Please process the image you want to read first</property>
-            <property name="label" translatable="yes">No image treated</property>
-            <attributes>
-              <attribute name="foreground">#ee3811c711c7</attribute>
-            </attributes>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Rotate :  (by 5°)
+
+   		   (by 90°)</property>
           </object>
           <packing>
-            <property name="x">76</property>
-            <property name="y">416</property>
+            <property name="x">42</property>
+            <property name="y">241</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="img_select">
-            <property name="width_request">113</property>
-            <property name="height_request">34</property>
+          <object class="GtkButton" id="rotate_minus_5">
+            <property name="label" translatable="yes">-</property>
             <property name="visible">True</property>
-            <property name="extension_events">cursor</property>
-            <property name="label" translatable="yes">Select image </property>
-            <attributes>
-              <attribute name="foreground">#000000000000</attribute>
-              <attribute name="scale">1,300000</attribute>
-            </attributes>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_minus_5_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">66</property>
-            <property name="y">79</property>
+            <property name="x">156</property>
+            <property name="y">234</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="network_select">
-            <property name="width_request">105</property>
-            <property name="height_request">24</property>
+          <object class="GtkButton" id="rotate_plus_5">
+            <property name="label" translatable="yes">+</property>
             <property name="visible">True</property>
-            <property name="extension_events">cursor</property>
-            <property name="label" translatable="yes">Select network</property>
-            <attributes>
-              <attribute name="foreground">#000000000000</attribute>
-              <attribute name="scale">1,300000</attribute>
-            </attributes>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_plus_5_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">68</property>
-            <property name="y">300</property>
+            <property name="x">214</property>
+            <property name="y">234</property>
           </packing>
         </child>
         <child>
-          <object class="GtkFileChooserButton" id="network_input">
-            <property name="width_request">117</property>
-            <property name="height_request">39</property>
+          <object class="GtkButton" id="rotate_minus_90">
+            <property name="label" translatable="yes">-</property>
             <property name="visible">True</property>
-            <signal name="file_set" handler="on_network_input_file_set"/>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_minus_90_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">64</property>
-            <property name="y">325</property>
+            <property name="x">156</property>
+            <property name="y">271</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="save_select">
-            <property name="width_request">144</property>
-            <property name="height_request">29</property>
+          <object class="GtkButton" id="rotate_plus_90">
+            <property name="label" translatable="yes">+</property>
             <property name="visible">True</property>
-            <property name="extension_events">cursor</property>
-            <property name="label" translatable="yes">Enter save file name</property>
-            <attributes>
-              <attribute name="foreground">#000000000000</attribute>
-              <attribute name="scale">1,300000</attribute>
-            </attributes>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_rotate_plus_90_clicked" swapped="no"/>
           </object>
           <packing>
-            <property name="x">53</property>
-            <property name="y">504</property>
+            <property name="x">214</property>
+            <property name="y">271</property>
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="save_name">
-            <property name="width_request">136</property>
-            <property name="height_request">26</property>
+          <object class="GtkLabel" id="sharpness">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="visibility">False</property>
-            <property name="invisible_char">&#x25CF;</property>
-            <property name="width_chars">128</property>
-            <signal name="changed" handler="on_save_name_changed"/>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Sharpness </property>
           </object>
           <packing>
-            <property name="x">58</property>
-            <property name="y">537</property>
+            <property name="x">41</property>
+            <property name="y">320</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="contrast">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Contrast</property>
+          </object>
+          <packing>
+            <property name="x">41</property>
+            <property name="y">360</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="sharpness_plus">
+            <property name="label" translatable="yes">+</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_sharpness_plus_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">186</property>
+            <property name="y">313</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="contrast_minus">
+            <property name="label" translatable="yes">-</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_contrast_minus_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">156</property>
+            <property name="y">354</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="contrast_plus">
+            <property name="label" translatable="yes">+</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_contrast_plus_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">214</property>
+            <property name="y">354</property>
           </packing>
         </child>
       </object>

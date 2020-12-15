@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "segmentation.h"
 
+
 int RLSACompleted()
 {
   return 0;
@@ -246,11 +247,10 @@ struct MatrixDOUBLE Resize(struct MatrixDOUBLE m)
   return newcharMatrix;
 }
 
-struct Characters *Segmentation(char *imagepath)
+struct Characters *Segmentation(SDL_Surface *image)
 {
   struct Image newImage;
   //Load image
-  SDL_Surface *image = loadImage(imagepath);
   struct MatrixDOUBLE imagemat = binarization(image, 1);
   newImage.matrix = imagemat;
 
@@ -332,6 +332,7 @@ struct Characters *Segmentation(char *imagepath)
             matrixSetDOUBLE(charMatrix, i - L->FirstPoint, j - C->FirstPoint, Value);
           }
         }
+        TraceRect(image, C->FirstPoint, L->FirstPoint, C->LastPoint, L->LastPoint);
 
         //Trim charMatrix?
         //Resize Matrix
@@ -401,16 +402,17 @@ struct Characters *Segmentation(char *imagepath)
   }
 
   struct Characters *chars = malloc(sizeof(struct Characters));
+  chars->Image_Segmentate = image;
   chars->AllCharacters = AllCharacters;
   chars->Character_Binarized_Matrix = Character_Binarized_Matrix;
   chars->Nb_Characters = (size_t)TotalNbCharacter;
 
-  
+  /*
     for (size_t i = 0; i < (size_t)TotalNbCharacter; i++)
     {
       if (chars->AllCharacters[i] == '*')
         show_matrix_to_img(Character_Binarized_Matrix[i], STANDARD_CHARACTER_MATRIX_SIZE, STANDARD_CHARACTER_MATRIX_SIZE);
     }
-
+    */
   return chars;
 }

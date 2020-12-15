@@ -95,7 +95,7 @@ void matrixSetUCHAR(struct MatrixUCHAR matrix, int x, int y, unsigned char value
 {
   if (!(checkMatrixUCHARValidity(matrix) && checkMatrixUCHARCoord(matrix, x, y)))
   {
-    printMatrixERROR(400);
+    //printMatrixERROR(400);
   } else {
     *(matrix.cells + x * matrix.columns + y) = value;
   }
@@ -105,7 +105,7 @@ void matrixSetDOUBLE(struct MatrixDOUBLE matrix, int x, int y, double value)
 {
   if (!(checkMatrixDOUBLEValidity(matrix) && checkMatrixDOUBLECoord(matrix, x, y)))
   {
-    printMatrixERROR(400);
+    //printMatrixERROR(400);
   } else {
     *(matrix.cells + x * matrix.columns + y) = value;
   }
@@ -115,7 +115,7 @@ void matrixSetINT(struct MatrixINT matrix, int x, int y, int value)
 {
   if (!(checkMatrixINTValidity(matrix) && checkMatrixINTCoord(matrix, x, y)))
   {
-    printMatrixERROR(400);
+    //printMatrixERROR(400);
   } else {
     *(matrix.cells + x * matrix.columns + y) = value;
   }
@@ -124,7 +124,7 @@ void matrixSetINT(struct MatrixINT matrix, int x, int y, int value)
 unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
   if (!(checkMatrixUCHARValidity(matrix) && checkMatrixUCHARCoord(matrix, x, y)))
   {
-    printMatrixERROR(400);
+    //printMatrixERROR(400);
     return '\0';
   } else {
     return *(matrix.cells + x * matrix.columns + y);
@@ -134,7 +134,7 @@ unsigned char matrixGetUCHAR (struct MatrixUCHAR matrix, int x, int y) {
 double matrixGetDOUBLE(struct MatrixDOUBLE matrix, int x, int y) {
   if (!(checkMatrixDOUBLEValidity(matrix) && checkMatrixDOUBLECoord(matrix, x, y)))
   {
-    printMatrixERROR(400);
+    //printMatrixERROR(400);
     return '\0';
   } else {
     return *(matrix.cells + x * matrix.columns + y);
@@ -144,7 +144,7 @@ double matrixGetDOUBLE(struct MatrixDOUBLE matrix, int x, int y) {
 int matrixGetINT(struct MatrixINT matrix, int x, int y) {
   if (!(checkMatrixINTValidity(matrix) && checkMatrixINTCoord(matrix, x, y)))
   {
-    printMatrixERROR(400);
+    //printMatrixERROR(400);
     return '\0';
   } else {
     return *(matrix.cells + x * matrix.columns + y);
@@ -156,7 +156,7 @@ void printMatrixUCHAR(struct MatrixUCHAR matrix) {
   {
     for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%d\t", matrixGetUCHAR(matrix,i,j));
+      //printf("%d\t", matrixGetUCHAR(matrix,i,j));
     }
     printf("\n");
   }
@@ -167,7 +167,7 @@ void printMatrixDOUBLE(struct MatrixDOUBLE matrix) {
   {
     for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%f\t", matrixGetDOUBLE(matrix,i,j));
+      //printf("%f\t", matrixGetDOUBLE(matrix,i,j));
     }
     printf("\n");
   }
@@ -178,7 +178,7 @@ void printMatrixINT(struct MatrixINT matrix) {
   {
     for (int j = 0; j < matrix.columns; j++)
     {
-      printf("%d\t", matrixGetINT(matrix,i,j));
+      //printf("%d\t", matrixGetINT(matrix,i,j));
     }
     printf("\n");
   }

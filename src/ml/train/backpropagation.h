@@ -70,6 +70,8 @@ double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
 double CalculateScore(struct Network *network, char *databasepath);
 
+void CalculateScores(struct Networks *networks, char *databasepath);
+
 char *loadDataBase(char *databasepath, char letter, size_t imagenumber);
 
 void PrintInput(double *input, size_t height, size_t with, char letter);

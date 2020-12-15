@@ -23,8 +23,8 @@ int main()
    char cwd1[PATH_MAX];
    char cwd2[PATH_MAX];
    char *datasetpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/dataset/DatatSet");
-   char *networkpath = strcat(getcwd(cwd1, sizeof(cwd1)), "/net.json");
-   char *imagepath = strcat(getcwd(cwd2, sizeof(cwd2)), "/data/images/test.png");
+   char *networkpath = strcat(getcwd(cwd1, sizeof(cwd1)), "/network_1608004356.json");
+   char *imagepath = strcat(getcwd(cwd2, sizeof(cwd2)), "/data/images/rota3.png");
 
    struct Networks *networks = LoadNetworksFromJSON(networkpath);
    

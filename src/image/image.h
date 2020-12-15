@@ -69,3 +69,4 @@ SDL_Surface* Grayscale(SDL_Surface *image);
  * @return The modified SDL_Surface.
  */
 SDL_Surface* PowerLaw(SDL_Surface *image, double c, double y);
+void TraceRect(SDL_Surface *image, size_t x1, size_t y1, size_t x2, size_t y2);
