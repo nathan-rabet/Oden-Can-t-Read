@@ -1,20 +1,21 @@
 # Projet-OCR
 
-Il s'agit d'un programme de type OCR partiellement fini.
+Il s'agit d'un programme de type OCR.
 
 # Exécution
-Pour compiler les programmes executez successivement les commande ci dessous :
+Pour compiler le programme executez la commande:
 
-`make xor`
+`make`
 
-`make binarization`
+Executable a pour nom: OCR_project
 
-`make rotation`
 
-Le programme xor retourne les résultats d'une porte xor.
+Le fichier "src/devmain" contient plusieur executables:
 
-binarization affiche l'image de base, 
-puis l'affiche une version "nettoyé", 
-puis finalement la version binarizé.
+'make TRAIN'
 
-rotation prend un argument, l'angle de rotation en degré que l'on veut faire subire à l'image.
+Permet d'entrainer un réseau de neurones.
+
+'make test'
+
+Permet de tester un réseau de neurones.

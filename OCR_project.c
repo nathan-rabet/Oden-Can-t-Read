@@ -5,6 +5,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+
 #include "src/image/image.h"
 #include "src/image/binarization.h"
 #include "src/segmentation/segmentation.h"
@@ -40,7 +41,7 @@ struct Networks *networks;
 int main()
 {
 	char cwd[500];
-	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/net.json");
+	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/networks/~training/network_1608069683.json");
 	networks = LoadNetworksFromJSON(networkpath);
 	// Initializes GTK.
 	gtk_init(NULL, NULL);
@@ -109,9 +110,6 @@ void desactivate_buttons()
 
 void on_binarization_clicked(GtkButton *b)
 {
-	//file = binarization(file)
-	//On ferme précèdente fenetre avec img si non déjà fermé
-	//fc SDL pour print img binarisé et segmenté dans une autre fenetre
 	if (imagepath != NULL)
 	{
 		if (image_surface == NULL)
@@ -150,19 +148,15 @@ void on_Save_clicked(GtkButton *b)
 	savebuffer = gtk_text_view_get_buffer(text);
 	gtk_text_buffer_get_start_iter(savebuffer, &start);
 	gtk_text_buffer_get_end_iter(savebuffer, &end);
-	int len = gtk_text_buffer_get_char_count(savebuffer) - 1;
-    if (len < 0)
-        return;
 	int len = gtk_text_buffer_get_char_count(savebuffer);
 	char *ai_text = gtk_text_buffer_get_text(savebuffer, &start, &end, FALSE);
 	if (ai_text != NULL)
 	{
-		//sauvegarde txt
 		FILE *save = fopen(save_file_name, "w");
 		while (len > 0)
 		{
 			len--;
-			fputc(*ai_text, save); //A COMPLETER
+			fputc(*ai_text, save);
 			(ai_text)++;
 		}
 		
@@ -247,9 +241,9 @@ void rotation(int angle)
 	struct MatrixUCHAR im_matR = createMatrixUCHAR(image_surface->w, image_surface->h);
 	struct MatrixUCHAR im_matG = createMatrixUCHAR(image_surface->w, image_surface->h);
 	struct MatrixUCHAR im_matB = createMatrixUCHAR(image_surface->w, image_surface->h);
-	for (size_t i = 0; i < im_matR.rows; i++)
+	for (int i = 0; i < im_matR.rows; i++)
 	{
-		for (size_t j = 0; j < im_matR.columns; j++)
+		for (int j = 0; j < im_matR.columns; j++)
 		{
 			SDL_Color color;
 			Uint32 pixel = getPixel(image_surface, i, j);
@@ -266,9 +260,9 @@ void rotation(int angle)
 	SDL_FreeSurface(image_surface);
 	image_surface = SDL_CreateRGBSurface(0, im_matR.rows, im_matR.columns, 32, 0, 0, 0, 0);
 
-	for (size_t i = 0; i < im_matR.rows; i++)
+	for (int i = 0; i < im_matR.rows; i++)
 	{
-		for (size_t j = 0; j < im_matR.columns; j++)
+		for (int j = 0; j < im_matR.columns; j++)
 		{
 			unsigned char r = matrixGetUCHAR(im_matR, i, j);
 			unsigned char g = matrixGetUCHAR(im_matG, i, j);
