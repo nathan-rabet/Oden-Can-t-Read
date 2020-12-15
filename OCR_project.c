@@ -40,7 +40,7 @@ struct Networks *networks;
 int main()
 {
 	char cwd[500];
-	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/network_1608004356.json");
+	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/net.json");
 	networks = LoadNetworksFromJSON(networkpath);
 	// Initializes GTK.
 	gtk_init(NULL, NULL);
@@ -116,8 +116,8 @@ void on_binarization_clicked(GtkButton *b)
 	{
 		if (image_surface == NULL)
 			image_surface = loadImage(imagepath);
-		segmentation_image = Segmentation(image_surface);
-		printf("Segmentation...\n");
+		if (segmentation_image == NULL)
+			segmentation_image = Segmentation(image_surface);
 		desactivate_buttons();
 		ShowImg(segmentation_image->Image_Segmentate);
 		activate_buttons();
@@ -126,8 +126,12 @@ void on_binarization_clicked(GtkButton *b)
 
 void on_Read_text_clicked(GtkButton *b)
 {
-	//prend le fichier avec image segmenté et input son txt dans la zone
-	segmentation_image = Segmentation(image_surface);
+	if (imagepath == NULL)
+		return;
+	if (image_surface == NULL)
+			image_surface = loadImage(imagepath);
+	if (segmentation_image == NULL)
+		segmentation_image = Segmentation(image_surface);
 
 	FindCharacters(networks, segmentation_image);
 
@@ -195,7 +199,9 @@ void on_reload_img_clicked(GtkButton *b)
 	{
 		if (image_surface != NULL)
 			SDL_FreeSurface(image_surface);
-
+		if (segmentation_image != NULL)
+			free(segmentation_image);
+		segmentation_image = NULL;
 		image_surface = loadImage(imagepath);
 		ShowImg(image_surface);
 	}
