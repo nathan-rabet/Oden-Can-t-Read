@@ -69,7 +69,7 @@ struct Networks *LoadNetworksFromJSON(char jsonFilePath[])
             int nb_inputs = json_object_get_int(JSONnb_input);
 
             nets->networks[net]->nb_layers = json_object_get_int(JSONnb_layers);
-            nets->networks[net]->characters = json_object_get_string(JSONcharacters);
+            nets->networks[net]->characters = (char*) json_object_get_string(JSONcharacters);
             nets->networks[net]->nb_characters = (size_t)json_object_get_string_len(JSONcharacters);
 
             // ? Layers
@@ -270,14 +270,14 @@ char FindCharacter(struct Networks *networks, char *letter_matrix)
         //printf("Net %c: %f|\n", networks->networks[i]->character, outputs[0]);
 
         size_t maxi_index1net = 0;
-        struct Neurone *neurones_one_network = networks->networks[i]->layers[networks->networks[i]->nb_layers - 1]->neurones;
+        struct Neurone *neurones_one_network = *(networks->networks[i]->layers[networks->networks[i]->nb_layers - 1]->neurones);
         for (size_t j = 1; j < networkNbOutput(networks->networks[i]); j++)
         {
             if (activationFunction(&neurones_one_network[j]) > activationFunction(&neurones_one_network[maxi_index1net]))
                 maxi_index1net = j;
         }
 
-        double most_high_value = activationFunction(&networks->networks[maxi_network_index]->layers[networks->networks[i]->nb_layers - 1]->neurones[maxi_index]->outputWithoutActivation);
+        double most_high_value = activationFunction(networks->networks[maxi_network_index]->layers[networks->networks[i]->nb_layers - 1]->neurones[maxi_index]);
         double this_most_high_value = activationFunction(&neurones_one_network[maxi_index1net]);
 
         if (most_high_value < this_most_high_value)
@@ -287,7 +287,7 @@ char FindCharacter(struct Networks *networks, char *letter_matrix)
         }
         free(outputs);
     }
-    networks->networks[maxi_network_index]->characters[maxi_index];
+    return networks->networks[maxi_network_index]->characters[maxi_index];
 }
 
 void FindCharacters(struct Networks *networks, struct Characters *character)

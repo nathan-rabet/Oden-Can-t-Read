@@ -1,6 +1,8 @@
+#include <limits.h>
+
 #include "backpropagMISC.h"
 #include "datasetFILES.h"
-#include "src/miscellaneous/CHARS.h"
+#include "../../../miscellaneous/CHARS.h"
 
 void PrintInput(double *input, size_t height, size_t with, char letter)
 {
@@ -36,7 +38,6 @@ void PrintInput(double *input, size_t height, size_t with, char letter)
 
 void loadDATASET(struct Folders *folders, char *dataset_path)
 {
-    folders = malloc(sizeof(struct Folders));
     folders->path = dataset_path;
 
     folders->folderLIST = malloc(sizeof(struct Folder) * CHARSLEN);
@@ -45,13 +46,15 @@ void loadDATASET(struct Folders *folders, char *dataset_path)
         struct Folder *folder = &folders->folderLIST[dir];
         folder->char_id = CHARS[dir];
 
-        int file_count = 0;
+        size_t file_count = 0;
         DIR *dirp;
         struct dirent *entry;
 
+        folder->path = malloc(sizeof(double) * PATH_MAX);
+
         sprintf(folder->path, "%s/%03d", dataset_path, CHARS[dir]);
 
-        dirp = opendir(dataset_path); /* There should be error handling after this */
+        dirp = opendir(folder->path); /* There should be error handling after this */
         while ((entry = readdir(dirp)) != NULL)
         {
             if (entry->d_type == DT_REG)
@@ -64,13 +67,15 @@ void loadDATASET(struct Folders *folders, char *dataset_path)
         closedir(dirp);
 
         folder->fileLIST = malloc(sizeof(char *) * file_count);
+        folder->nb_files = file_count;
         for (size_t f = 0; f < file_count; f++)
         {
             struct File *file = &folder->fileLIST[f];
 
             file->file_index = f;
 
-            sprintf(file->path, "%s/%03d", folder->path, f);
+            file->path = malloc(sizeof(double) * PATH_MAX);
+            sprintf(file->path, "%s/%03ld", folder->path, f);
 
             file->data = loadDATASET_Image(folders->path, folder->char_id, file->file_index);
         }
@@ -118,10 +123,10 @@ void configure_batch_io(struct Network *network, struct Folders *dataset, char *
 
         // Check if the random letter is one managed by the network
         if (letter_id_in_CHARS == network->characters[0])
-            expected_output[i][find_char_id(CHARS[letter_id_in_CHARS],network->characters)] = 1;
+            expected_output[i][find_char_id(CHARS[(int)letter_id_in_CHARS],network->characters)] = 1;
 
-        char folder_name = dataset->folderLIST[CHARS[letter_id_in_CHARS]].char_id;
-        inputs[i] = dataset->folderLIST[folder_name].fileLIST[rand() % dataset->folderLIST[folder_name].nb_files].data;
+        char folder_name = dataset->folderLIST[(int)CHARS[(int)letter_id_in_CHARS]].char_id;
+        inputs[i] = dataset->folderLIST[(int)folder_name].fileLIST[rand() % dataset->folderLIST[(int)folder_name].nb_files].data;
     }
 }
 
@@ -158,31 +163,38 @@ double CalculateScore(struct Network *network)
         double *outputs = calculateNetworkOutput(network, inputs);
 
         int isIn = 0;
+        size_t maxOutput_index = 0;
         double maxOutput = 0;
         for (size_t c = 0; c < networkNbOutput(network); c++)
         {
-            if (network->characters == c)
+            if (network->characters[c] == letter)
                 isIn = 1;
             
-            if ()
+            if (activationFunction(network->layers[network->nb_layers - 1]->neurones[c]) > activationFunction(network->layers[network->nb_layers - 1]->neurones[maxOutput_index])) {
+                maxOutput_index = c;
+                maxOutput = activationFunction(network->layers[network->nb_layers - 1]->neurones[c]);
+            }
         }
-        
 
-        if (isIn)
+        double * softmaxed = softmax(*(network->layers[network->nb_layers - 1]));
+
+        if (isIn == 1)
         {
-            if (*outputs > 0.8)
+            if (softmaxed[maxOutput_index] > 0.85)
                 nb_success += 1;
         }
         else
         {
-            if (*outputs < 0.5)
+            if (softmaxed[maxOutput_index] < 0.15)
                 nb_success += 1;
         }
 
-        cost_average += cost(network, letter == network->character ? 0 : 45615);
+        // isIn is also the place of the char
+        cost_average += cost(network, maxOutput);
 
         free(outputs);
         free(inputs);
+        free(softmaxed);
     }
 
     cost_average /= number_of_test;
@@ -207,9 +219,9 @@ void MinibatchesStates(size_t batches_already_done[], size_t batches_how_many[])
 {
     double average_percentage = 0;
 
-    for (size_t i = 0; i < CHARSLEN; i++)
+    for (size_t i = 0; i < networksRef->nb_networks; i++)
     {
-        printf("MINIBACH for network '%c' : %ld/%d\n", CHARS[i], batches_already_done[i], NB_MINIBATCH);
+        printf("MINIBACH for network '%s' : %ld/%d\n", networksRef->networks[i]->characters, batches_already_done[i], NB_MINIBATCH);
         printf("\t↳[");
 
         double percent = (batches_how_many[i] / (double)NB_TRAINING_PER_MINIBATCH) * 100;

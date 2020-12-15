@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -ldl
+CFLAGS = -Wall -Wextra -std=c99 -O0 -lm -ldl -std=gnu99
 CFLAGS += $(shell pkg-config --cflags json-c) # json-c flags
 CFLAGS_GTK = $(shell pkg-config --cflags gtk+-3.0)
 
@@ -23,6 +23,8 @@ SRC += src/math/random.c
 SRC += src/ml/train/backpropagation.c
 SRC += src/segmentation/segmentation.c
 SRC += src/ml/struct/networks.c
+SRC += src/ml/train/lib/backpropagMISC.c
+SRC += src/miscellaneous/CHARS.c
 #SRC += OCR_project.c
 #SRC += OCR_project.glade
 

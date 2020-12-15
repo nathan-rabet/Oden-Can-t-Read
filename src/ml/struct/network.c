@@ -9,7 +9,6 @@
 #include <time.h>
 #include <float.h>
 #include <math.h>
-
 #include "../../math/random.h"
 #include "../../miscellaneous/CHARS.h"
 
@@ -23,11 +22,13 @@ struct Network *CreateNetwork(struct Layer **layers, size_t nb_layers, char in_c
     network->characters = malloc(sizeof(char) * (find_char_id(out_char, CHARS) - find_char_id(in_char, CHARS)));
 
     size_t i_in = find_char_id(in_char, CHARS);
-    size_t i_end = find_char_id(out_char, CHARS) + 1;
+    size_t i_end = find_char_id(out_char, CHARS);
     for (size_t i = 0; i + i_in < i_end; i++)
     {
-        network->characters[i] = CHARS[i];
+        network->characters[i] = CHARS[i + i_in];
     }
+
+    network->nb_characters = find_char_id(out_char, CHARS) - find_char_id(in_char, CHARS);
 
     return network;
 }
