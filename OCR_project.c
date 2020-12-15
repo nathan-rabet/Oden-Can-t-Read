@@ -41,7 +41,7 @@ struct Networks *networks;
 int main()
 {
 	char cwd[500];
-	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/networks/~training/network_1608069683.json");
+	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/networks/network_1607991061.json");
 	networks = LoadNetworksFromJSON(networkpath);
 	// Initializes GTK.
 	gtk_init(NULL, NULL);
