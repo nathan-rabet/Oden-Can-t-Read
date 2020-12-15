@@ -153,6 +153,7 @@ void on_Save_clicked(GtkButton *b)
 	int len = gtk_text_buffer_get_char_count(savebuffer) - 1;
     if (len < 0)
         return;
+	int len = gtk_text_buffer_get_char_count(savebuffer);
 	char *ai_text = gtk_text_buffer_get_text(savebuffer, &start, &end, FALSE);
 	if (ai_text != NULL)
 	{
@@ -166,7 +167,6 @@ void on_Save_clicked(GtkButton *b)
 		}
 		
 		fclose(save);
-		printf("Save!");
 	}
 }
 
@@ -186,7 +186,7 @@ void on_save_name_changed(GtkEntry *e)
 	if (save_file_name != NULL)
 		free(save_file_name);
 	save_file_name = malloc(128 * sizeof(char));
-	sprintf(save_file_name, "%s", gtk_entry_get_text(e));
+	sprintf(save_file_name, "text/%s", gtk_entry_get_text(e));
 }
 
 // called when window is closed
