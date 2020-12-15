@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
-#include "loadmnist.h"
 #include "../struct/network.h"
 #include "../struct/networks.h"
 #include "../struct/neurone.h"
@@ -23,7 +22,7 @@ struct _BackpropagTHREAD {
     size_t minibatch_list_index;
 };
 
- /*
+ /**
  * @brief Train the network to reconize letters. Inputs are 128x128 images
  * 
  * @param network The network to work with.
@@ -33,7 +32,6 @@ struct _BackpropagTHREAD {
  * @param minibatchtrain The number of train of batch.
  * @return Return a array of the inputs.
  */
-void configure_batch_io(struct Network *network, char *datasetpath, char **inputs, double **expected_output);
 
 int trainNetworks(struct Networks *networks, char *datasetpath);
 
@@ -68,9 +66,7 @@ void backpropagation(struct Network *network, double *expected_output);
  */
 double* loadmatrixasinputs(struct MatrixDOUBLE *imgmat, int numberofneurones);
 
-double CalculateScore(struct Network *network, char *databasepath);
-
-char *loadDataBase(char *databasepath, char letter, size_t imagenumber);
+char *loadDATASET_Image(char *databasepath, char letter, size_t imagenumber);
 
 void PrintInput(double *input, size_t height, size_t with, char letter);
 

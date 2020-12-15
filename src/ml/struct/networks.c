@@ -58,18 +58,19 @@ struct Networks *LoadNetworksFromJSON(char jsonFilePath[])
             struct json_object *JSONlayers = NULL;
 
             struct json_object *JSONnb_input = NULL;
-            struct json_object *JSONcharacter = NULL;
+            struct json_object *JSONcharacters = NULL;
 
             json_object_object_get_ex(parsed_json_network, "nb_layers", &JSONnb_layers);
             json_object_object_get_ex(parsed_json_network, "layers", &JSONlayers);
 
             json_object_object_get_ex(parsed_json_network, "nb_inputs", &JSONnb_input);
-            json_object_object_get_ex(parsed_json_network, "character", &JSONcharacter);
+            json_object_object_get_ex(parsed_json_network, "characters", &JSONcharacters);
 
             int nb_inputs = json_object_get_int(JSONnb_input);
 
             nets->networks[net]->nb_layers = json_object_get_int(JSONnb_layers);
-            nets->networks[net]->character = json_object_get_int(JSONcharacter);
+            nets->networks[net]->characters = json_object_get_string(JSONcharacters);
+            nets->networks[net]->nb_characters = (size_t)json_object_get_string_len(JSONcharacters);
 
             // ? Layers
             nets->networks[net]->layers = malloc(sizeof(struct Layer *) * (nets->networks[net]->nb_layers));
@@ -161,11 +162,11 @@ void SaveNetworksToJSON(struct Networks *networks, char jsonFilePath[])
 
         fprintf(f,
                 "\t\t{\n"
-                "\t\t\t\"character\":%d,\n"
+                "\t\t\t\"characters\":\"%s\",\n"
                 "\t\t\t\"nb_inputs\":%lu,\n"
                 "\t\t\t\"nb_layers\":%lu,\n"
                 "\t\t\t\"layers\": [\n",
-                networks->networks[net]->character,
+                networks->networks[net]->characters,
                 nb_input, nb_layers);
 
         for (size_t l = 1; l < nb_layers; l++)
@@ -235,10 +236,14 @@ double **calculateNetworksOutput(struct Networks *networks, char input[])
 struct Networks *generateRandomNetworks(size_t nb_layers, size_t nb_neurone_per_layer[], char activation_functions_per_layer[])
 {
 
-    struct Networks *networks = CreateNetworks(malloc(sizeof(struct Network *) * CHARSLEN), CHARSLEN);
-    for (size_t n = 0; n < networks->nb_networks; n++)
+    struct Networks *networks = CreateNetworks(malloc(sizeof(struct Network *) * CHARSLEN / CHARS_SPLIT_FACTOR), CHARSLEN / CHARS_SPLIT_FACTOR);
+    size_t in_index = 0;
+    size_t out_index = CHARSLEN / CHARS_SPLIT_FACTOR;
+    for (size_t n = 0; n < CHARSLEN / CHARS_SPLIT_FACTOR; n++)
     {
-        networks->networks[n] = generateRandomNetwork(nb_layers, nb_neurone_per_layer, activation_functions_per_layer, CHARS[n]);
+        networks->networks[n] = generateRandomNetwork(nb_layers, nb_neurone_per_layer, activation_functions_per_layer, CHARS[in_index], CHARS[out_index]);
+        in_index = out_index;
+        out_index += CHARSLEN / CHARS_SPLIT_FACTOR;
     }
 
     return networks;
@@ -255,23 +260,34 @@ void FreeNetworks(struct Networks *networks)
     free(networks);
 }
 
-char FindCharacter(struct Networks *networks, char* letter_matrix)
+char FindCharacter(struct Networks *networks, char *letter_matrix)
 {
-    size_t index_char = 0;
-    double max_sort = 0;
+    size_t maxi_network_index = 0;
+    size_t maxi_index = 0;
     for (size_t i = 0; i < networks->nb_networks; i++)
     {
         double *outputs = calculateNetworkOutput(networks->networks[i], letter_matrix);
         //printf("Net %c: %f|\n", networks->networks[i]->character, outputs[0]);
-        if (max_sort < outputs[0])
+
+        size_t maxi_index1net = 0;
+        struct Neurone *neurones_one_network = networks->networks[i]->layers[networks->networks[i]->nb_layers - 1]->neurones;
+        for (size_t j = 1; j < networkNbOutput(networks->networks[i]); j++)
         {
-            index_char = i;
-            max_sort = outputs[0];
+            if (activationFunction(&neurones_one_network[j]) > activationFunction(&neurones_one_network[maxi_index1net]))
+                maxi_index1net = j;
+        }
+
+        double most_high_value = activationFunction(&networks->networks[maxi_network_index]->layers[networks->networks[i]->nb_layers - 1]->neurones[maxi_index]->outputWithoutActivation);
+        double this_most_high_value = activationFunction(&neurones_one_network[maxi_index1net]);
+
+        if (most_high_value < this_most_high_value)
+        {
+            maxi_network_index = i;
+            maxi_index = maxi_index1net;
         }
         free(outputs);
     }
-    //printf("\n=================\n");
-    return networks->networks[index_char]->character;
+    networks->networks[maxi_network_index]->characters[maxi_index];
 }
 
 void FindCharacters(struct Networks *networks, struct Characters *character)

@@ -20,8 +20,8 @@ int main()
 {   
    mustcall();
 
-   size_t nrpl[] = {NB_INPUTS, 15, 15, 1};
-   char afpl[] = {0, 2, 2, 2};
+   size_t nrpl[] = {NB_INPUTS, 25, 25, CHARSLEN / CHARS_SPLIT_FACTOR};
+   char afpl[] = {0, 5, 2, 2};
    struct Networks *networks = generateRandomNetworks(4, nrpl, afpl);
    
    //struct Networks *networks = LoadNetworksFromJSON("newnet.json");
