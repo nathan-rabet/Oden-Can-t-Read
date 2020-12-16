@@ -46,7 +46,7 @@ int main()
 	// Initializes GTK.
 	gtk_init(NULL, NULL);
 
-	builder = gtk_builder_new_from_file("mainINTERFACE.glade");
+	builder = gtk_builder_new_from_file("src/gtk/mainINTERFACE.glade");
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
 
