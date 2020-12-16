@@ -1,6 +1,8 @@
 # OCR S3 EPITA
 
 Il s'agit d'un programme de détection optique de caractères (ou *optical character recognition*, OCR) réalisé lors de notre troisième semestre à EPITA.
+![Segmentation](https://user-images.githubusercontent.com/13369175/102380416-2e6f7e80-3fc8-11eb-8bc7-1ab05dbc7ea6.png)
+
 
 # Exécution de l'interface graphique
 ![Interface OCR](https://user-images.githubusercontent.com/13369175/102357792-032c6580-3faf-11eb-9265-53ef588f7070.png)
