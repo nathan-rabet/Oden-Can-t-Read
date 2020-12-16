@@ -9,7 +9,7 @@ Pour ouvrir l'interface graphique :
 
 - Faites `make interface` ou tout simplement `make` dans un terminal.
 
-- Éxecutez le fichier `mainINTERFACE`
+- Éxecutez le fichier `mainINTERFACE.o`
 
 # Entrainement des reseaux de neurones multicouches
 Aucun réseau n'est actuellement entrainé.
@@ -18,12 +18,12 @@ Pour lui permettre de détecter correctement les caractrères, il faut le faire 
 
 - Faites `make train` dans un terminal.
 
-- Lancez le fichier `mainTRAIN`
+- Lancez le fichier `mainTRAIN.o`
 
 ## Utilisation de l'outil d'entrainement des réseaux
 ![Dashboard](https://user-images.githubusercontent.com/13369175/102359802-88187e80-3fb1-11eb-97e8-5c46c7185737.png)
 
-Une fois le fichier `mainTRAIN` lancé, vous pouvez faire plusieurs actions :
+Une fois le fichier `mainTRAIN.o` lancé, vous pouvez faire plusieurs actions :
 ### Graphique de progression
 Le tableau de progression accessible en appuyant sur la touche <kbd>Enter</kbd>.
 
