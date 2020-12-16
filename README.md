@@ -11,7 +11,7 @@ Pour ouvrir l'interface graphique :
 
 - Éxecutez le fichier `mainINTERFACE.o`
 
-# Entrainement des reseaux de neurones multicouches
+# Entrainement des réseaux de neurones multicouches
 Aucun réseau n'est actuellement entrainé.
 
 Pour lui permettre de détecter correctement les caractrères, il faut le faire !
