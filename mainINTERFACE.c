@@ -41,12 +41,12 @@ struct Networks *networks;
 int main()
 {
 	char cwd[500];
-	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/networks/network_1607991061.json");
+	char *networkpath = strcat(getcwd(cwd, sizeof(cwd)), "/data/networks/networkTest.json");
 	networks = LoadNetworksFromJSON(networkpath);
 	// Initializes GTK.
 	gtk_init(NULL, NULL);
 
-	builder = gtk_builder_new_from_file("OCR_project.glade");
+	builder = gtk_builder_new_from_file("mainINTERFACE.glade");
 
 	window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
 

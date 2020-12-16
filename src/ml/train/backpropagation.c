@@ -39,21 +39,35 @@ int trainNetworkTHREAD(void *data)
             minibatch(network, inputs, expected_output);
         }
 
-        // Saving networks automaticaly
-        isStopped = 1;
-        char *c = malloc(sizeof(char) * 100);
+        int can_save = 1;
 
-        struct stat st = {0};
-
-        if (stat("data/networks/~training/", &st) == -1)
+        for (size_t i = 1; i < CHARSLEN / CHARS_SPLIT_FACTOR; i++)
         {
-            mkdir("data/networks/~training/", 0700);
+            if (batches_already_done[i] != batches_already_done[0])
+            {
+                can_save = 0;
+                break;
+            }
         }
 
-        sprintf(c, "data/networks/~training/network_%d.json", (int)time(NULL));
-        SaveNetworksToJSON(networksRef, c);
-        free(c);
-        isStopped = 0;
+        if (can_save)
+        {
+            // Saving networks automaticaly
+            isStopped = 1;
+            char *c = malloc(sizeof(char) * 100);
+
+            struct stat st = {0};
+
+            if (stat("data/networks/~training/", &st) == -1)
+            {
+                mkdir("data/networks/~training/", 0700);
+            }
+
+            sprintf(c, "data/networks/~training/network_%d.json", (int)time(NULL));
+            SaveNetworksToJSON(networksRef, c);
+            free(c);
+            isStopped = 0;
+        }
 
         for (size_t i = 0; i < MINIBATCH_SIZE; i++)
             free(expected_output[i]);
@@ -65,6 +79,7 @@ int trainNetworkTHREAD(void *data)
 
 int trainNetworks(struct Networks *networks, char *datasetpath)
 {
+    printf("Loading all dataset...\n");
     mtx_init(&mutex, mtx_plain);
     datset_folders = malloc(sizeof(struct Folders));
 

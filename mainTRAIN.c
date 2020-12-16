@@ -29,7 +29,6 @@ int main()
 
    char cwd[PATH_MAX];
    char * datasetpath = strcat(getcwd(cwd, sizeof(cwd)),"/data/dataset");
-   printf("Loading all dataset...");
    trainNetworks(networks,datasetpath);
    SaveNetworksToJSON(networks, "net.json");
    printf("Done!\n");

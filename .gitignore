@@ -57,3 +57,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 *.json
+!networkTest.json
+!*.old.json

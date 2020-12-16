@@ -103,8 +103,6 @@ void freeDATASET(struct Folders *dataset)
     free(dataset);
 }
 
-
-
 void configure_batch_io(struct Network *network, struct Folders *dataset, char **inputs, double **expected_output)
 {
     for (size_t i = 0; i < MINIBATCH_SIZE; i++)
@@ -123,7 +121,7 @@ void configure_batch_io(struct Network *network, struct Folders *dataset, char *
 
         // Check if the random letter is one managed by the network
         if (letter_id_in_CHARS == network->characters[0])
-            expected_output[i][find_char_id(CHARS[(int)letter_id_in_CHARS],network->characters)] = 1;
+            expected_output[i][find_char_id(CHARS[(int)letter_id_in_CHARS], network->characters)] = 1;
 
         char folder_name = dataset->folderLIST[(int)CHARS[(int)letter_id_in_CHARS]].char_id;
         inputs[i] = dataset->folderLIST[(int)folder_name].fileLIST[rand() % dataset->folderLIST[(int)folder_name].nb_files].data;
@@ -133,6 +131,8 @@ void configure_batch_io(struct Network *network, struct Folders *dataset, char *
 void CalculateScores(struct Networks *networks)
 {
     double average_percentage = 0;
+    printf("Accuracy test\n");
+
     for (size_t i = 0; i < networks->nb_networks; i++)
     {
         average_percentage += CalculateScore(networks->networks[i]);
@@ -140,14 +140,15 @@ void CalculateScores(struct Networks *networks)
 
     average_percentage /= networks->nb_networks;
 
-    printf("\n\nGlobal accuracy : %s%f%s\n", BLU, average_percentage, RST);
+    printf("\n\nGlobal accuracy (perfect results only): %s%f%%%s\n", BLU, average_percentage, RST);
 }
 
 double CalculateScore(struct Network *network)
 {
     printf("SCORE : network '%s'\n", network->characters);
     int number_of_test = 1000;
-    int nb_success = 0;
+    int nb_success_perfect = 0;
+    int nb_success_correct = 0;
 
     double cost_average = 0;
     for (int i = 0; i < number_of_test; i++)
@@ -157,7 +158,8 @@ double CalculateScore(struct Network *network)
             letter = network->characters[rand() % networkNbOutput(network)];
 
         // Dataset loading
-        char *inputs = loadDATASET_Image(datset_folders->path, letter, (rand() % 1000));
+        char *inputs = loadDATASET_Image(datset_folders->path, letter,
+                                         (rand() % datset_folders->folderLIST[find_char_id(letter, CHARS)].nb_files));
 
         // Feedforward
         double *outputs = calculateNetworkOutput(network, inputs);
@@ -169,24 +171,34 @@ double CalculateScore(struct Network *network)
         {
             if (network->characters[c] == letter)
                 isIn = 1;
-            
-            if (activationFunction(network->layers[network->nb_layers - 1]->neurones[c]) > activationFunction(network->layers[network->nb_layers - 1]->neurones[maxOutput_index])) {
+
+            if (activationFunction(network->layers[network->nb_layers - 1]->neurones[c]) > activationFunction(network->layers[network->nb_layers - 1]->neurones[maxOutput_index]))
+            {
                 maxOutput_index = c;
                 maxOutput = activationFunction(network->layers[network->nb_layers - 1]->neurones[c]);
             }
         }
 
-        double * softmaxed = softmax(*(network->layers[network->nb_layers - 1]));
+        double *softmaxed = softmax(*(network->layers[network->nb_layers - 1]));
 
-        if (isIn == 1)
+        if (isIn)
         {
-            if (softmaxed[maxOutput_index] > 0.85)
-                nb_success += 1;
+            if (network->characters[maxOutput_index] == letter)
+            {
+                if (softmaxed[maxOutput_index] > 0.9)
+                    nb_success_perfect += 1;
+
+                if (softmaxed[maxOutput_index] > 0.8)
+                    nb_success_correct += 1;
+            }
         }
         else
         {
-            if (softmaxed[maxOutput_index] < 0.15)
-                nb_success += 1;
+            if (softmaxed[maxOutput_index] < 0.10)
+                nb_success_perfect += 1;
+
+            if (softmaxed[maxOutput_index] < 0.20)
+                nb_success_correct += 1;
         }
 
         // isIn is also the place of the char
@@ -198,7 +210,7 @@ double CalculateScore(struct Network *network)
     }
 
     cost_average /= number_of_test;
-    float percentage_of_success = ((100 * nb_success) / number_of_test);
+    float percentage_of_success = ((100 * nb_success_perfect) / number_of_test);
     char *color;
 
     if (percentage_of_success > 90)
@@ -210,7 +222,7 @@ double CalculateScore(struct Network *network)
         color = RED;
 
     printf("COST : %f\n", cost_average);
-    printf("PERCENTAGE : %s%f%%%s. [%d/%d]\n\n", color, percentage_of_success, RST, nb_success, number_of_test);
+    printf("RESULTS : %s%f%%%s. \n\t %d perfectly found (+90%% certitude), %d correctly found (+80%% certitude), %d not found\n\n", color, percentage_of_success, RST, nb_success_perfect, nb_success_correct, number_of_test - nb_success_perfect - nb_success_correct);
 
     return percentage_of_success;
 }
